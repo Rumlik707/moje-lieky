@@ -1875,7 +1875,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const nbHid=()=>{try{return JSON.parse(localStorage.getItem(NBH)||'{}')}catch(e){return {}}};
   function nbDismiss(tabName){
     const id=NB_OF[tabName], el=id&&$(id); if(!el||el.hidden) return;
-    const h=nbHid(); h[id]=Date.now(); try{localStorage.setItem(NBH,JSON.stringify(h))}catch(e){}
+    const h=nbHid(); h[id]={t:Date.now(),k:nbCur[id]||''}; try{localStorage.setItem(NBH,JSON.stringify(h))}catch(e){}
     el.classList.add('gone'); setTimeout(()=>{el.hidden=true;el.classList.remove('gone')},reduce()?0:320);
   }
   document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);quickOpen(false);nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
@@ -1898,9 +1898,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     ind.style.transform='translate('+(r.left-bar.left+r.width/2-30)+'px,'+(r.top-bar.top+r.height/2-16)+'px)'; ind.style.opacity=1;
   }
   window.addEventListener('resize',moveInd);
-  function setNb(id,txt,cls,label){
-    const el=$(id); const key=txt==null?'':txt+'|'+cls;
-    const hid=nbHid()[id]; if(hid&&Date.now()-hid<864e5) txt=null;
+  const nbCur={};
+  function setNb(id,txt,cls,label,ck){
+    const el=$(id); const key=txt==null?'':txt+'|'+cls; nbCur[id]=ck||key;
+    const hid=nbHid()[id]; if(hid&&typeof hid==='object'&&hid.k===nbCur[id]&&Date.now()-hid.t<864e5) txt=null;
     if(txt==null){if(!el.classList.contains('gone')){el.hidden=true;el.dataset.k=''}return}
     el.hidden=false; el.textContent=txt; el.className='nb '+cls;
     if(el.dataset.k!==key){void el.offsetWidth;el.classList.add('pop')} el.dataset.k=key;
@@ -1983,17 +1984,18 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         if(pc===100&&was!=='100'&&was!=null){r.classList.remove('full');void r.offsetWidth;r.classList.add('full')} r.dataset.p=pc;}}
     notifyDue(); moveInd();
     const left=itemsFor(today).filter(i=>!taken(lg,i.m,i.k)&&!skipped(lg,i.m,i.k));
-    const late=left.filter(i=>dueMin(i)<=nowM).length;
+    const dueAt=i=>toMin(i.t||SLOT_TIME[i.s]||'08:00');
+    const now=left.filter(i=>dueAt(i)<=nowM), late=now.filter(i=>nowM-dueAt(i)>=60);
     if(!itemsFor(today).length) setNb('nbToday',null);
-    else if(!left.length) setNb('nbToday','✓','ok','všetko užité');
-    else setNb('nbToday',String(left.length),late?'bad':'',left.length+' zostáva, '+late+' už je čas');
-    const y=statusOf(addDays(today,-1));
-    setNb('nbWeek',(y==='part'||y==='none')?'':null,'dot warn','včera niečo chýba');
+    else if(!left.length) setNb('nbToday','✓','ok','všetko užité','ok'+today);
+    else if(now.length) setNb('nbToday',String(now.length),late.length?'bad':'',now.length+' je čas užiť',now.map(i=>i.m.id+'@'+i.k).sort().join());
+    else setNb('nbToday',null);
+    setNb('nbWeek',null);
     const need=meds.filter(m=>needsOrder(m)&&(!m.days||endKey(m)>=today)), exp=meds.filter(m=>{const o=openInfo(m);return o&&o.state!=='ok'});
     const ids=new Set([...need,...exp].map(m=>m.id)), bad=exp.some(m=>openInfo(m).state==='exp')||need.some(m=>m.left===0);
-    setNb('nbStock',ids.size?String(ids.size):null,bad?'bad':'warn',ids.size+' treba riešiť');
+    setNb('nbStock',ids.size?String(ids.size):null,bad?'bad':'warn',ids.size+' treba riešiť',[...ids].sort().join());
     const vs=visitsSorted().filter(v=>{const d=diffDays(today,v.date);return v.type==='rx'?d<=7:d<=2});
-    setNb('nbMore',vs.length?String(vs.length):null,vs.some(v=>diffDays(today,v.date)<0)?'bad':'warn',vs.length+' termíny');
+    setNb('nbMore',vs.length?String(vs.length):null,vs.some(v=>diffDays(today,v.date)<0)?'bad':'warn',vs.length+' termíny',vs.map(v=>v.id||v.date+v.title).join());
   }
   function renderChips(){
     const c=[];
