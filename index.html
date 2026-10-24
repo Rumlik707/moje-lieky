@@ -691,6 +691,9 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
             <input id="fLeft" type="number" inputmode="numeric" min="0" max="50" placeholder="1">
           </label>
         </div>
+        <label class="fld" for="fCount">Kusov doma spolu <span class="note">(aj s načatým balením)</span>
+          <input id="fCount" type="number" inputmode="numeric" min="0" max="5000" placeholder="napr. 47" style="text-align:center;font-variant-numeric:tabular-nums">
+        </label>
         <p class="note" id="stockPreview" style="margin:0"></p>
       </fieldset>
       <fieldset class="fs">
@@ -1488,7 +1491,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const slots=slotBoxes().filter(b=>b.checked).map(b=>b.value);
     const days=$('fDurDays').checked?numVal('fDays'):null;
     const start=editId?((meds.find(m=>m.id===editId)||{}).start||today):today;
-    return {rolling:$('fRoll').checked,mode,every,first,slots,days,start,gapH:numVal('fGap'),maxDay:numVal('fMax'),openDays:numVal('fOpenDays'),opened:$('fOpened').value||null,per:1,pack:numVal('fPack'),packs:numVal('fLeft')};
+    return {rolling:$('fRoll').checked,mode,every,first,slots,days,start,gapH:numVal('fGap'),maxDay:numVal('fMax'),openDays:numVal('fOpenDays'),opened:$('fOpened').value||null,per:1,pack:numVal('fPack'),packs:numVal('fLeft'),count:numVal('fCount')};
   }
   function updPreview(){
     const c=curColor();
@@ -1526,24 +1529,27 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('daysEnd').textContent=n>=1&&n<=365?'posledný deň '+nice(addDays(d.start,n-1)):'';
     const cur=editId?(meds.find(m=>m.id===editId)||{}).left:null;
     let leftIn=null;
-    if(d.pack>0&&d.packs!=null&&d.packs>=0) leftIn=d.pack*d.packs;
+    if(d.count!=null&&d.count>=0) leftIn=d.count;
+    else if(d.pack>0&&d.packs!=null&&d.packs>=0) leftIn=d.pack*d.packs;
     else if(editId&&cur!=null) leftIn=cur;
     else if(!editId&&d.pack>0) leftIn=d.pack;
     const doses=d.mode==='hours'?Math.round(24/d.every):d.slots.length;
     let txt='';
-    if(d.pack>0&&d.packs>0) txt=d.packs+' × '+d.pack+' = '+leftIn+' '+ks(leftIn)+'. ';
-    else if(editId&&cur!=null&&!(d.packs>0)) txt='Teraz doma '+cur+' '+ks(cur)+' (ubúda podľa užitia). Vyplň balenia, ak chceš stav prepočítať. ';
+    if(d.count!=null&&d.count>=0) txt='Doma '+d.count+' '+ks(d.count)+(editId&&cur!=null&&cur!==d.count?' (teraz '+cur+', '+(d.count>cur?'+':'−')+Math.abs(d.count-cur)+')':'')+'. ';
+    else if(d.pack>0&&d.packs>0) txt=d.packs+' × '+d.pack+' = '+leftIn+' '+ks(leftIn)+'. ';
+    else if(editId&&cur!=null&&!(d.packs>0)) txt='Teraz doma '+cur+' '+ks(cur)+' (ubúda podľa užitia). ';
     else if(!editId&&d.pack>0) txt='Rátam s 1 balením, '+d.pack+' '+ks(d.pack)+'. ';
     if(leftIn>0&&doses>0&&d.per>0){
       const perDay=doses*d.per; txt+='Denne berieš '+perDay+' '+ks(perDay)+'. ';
       if(d.days>0){const need=perDay*d.days;txt+=leftIn>=need?'Na celú liečbu treba '+need+' '+ks(need)+', zásoba vystačí.':'Na celú liečbu treba '+need+' '+ks(need)+', chýba '+(need-leftIn)+' '+ks(need-leftIn)+'.'}
-      else{const dd=Math.floor(leftIn/perDay);txt+='Vydrží asi '+dd+' '+dni(dd)+', do '+nice(addDays(today,Math.max(0,dd-1)))+'. Upozorním 14 dní vopred.'}
+      else{const dd=Math.floor(leftIn/perDay);txt+='Vydrží asi '+dd+' '+dni(dd)+', do '+nice(addDays(today,Math.max(0,dd-1))).replace(/\.$/,'')+'. Upozorním 14 dní vopred.'}
     }
     $('stockPreview').textContent=txt;
   }
   document.querySelectorAll('input[name=fShape],input[name=fColor]').forEach(i=>i.addEventListener('change',updPreview));
   document.querySelectorAll('input[name=fMode],input[name=fEvery],input[name=fDur]').forEach(i=>i.addEventListener('change',()=>{$('fErr').hidden=true;updForm()}));
-  ['fFirst','fDays','fPack','fLeft','fOpenDays','fOpened','fRoll'].forEach(id=>$(id).addEventListener('input',()=>{$('fErr').hidden=true;updForm()}));
+  ['fPack','fLeft'].forEach(id=>$(id).addEventListener('input',()=>{const pk=numVal('fPack'),ps=numVal('fLeft');if(pk>0&&ps!=null&&ps>=0)$('fCount').value=pk*ps}));
+  ['fFirst','fDays','fPack','fLeft','fCount','fOpenDays','fOpened','fRoll'].forEach(id=>$(id).addEventListener('input',()=>{$('fErr').hidden=true;updForm()}));
   slotBoxes().forEach(b=>b.addEventListener('change',()=>{$('fErr').hidden=true;updForm()}));
   $('dMinus').onclick=()=>{$('fDays').value=Math.max(1,(numVal('fDays')||1)-1);updForm()};
   $('dPlus').onclick=()=>{$('fDays').value=Math.min(365,(numVal('fDays')||0)+1);updForm()};
@@ -1579,7 +1585,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     setRadio('fMode',m.mode); setRadio('fEvery',m.every); $('fFirst').value=m.first; $('fRoll').checked=m.mode==='hours'?!!m.rolling:true;
     slotBoxes().forEach(b=>b.checked=m.slots.includes(b.value));
     $('fDurDays').checked=!!m.days; $('fDurAlways').checked=!m.days; $('fDays').value=m.days||7;
-    $('fPack').value=m.pack||''; $('fLeft').value=''; $('fOpenDays').value=m.openDays||''; $('fOpened').value=m.opened||''; $('fGap').value=m.gapH||''; $('fMax').value=m.maxDay||'';
+    $('fPack').value=m.pack||''; $('fLeft').value=''; $('fCount').value=m.left!=null?m.left:''; $('fOpenDays').value=m.openDays||''; $('fOpened').value=m.opened||''; $('fGap').value=m.gapH||''; $('fMax').value=m.maxDay||'';
     setRadio('fShape',m.shape); setRadio('fColor',m.color); updPreview(); updForm();
     setRadio('fKind',m.kind);
     if(m.kind==='swap'){const d=m.openDays||90;if(d%30===0){$('fSwapN').value=d/30;setRadio('fSwapU','m')}else{$('fSwapN').value=Math.max(1,Math.round(d/7));setRadio('fSwapU','w')} $('fSwapLast').value=m.opened||today; $('fSpare').value=m.left!=null?m.left:''; setRadio('fPlace',m.place||'');$('placeBoth').hidden=true}
@@ -1620,13 +1626,15 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     if($('fDurDays').checked&&!(d.days>=1&&d.days<=365)) return err('Počet dní musí byť od 1 do 365.',$('fDays'));
     if(d.pack!=null&&!(d.pack>=1&&d.pack<=1000)) return err('Počet kusov v balení musí byť od 1 do 1000.',$('fPack'));
     if(d.packs!=null&&!(d.packs>=0&&d.packs<=50)) return err('Počet balení musí byť od 0 do 50.',$('fLeft'));
-    if(d.packs!=null&&!d.pack) return err('Zadaj, koľko kusov je v jednom balení.',$('fPack'));
+    if(d.count!=null&&!(d.count>=0&&d.count<=5000)) return err('Kusov doma môže byť od 0 do 5000.',$('fCount'));
+    if(d.packs!=null&&!d.pack&&d.count==null) return err('Zadaj, koľko kusov je v jednom balení.',$('fPack'));
     const prev=editId?(meds.find(m=>m.id===editId)||{}).left:null;
     let left=prev==null?null:prev;
     if(d.pack&&d.packs!=null) left=d.pack*d.packs;
     else if(d.pack&&!editId) left=d.pack;
     else if(d.pack&&editId&&prev==null) left=d.pack;
-    if(!d.pack&&d.packs==null&&editId&&$('fPack').value.trim()==='') left=null;
+    if(!d.pack&&d.packs==null&&d.count==null&&editId&&$('fPack').value.trim()==='') left=null;
+    if(d.count!=null) left=d.count;
     const base={kind:'med',name,dose,mode:d.mode,rolling:d.mode==='hours'&&d.rolling,gapH:d.mode==='need'?d.gapH:null,maxDay:d.mode==='need'?d.maxDay:null,slots:d.mode==='slots'?d.slots:['rano'],every:d.every,first:d.first,days:d.days||null,openDays:d.openDays||null,opened:d.openDays?d.opened:null,per:d.per,pack:d.pack,left:left==null?null:left,shape:curShape(),color:curColor()};
     if(editId){ meds=meds.map(m=>m.id===editId?normMed({...m,...base}):m); toast('Zmeny uložené'); }
     else { meds=meds.concat([normMed({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),start:today,...base})]); toast(name+' pridaný'); }
