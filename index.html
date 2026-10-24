@@ -495,14 +495,16 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 .wd2.hit.f-drop{box-shadow:inset 0 0 0 2.5px #26B5CC;background:#E3F6F9}
 .wd2.hit.f-bottle{box-shadow:inset 0 0 0 2.5px #A0522D;background:#F6ECE5}
 .wd2.hit.f-other{box-shadow:inset 0 0 0 2.5px #7C74EA;background:#EEEDFD}
+.wd2.hit.f-care{box-shadow:inset 0 0 0 2.5px #1FA3B8;background:#DDF4F8}
+.wd2.hit.f-cosm{box-shadow:inset 0 0 0 2.5px #D9658C;background:#FBE9EF}
 .wd2.hit.f-swap{box-shadow:inset 0 0 0 2.5px #7C74EA;background:#EEEDFD}
-.wd2.hit.f-meds{--fc:#2D6BE4;--fs:#E2EBFD}.wd2.hit.f-drop{--fc:#1FA3B8;--fs:#DDF4F8}.wd2.hit.f-bottle{--fc:#A0522D;--fs:#F6ECE5}.wd2.hit.f-other,.wd2.hit.f-swap{--fc:#6E66E0;--fs:#ECEBFD}
+.wd2.hit.f-meds{--fc:#2D6BE4;--fs:#E2EBFD}.wd2.hit.f-drop{--fc:#1FA3B8;--fs:#DDF4F8}.wd2.hit.f-bottle{--fc:#A0522D;--fs:#F6ECE5}.wd2.hit.f-other,.wd2.hit.f-swap{--fc:#6E66E0;--fs:#ECEBFD}.wd2.hit.f-care{--fc:#1FA3B8;--fs:#DDF4F8}.wd2.hit.f-cosm{--fc:#D9658C;--fs:#FBE9EF}
 .wd2.hit{background:var(--fs)!important;box-shadow:inset 0 0 0 2.5px var(--fc)!important}
 .wd2.hit .dl{color:var(--fc)!important}
 .wd2.hit.sel{background:var(--fc)!important;box-shadow:0 10px 22px -8px var(--fc)!important}
 .wd2.hit.sel .dl,.wd2.hit.sel .dn{color:#fff!important}
 .wd2.hit.sel::after{background:var(--fc)}
-.wf[data-f=meds]{--fc:#2D6BE4}.wf[data-f=drop]{--fc:#1FA3B8}.wf[data-f=bottle]{--fc:#A0522D}.wf[data-f=swap]{--fc:#6E66E0}
+.wf[data-f=meds]{--fc:#2D6BE4}.wf[data-f=drop]{--fc:#1FA3B8}.wf[data-f=bottle]{--fc:#A0522D}.wf[data-f=swap]{--fc:#6E66E0}.wf[data-f=care]{--fc:#1FA3B8}.wf[data-f=cosm]{--fc:#D9658C}
 .wf{border-color:var(--fc,var(--line))}
 .wf.on{background:var(--fc,var(--acc))!important;border-color:var(--fc,var(--acc))!important;color:#fff}
 .wf.on svg{background:#fff;border-radius:50%;padding:2px}
@@ -611,7 +613,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   </div>
 
   <div class="view" id="v-meds" hidden>
-    <div class="vhead"><h1 class="hello">Lieky</h1><button class="btn pri sm" id="addBtn" type="button">Pridať liek</button></div>
+    <div class="vhead"><h1 class="hello">Lieky</h1><button class="btn pri sm" id="addBtn" type="button">Pridať</button></div>
     <div id="orders"></div>
     <section class="panel" id="panel">
       <ul class="mlist" id="mlist"></ul>
@@ -620,8 +622,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       <fieldset class="fs">
         <legend>Čo pridávaš</legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="fKind" id="fKindMed" value="med" checked><span>Liek</span></label>
-          <label class="chip"><input type="radio" name="fKind" id="fKindSwap" value="swap"><span>Vec na výmenu</span></label>
+          <label class="chip"><input type="radio" name="fKind" id="fKindMed" value="med" checked><span>Lieky</span></label>
+          <label class="chip"><input type="radio" name="fKind" id="fKindCare" value="care"><span>Kvapky a ošetrenie</span></label>
+          <label class="chip"><input type="radio" name="fKind" id="fKindCosm" value="cosm"><span>Kozmetika</span></label>
+          <label class="chip"><input type="radio" name="fKind" id="fKindSwap" value="swap"><span>Výmena</span></label>
         </div>
         <div class="chips" id="swapPresets" hidden style="margin-top:4px">
           <button type="button" class="btn ghost sm" data-preset="Hlavica elektrickej kefky|3|m|ebrush">Hlavica elektrickej kefky</button>
@@ -629,9 +633,18 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
           <button type="button" class="btn ghost sm" data-preset="Jednozložková kefka|3|m|tuft">Jednozložková kefka</button>
           <button type="button" class="btn ghost sm" data-preset="Filter do kanvice|1|m|drop">Filter na vodu</button>
           <button type="button" class="btn ghost sm" data-preset="Šošovky|1|m|drop">Šošovky</button>
+          <button type="button" class="btn ghost sm" data-preset="Žiletka|2|w|razor">Žiletka</button>
+        </div>
+        <div class="chips" id="cosmPresets" hidden style="margin-top:4px">
+          <button type="button" class="btn ghost sm" data-preset="Šampón|12|m|pump">Šampón</button>
+          <button type="button" class="btn ghost sm" data-preset="Sprchový gél|12|m|pump">Sprchový gél</button>
+          <button type="button" class="btn ghost sm" data-preset="Telové mlieko|12|m|pump">Telové mlieko</button>
+          <button type="button" class="btn ghost sm" data-preset="Krém na tvár|6|m|jar">Krém na tvár</button>
+          <button type="button" class="btn ghost sm" data-preset="Opaľovací krém|12|m|tube">Opaľovací krém</button>
+          <button type="button" class="btn ghost sm" data-preset="Zubná pasta|12|m|tube">Zubná pasta</button>
         </div>
       </fieldset>
-      <label class="fld" for="fName">Názov lieku
+      <label class="fld" for="fName"><span id="fNameL">Názov lieku</span>
         <input id="fName" autocomplete="off" placeholder="Euthyrox">
       </label>
       <p class="kindhint" id="kindHint" hidden>Toto vyzerá na vec, ktorú vymieňaš, nie na liek. <button type="button" class="linkbtn" id="kindSwitch">Prepnúť na vec na výmenu</button></p>
@@ -711,10 +724,13 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       </div>
       <div class="grp" id="swapOnly" hidden>
         <fieldset class="fs">
-          <legend>Vymieňať každé</legend>
+          <legend id="swLeg">Vymieňať každé</legend>
+          <div class="chips" id="paoRow" hidden style="margin-bottom:6px">
+            <button type="button" class="btn ghost sm" data-pao="3">3M</button><button type="button" class="btn ghost sm" data-pao="6">6M</button><button type="button" class="btn ghost sm" data-pao="12">12M</button><button type="button" class="btn ghost sm" data-pao="18">18M</button><button type="button" class="btn ghost sm" data-pao="24">24M</button><button type="button" class="btn ghost sm" data-pao="36">36M</button>
+          </div>
           <div class="days-row">
             <label for="fSwapN" class="sr">Počet</label>
-            <input id="fSwapN" type="number" inputmode="numeric" min="1" max="24" value="3" class="tinput" style="width:80px;text-align:center">
+            <input id="fSwapN" type="number" inputmode="numeric" min="1" max="36" value="3" class="tinput" style="width:80px;text-align:center">
             <div class="chips">
               <label class="chip"><input type="radio" name="fSwapU" id="fSwapUw" value="w"><span>týždne</span></label>
               <label class="chip"><input type="radio" name="fSwapU" id="fSwapUm" value="m" checked><span>mesiace</span></label>
@@ -722,10 +738,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
           </div>
         </fieldset>
         <div class="stock-grid">
-          <label class="fld" for="fSwapLast">Naposledy vymenené
+          <label class="fld" for="fSwapLast" id="fSwapLastL">Naposledy vymenené
             <input id="fSwapLast" type="date" class="tinput" style="font-size:16px;width:100%">
           </label>
-          <label class="fld" for="fSpare">Náhradných doma
+          <label class="fld" for="fSpare" id="fSpareL">Náhradných doma
             <input id="fSpare" type="number" inputmode="numeric" min="0" max="50" placeholder="2">
           </label>
         </div>
@@ -746,7 +762,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         <div class="chips" id="fColors" style="margin-top:4px"></div>
         <div class="preview" aria-hidden="true"><span id="pvPill"></span><span class="note" id="pvText">Takto ho uvidíš v zozname</span></div>
       </fieldset>
-      <label class="fld" for="fDose">Poznámka k dávke <span class="note">(nepovinné)</span>
+      <label class="fld" for="fDose"><span id="fDoseL">Poznámka k dávke</span> <span class="note">(nepovinné)</span>
         <input id="fDose" autocomplete="off" placeholder="po jedle">
       </label>
       <p class="err" id="fErr" hidden></p>
@@ -805,7 +821,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const COLORS=['#F6C343','#34B88A','#7C74EA','#2D6BE4','#E98DBA','#EE7E76','#26B5CC','#FFFFFF','#A0522D'];
   const OLD_COLORS=['#FFC94D','#4CC38A','#9B8CF2','#4A9BF0','#F58FB6','#F2837A','#5FD0D8','#FFFFFF'];
   const COLOR_NAMES=['žltá','zelená','fialová','modrá','ružová','koralová','tyrkysová','biela','hnedá'];
-  const SHAPES=[{k:'tab',l:'Tableta'},{k:'cap',l:'Kapsula'},{k:'drop',l:'Kvapky'},{k:'bottle',l:'Fľaštička'},{k:'tube',l:'Masť / krém'},{k:'brush',l:'Kefka'},{k:'tuft',l:'Jednozložková'},{k:'ebrush',l:'Elektrická'}];
+  const SHAPES=[{k:'tab',l:'Tableta'},{k:'cap',l:'Kapsula'},{k:'drop',l:'Kvapky'},{k:'bottle',l:'Fľaštička'},{k:'tube',l:'Masť / krém'},{k:'pump',l:'Fľaša s pumpou'},{k:'jar',l:'Kelímok'},{k:'razor',l:'Žiletka'},{k:'brush',l:'Kefka'},{k:'tuft',l:'Jednozložková'},{k:'ebrush',l:'Elektrická'}];
   const EVERY=[4,6,8,12,24];
   const ORDER_DAYS=14;
   const SLOT_TIME={rano:'08:00',obed:'12:00',vecer:'18:00',noc:'21:30'};
@@ -820,7 +836,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const parse=key=>{const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)};
   const addDays=(key,n)=>{const d=parse(key);d.setDate(d.getDate()+n);return dk(d)};
   const diffDays=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
-  const nice=key=>{const d=parse(key);return d.getDate()+'. '+(d.getMonth()+1)+'.'};
+  const nice=key=>{const d=parse(key);return d.getDate()+'. '+(d.getMonth()+1)+'.'+(d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():'')};
+  const niceS=key=>nice(key).replace(/\.$/,'');
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const slotIdx=k=>SLOTS.findIndex(x=>x.k===k);
   const slotLabel=k=>(SLOTS[slotIdx(k)]||SLOTS[0]).l;
@@ -875,6 +892,28 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         '<rect x="22.2" y="14" width="1.8" height="4" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".6"/>'+
         '<rect x="23.9" y="12.6" width="4.8" height="6.8" rx="1.3" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M25.3 13.6v4.8M26.6 13.6v4.8M27.9 13.6v4.8" stroke="#D2DAE6" stroke-width=".6"/></g></svg>';
     }
+    if(shape==='pump'){
+      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+lo+'"/><stop offset=".38" stop-color="'+hi+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
+        '<rect x="15" y="2.6" width="2" height="4.6" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".6"/><path d="M12.4 5.2h9.2v2.4h-2.2v-.8h-7z" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".7" stroke-linejoin="round"/>'+
+        '<rect x="12.6" y="7.6" width="6.8" height="3.6" rx="1" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/>'+
+        '<rect x="8.6" y="11" width="14.8" height="16.6" rx="3.4" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
+        '<rect x="10.8" y="15.4" width="10.4" height="7.4" rx="1.6" fill="#FFFFFF" opacity=".9"/><path d="M13 18.2h6M13 20.4h4" stroke="'+edge+'" stroke-width="1.1" stroke-linecap="round"/>'+
+        '<path d="M10.4 13.6v11.4" stroke="rgba(255,255,255,.6)" stroke-width="1.3" stroke-linecap="round"/></svg>';
+    }
+    if(shape==='jar'){
+      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+lo+'"/><stop offset=".38" stop-color="'+hi+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
+        '<rect x="6.4" y="14" width="19.2" height="13" rx="3.6" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
+        '<rect x="5.6" y="8.4" width="20.8" height="6.2" rx="2.2" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M9 9.6v3.8M12 9.6v3.8M15 9.6v3.8M18 9.6v3.8M21 9.6v3.8M24 9.6v3.8" stroke="#D2DAE6" stroke-width=".7"/>'+
+        '<rect x="10" y="17.6" width="12" height="5.6" rx="1.4" fill="#FFFFFF" opacity=".9"/><path d="M12.6 20.4h6.8" stroke="'+edge+'" stroke-width="1.2" stroke-linecap="round"/>'+
+        '<path d="M8.4 16.6v7.6" stroke="rgba(255,255,255,.6)" stroke-width="1.3" stroke-linecap="round"/></svg>';
+    }
+    if(shape==='razor'){
+      return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 1) rotate(-38 16 16)">'+
+        '<rect x="14.5" y="12.6" width="3" height="17.4" rx="1.5" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><path d="M15.2 20v7" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>'+
+        '<rect x="14" y="10.6" width="4" height="3.2" rx="1" fill="'+lo+'"/>'+
+        '<rect x="7.4" y="4.4" width="17.2" height="7" rx="2.2" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/>'+
+        '<rect x="8.4" y="5.4" width="15.2" height="1.8" rx=".9" fill="'+hi+'"/><path d="M8.6 9.2h14.8" stroke="#8A98AC" stroke-width="1.1"/><path d="M8.6 10.4h14.8" stroke="#C4CEDB" stroke-width=".6"/></g></svg>';
+    }
     if(shape==='ebrush') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 1.5) rotate(-40 16 16)"><rect x="14.9" y="6" width="2.2" height="8" rx="1.1" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".7"/><rect x="12" y="12.5" width="8" height="18" rx="4" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><circle cx="16" cy="18.5" r="1.9" fill="#FFFFFF" stroke="'+edge+'" stroke-width=".6"/><path d="M13.8 22v6" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-linecap="round"/><circle cx="16" cy="4.6" r="3.6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><g fill="'+color+'"><circle cx="16" cy="4.6" r=".9"/><circle cx="14.2" cy="3.6" r=".7"/><circle cx="17.8" cy="3.6" r=".7"/><circle cx="14.2" cy="5.6" r=".7"/><circle cx="17.8" cy="5.6" r=".7"/></g></g></svg>';
     if(shape==='tuft') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 2) rotate(-40 16 16)"><rect x="13.2" y="15" width="5.6" height="15" rx="2.8" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><rect x="14.7" y="8.5" width="2.6" height="8" rx="1.3" fill="'+color+'" stroke="'+edge+'" stroke-width=".7"/><ellipse cx="16" cy="8.4" rx="4.2" ry="2.6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M12.6 7.6Q16 -2.8 19.4 7.6Z" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8" stroke-linejoin="round"/><path d="M14.3 6.6L15 2.6M16 6.6V1.4M17.7 6.6L17 2.6" stroke="'+color+'" stroke-width="1.3" stroke-linecap="round"/><path d="M14.7 18v9" stroke="rgba(255,255,255,.6)" stroke-width="1.1" stroke-linecap="round"/></g></svg>';
     if(shape==='brush') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="rotate(-40 16 16)"><rect x="13" y="12" width="6" height="18" rx="3" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><rect x="11.5" y="2.5" width="9" height="11" rx="3" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M13.5 4.5v7M16 4.5v7M18.5 4.5v7" stroke="'+color+'" stroke-width="1.6" stroke-linecap="round"/><path d="M14.5 15v12" stroke="rgba(255,255,255,.6)" stroke-width="1.2" stroke-linecap="round"/></g></svg>';
@@ -905,14 +944,16 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   $('discBtn').onclick=()=>{discreet=!discreet;try{localStorage.setItem('lieky-discreet',discreet?'1':'0')}catch(e){}applyDiscreet();render();toast(discreet?'Názvy sú skryté':'Názvy sú znova viditeľné')};
   function normTime(v){
+    const cm=/^\s*(\d{1,2}):(\d{0,2})\s*$/.exec(String(v||''));
+    if(cm){const h=+cm[1], m=cm[2]===''?0:cm[2].length===1?+cm[2]*10:+cm[2]; if(h>23||m>59) return v; return pad(h)+':'+pad(m)}
     const d=String(v||'').replace(/\D/g,'').slice(0,4); if(!d) return '';
     let h,m; if(d.length<=2){h=+d;m=0} else if(d.length===3){h=+d[0];m=+d.slice(1)} else {h=+d.slice(0,2);m=+d.slice(2)}
     if(h>23||m>59) return v; return pad(h)+':'+pad(m);
   }
   document.addEventListener('input',e=>{const t=e.target;if(!t.classList||!t.classList.contains('tm'))return;
     if(e.inputType&&e.inputType.startsWith('delete'))return;
-    let d=t.value.replace(/\D/g,'').slice(0,4); if(d.length>=3) d=d.slice(0,d.length-2)+':'+d.slice(-2); if(d.length===4&&!d.includes(':')) d=d.slice(0,2)+':'+d.slice(2);
-    t.value=d;});
+    const d=t.value.replace(/\D/g,'').slice(0,4);
+    t.value=!d?'':+d[0]>=3?d[0]+':'+d.slice(1,3):d.length>=2?d.slice(0,2)+':'+d.slice(2,4):d;});
   document.addEventListener('focusout',e=>{const t=e.target;if(t.classList&&t.classList.contains('tm')&&t.value){const n=normTime(t.value);if(n!==t.value){t.value=n;t.dispatchEvent(new Event('input',{bubbles:true}))}}});
   document.addEventListener('focusin',e=>{const t=e.target;if(t.classList&&t.classList.contains('tm'))setTimeout(()=>{try{t.select()}catch(_){}},30)});
   const cdFmt=m=>m<60?'<1h':Math.round(m/60)+'h';
@@ -941,7 +982,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       start:/^\d{4}-\d{2}-\d{2}$/.test(m.start||'')?m.start:'2000-01-01', days:posInt(m.days,365),
       shape:SHAPES.some(s=>s.k===m.shape)?m.shape:'tab', color:COLORS.includes(m.color)?m.color:OLD_COLORS.includes(m.color)?COLORS[OLD_COLORS.indexOf(m.color)]:hashColor(m.id),
       per:posInt(m.per,20)||1, pack:posInt(m.pack,1000), left:Number.isFinite(m.left)&&m.left>=0?Math.round(m.left):null,
-      kind:m.kind==='swap'?'swap':'med', rolling:!!m.rolling, gapH:posInt(m.gapH,48), maxDay:posInt(m.maxDay,24),
+      kind:m.kind==='swap'?'swap':'med', sub:m.kind==='swap'&&m.sub==='cosm'?'cosm':undefined, rolling:!!m.rolling, gapH:posInt(m.gapH,48), maxDay:posInt(m.maxDay,24),
       openDays:posInt(m.openDays,730), opened:/^\d{4}-\d{2}-\d{2}$/.test(m.opened||'')?m.opened:null,
       place:m.place==='doma'||m.place==='prech'?m.place:null,
       legacy:m.slot&&SLOTS.some(s=>s.k===m.slot)?m.slot:undefined};
@@ -989,6 +1030,11 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   function openText(m){
     const o=openInfo(m); if(!o) return '';
+    if(isCos(m)){
+      if(o.left<0) return 'po spotrebe od '+nice(o.last);
+      if(o.left===0) return 'spotrebovať dnes';
+      return 'spotrebovať do '+nice(o.last)+' (o '+o.left+' '+dni(o.left)+')';
+    }
     if(m.kind==='swap'){
       if(o.left<0) return 'treba vymeniť (od '+nice(o.last)+')';
       if(o.left===0) return 'vymeniť dnes';
@@ -998,6 +1044,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     return 'použiteľné do '+nice(o.last)+(o.left===0?' (posledný deň)':' (ešte '+(o.left+1)+' '+dni(o.left+1)+')');
   }
   function isTop(m){return !!m&&(m.shape==='bottle'||m.shape==='tube')}
+  function isCos(m){return !!m&&m.kind==='swap'&&m.sub==='cosm'}
+  function grpOf(m){return m.kind==='swap'?(m.sub==='cosm'?'cosm':'swap'):(m.shape==='drop'||isTop(m)?'care':'med')}
+  const GRP_SHAPES={med:['tab','cap'],care:['drop','bottle','tube'],cosm:['pump','tube','jar','bottle'],swap:['brush','tuft','ebrush','razor','drop']};
+  const GRP_TITLE={med:'liek',care:'kvapky / ošetrenie',cosm:'kozmetiku',swap:'vec na výmenu'};
   const byBottle=m=>!!m&&m.kind!=='swap'&&(isTop(m)||m.shape==='drop');
   const tb=n=>n===1?'tuba':n>1&&n<5?'tuby':'túb';
   const pkW=(m,n)=>m&&m.shape==='tube'?tb(n):fl(n);
@@ -1031,6 +1081,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     return 'zásoba vydrží do '+nice(i.last);
   }
   function stockShort(m){
+    if(isCos(m)) return m.left==null?'':m.left>0?'v zásobe '+m.left+' '+ks(m.left):'nemáš ďalšie balenie';
     if(m.kind==='swap') return m.left==null?'':m.left>0?'náhradné '+m.left+' '+ks(m.left):'žiadne náhradné';
     const i=stockInfo(m); if(!i) return '';
     if(i.need) return 'doma '+i.left+' '+un(m,i.left);
@@ -1117,7 +1168,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const left=diffDays(today,e)+1;
     return left===1?'posledný deň':'ešte '+left+' '+dni(left);
   }
-  const freqText=m=>m.kind==='swap'?(L=>'výmena '+(L==='mesiac'||L==='týždeň'?'každý ':/dní|deň/.test(L)?'každých ':'každé ')+L)(swapLabel(m.openDays)):m.mode==='need'?'podľa potreby':m.mode==='hours'?(m.rolling?'každých '+m.every+' h od posledného užitia':'každých '+m.every+' h ('+hourTimes(m).join(', ')+')'):m.slots.map(slotLabel).join(', ');
+  const freqText=m=>isCos(m)?'po otvorení '+Math.round((m.openDays||360)/30)+'M':m.kind==='swap'?(L=>'výmena '+(L==='mesiac'||L==='týždeň'?'každý ':/dní|deň/.test(L)?'každých ':'každé ')+L)(swapLabel(m.openDays)):m.mode==='need'?'podľa potreby':m.mode==='hours'?(m.rolling?'každých '+m.every+' h od posledného užitia':'každých '+m.every+' h ('+hourTimes(m).join(', ')+')'):m.slots.map(slotLabel).join(', ');
   function swapLabel(d){if(d%30===0){const n=d/30;return n===1?'mesiac':n+(n<5?' mesiace':' mesiacov')}if(d%7===0){const n=d/7;return n===1?'týždeň':n+(n<5?' týždne':' týždňov')}return d+' '+dni(d)}
   function greeting(){const h=new Date().getHours();return h<10?'Dobré ráno':h<18?'Dobrý deň':'Dobrý večer'}
 
@@ -1153,7 +1204,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     {
       const nowM=toMin(nowHM());
       const days=[]; for(let i=0;i<7;i++) days.push(addDays(today,weekOff-3+i));
-      const ICON_TAB=pillSvg('tab','#2D6BE4',22), ICON_DROP=NEEDICO, ICON_BOT=pillSvg('bottle','#A0522D',22), ICON_CAP=pillSvg('cap','#7C74EA',22), ICON_SW=SWAPICO;
+      const ICON_TAB=pillSvg('tab','#2D6BE4',22), ICON_DROP=NEEDICO, ICON_BOT=pillSvg('bottle','#A0522D',22), ICON_CAP=pillSvg('cap','#7C74EA',22), ICON_SW=SWAPICO, ICON_CO=pillSvg('pump','#D9658C',22);
       let h='<div class="wk-nav"><span class="wk-range">'+nice(days[0])+' – '+nice(days[6])+'</span>'+(weekOff!==0?'<button type="button" class="wk-today" id="wkToday">Dnes</button>':'')+'</div><div class="wk-strip"><button type="button" class="wk-arr side" id="wkPrev" aria-label="O 3 dni späť">‹</button><div class="wk-view"><div class="wg2">';
       days.forEach(k=>{
         const dd=parse(k), items=itemsFor(k), lg=dayLog(k);
@@ -1161,21 +1212,22 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         const s=statusOf(k); const cls={full:'full',part:'part',none:'none',future:'fut',empty:'empty',todo:'todo'}[s];
         const ev=extra.prn.filter(p=>p.t.slice(0,10)===k).map(p=>meds.find(x=>x.id===p.m)).filter(m=>m&&m.kind!=='swap');
         const drops=ev.filter(m=>m.shape==='drop').length, bots=ev.filter(m=>isTop(m)).length, other=ev.length-drops-bots;
-        const sw=extra.sw.filter(e=>e.d===k&&meds.some(m=>m.id===e.m)).length;
+        const swE=extra.sw.filter(e=>e.d===k).map(e=>meds.find(m=>m.id===e.m)).filter(Boolean);
+        const co=swE.filter(isCos).length, sw=swE.length-co, care=drops+bots;
         const ic=(cat,svg,txt,c,lab)=>(wkFilter&&wkFilter!==cat)?'':'<span class="wi '+(c||'')+'" data-cat="'+cat+'" title="'+lab+'">'+svg+'<b>'+txt+'</b></span>';
         let icons='';
         if(items.length) icons+=ic('meds',ICON_TAB,n+'/'+items.length,'st-'+cls,'užité lieky');
-        if(drops) icons+=ic('drop',ICON_DROP,drops+'×','','kvapkanie');
-        if(bots) icons+=ic('bottle',ICON_BOT,bots+'×','','ošetrenie');
-        if(other) icons+=ic('other',ICON_CAP,other+'×','','podľa potreby');
+        if(other) icons+=ic('meds',ICON_CAP,other+'×','','podľa potreby');
+        if(care) icons+=ic('care',drops?ICON_DROP:ICON_BOT,care+'×','','kvapky a ošetrenie');
+        if(co) icons+=ic('cosm',ICON_CO,'','','kozmetika otvorená');
         if(sw) icons+=ic('swap',ICON_SW,'','','výmena');
-        const word=[items.length?'užité '+n+' z '+items.length:'',drops?'kvapkanie '+drops+'×':'',bots?'ošetrenie '+bots+'×':'',other?'podľa potreby '+other+'×':'',sw?'výmena':''].filter(Boolean).join(', ')||'nič';
-        const has={meds:items.length>0,drop:drops>0,bottle:bots>0,other:other>0,swap:sw>0};
+        const word=[items.length?'užité '+n+' z '+items.length:'',other?'podľa potreby '+other+'×':'',care?'kvapky a ošetrenie '+care+'×':'',co?'otvorená kozmetika':'',sw?'výmena':''].filter(Boolean).join(', ')||'nič';
+        const has={meds:items.length>0||other>0,care:care>0,cosm:co>0,swap:sw>0};
         const fcls=wkFilter?(has[wkFilter]?' hit f-'+wkFilter:' dim'):'';
         h+='<button type="button" class="wd2 '+cls+fcls+(k===sel?' sel':'')+(k===today?' today':'')+'" data-k="'+k+'" aria-pressed="'+(k===sel)+'" aria-label="'+DAYS[dd.getDay()]+' '+dd.getDate()+'. '+MON[dd.getMonth()]+': '+word+'"><span class="dl">'+(k===today?'Dnes':DSH[dd.getDay()])+'</span><span class="dn"><b>'+dd.getDate()+'</b>'+(dd.getMonth()+1)+'.</span><span class="wis">'+(icons||'<span class="wi empty">–</span>')+'</span></button>';
       });
       const fb=(f,svg,l)=>'<button type="button" class="wf'+(wkFilter===f?' on':'')+'" data-f="'+f+'" aria-pressed="'+(wkFilter===f)+'">'+svg+'<span>'+l+'</span></button>';
-      h+='</div></div><button type="button" class="wk-arr side" id="wkNext" aria-label="O 3 dni dopredu">›</button></div><div class="wk-filt">'+fb('meds',ICON_TAB,'lieky')+fb('drop',ICON_DROP,'kvapkanie')+fb('bottle',ICON_BOT,'ošetrenie')+fb('swap',ICON_SW,'výmena')+(wkFilter?'<button type="button" class="wf all" data-f="">všetko</button>':'')+'</div>';
+      h+='</div></div><button type="button" class="wk-arr side" id="wkNext" aria-label="O 3 dni dopredu">›</button></div><div class="wk-filt">'+fb('meds',ICON_TAB,'lieky')+fb('care',ICON_DROP,'kvapky a ošetrenie')+fb('cosm',ICON_CO,'kozmetika')+fb('swap',ICON_SW,'výmena')+(wkFilter?'<button type="button" class="wf all" data-f="">všetko</button>':'')+'</div>';
       $('grid').innerHTML=h;
       if(wkSlide&&!reduce()){const g=$('grid').querySelector('.wg2');g.classList.add(wkSlide==='n'?'slide-n':'slide-p')} wkSlide=null;
       if(wkRest!=null){const g=$('grid').querySelector('.wg2');g.style.transition='none';g.style.transform='translateX('+wkRest+'px)';void g.offsetWidth;g.style.transition='transform .32s cubic-bezier(.22,1,.36,1)';g.style.transform='';wkRest=null}
@@ -1259,10 +1311,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     renderList();
   }
   function renderWeekExtra(){
-    if(wkFilter==='meds') return;
     const shapeCat=m=>m.shape==='drop'?'drop':isTop(m)?'bottle':'other';
     const needAll=meds.filter(m=>m.mode==='need'&&m.kind!=='swap');
-    const swAll=meds.filter(m=>m.kind==='swap'||(m.openDays&&m.mode!=='need'));
+    const swAll=meds.filter(m=>!isCos(m)&&(m.kind==='swap'||(m.openDays&&m.mode!=='need')));
+    const coAll=meds.filter(isCos);
     const needRow=m=>{
       const ent=extra.prn.filter(p=>p.m===m.id&&p.t.slice(0,10)===sel).sort((a,b)=>a.t<b.t?-1:1);
       let r='<div class="ord wk-row"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div class="wk-times">'+(ent.length?ent.map(p=>'<span class="wk-chip">'+p.t.slice(11)+'<button type="button" class="wk-x" data-wkdel="'+p.id+'" aria-label="Zmazať záznam o '+p.t.slice(11)+'">×</button></span>').join(''):'<span class="note">v tento deň nič</span>')+'</div></div>';
@@ -1271,26 +1323,27 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       return r+'</div>';
     };
     const swRow=m=>{
-      const swap=m.kind==='swap';
+      const swap=m.kind==='swap'&&!isCos(m);
       const was=extra.sw.some(e=>e.m===m.id&&e.d===sel);
       return '<div class="ord wk-row"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div>'+(was?(swap?'vymenené v tento deň ✓':'otvorené v tento deň ✓'):(m.opened?(swap?'naposledy vymenené ':'otvorené ')+nice(m.opened):'zatiaľ bez dátumu'))+'</div></div>'+
         (was?'<button type="button" class="btn ghost sm" data-wkun="'+m.id+'">Zrušiť</button>':'<button type="button" class="btn ghost sm" data-wksw="'+m.id+'">'+(swap?'Vymenil som v tento deň':'Otvoril som v tento deň')+'</button>')+'</div>';
     };
     const groups=[
-      {k:'other',l:'Podľa potreby',ico:pillSvg('cap','#7C74EA',22),list:needAll.filter(m=>shapeCat(m)==='other'),row:needRow},
-      {k:'drop',l:'Kvapkanie',ico:NEEDICO,list:needAll.filter(m=>shapeCat(m)==='drop'),row:needRow},
-      {k:'bottle',l:'Ošetrenie',ico:pillSvg('bottle','#A0522D',22),list:needAll.filter(m=>shapeCat(m)==='bottle'),row:needRow},
-      {k:'swap',l:'Výmena',ico:SWAPICO,list:swAll,row:swRow}
+      {k:'other',f:'meds',l:'Podľa potreby',ico:pillSvg('cap','#7C74EA',22),list:needAll.filter(m=>shapeCat(m)==='other'),row:needRow},
+      {k:'drop',f:'care',l:'Kvapkanie',ico:NEEDICO,list:needAll.filter(m=>shapeCat(m)==='drop'),row:needRow},
+      {k:'bottle',f:'care',l:'Ošetrenie',ico:pillSvg('bottle','#A0522D',22),list:needAll.filter(m=>shapeCat(m)==='bottle'),row:needRow},
+      {k:'cosm',f:'cosm',l:'Kozmetika',ico:pillSvg('pump','#D9658C',22),list:coAll,row:swRow},
+      {k:'swap',f:'swap',l:'Výmena',ico:SWAPICO,list:swAll,row:swRow}
     ];
-    const vis=groups.filter(g=>g.list.length&&(!wkFilter||wkFilter===g.k));
+    const vis=groups.filter(g=>g.list.length&&(!wkFilter||wkFilter===g.f));
     if(!vis.length) return;
     let total=0, inner='';
     vis.forEach(g=>{
-      const cnt=g.k==='swap'?extra.sw.filter(e=>e.d===sel&&g.list.some(m=>m.id===e.m)).length:extra.prn.filter(p=>p.t.slice(0,10)===sel&&g.list.some(m=>m.id===p.m)).length;
+      const cnt=g.k==='swap'||g.k==='cosm'?extra.sw.filter(e=>e.d===sel&&g.list.some(m=>m.id===e.m)).length:extra.prn.filter(p=>p.t.slice(0,10)===sel&&g.list.some(m=>m.id===p.m)).length;
       total+=cnt;
       inner+='<div class="wsub"><span class="wsub-h"><span class="hico sm">'+g.ico+'</span>'+g.l+'<span class="cnt">· '+cnt+'</span></span>'+g.list.map(g.row).join('')+'</div>';
     });
-    const def=!!wkFilter&&wkFilter!=='meds', o=isOpen('wx-ost',def)||vis.some(g=>g.list.some(m=>m.id===wkAdd));
+    const def=!!wkFilter, o=isOpen('wx-ost',def)||vis.some(g=>g.list.some(m=>m.id===wkAdd));
     DAYEL().insertAdjacentHTML('beforeend','<section class="opened wkx'+(o?'':' closed')+playCls('wx-ost')+'"><button type="button" class="opened-h" data-tog="wx-ost" data-def="'+def+'" aria-expanded="'+o+'"><span class="hico">'+OSTICO+'</span><span>Ostatné<span class="cnt">· '+total+'</span></span><span class="wsub-icons">'+vis.map(g=>'<span class="hico xs">'+g.ico+'</span>').join('')+'</span><span class="bh-r">'+CHEV+'</span></button><div class="olist"'+(o?'':' hidden')+'>'+inner+'</div></section>');
     const root=DAYEL();
     root.querySelectorAll('[data-wkadd]').forEach(b=>b.onclick=()=>{wkAdd=b.dataset.wkadd;render();const t=$('wkT');if(t)t.focus()});
@@ -1339,7 +1392,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('orders').innerHTML='<section class="orders" aria-label="Lieky na objednanie"><div class="orders-h">'+BOX+'<span>Treba objednať</span></div>'+
       list.map(m=>{
         const i=stockInfo(m)||{};
-        const why=m.kind==='swap'?'nemáš náhradné, kúp nové':byBottle(m)?'doma už nie je ďalšia '+pkW(m,1):i.course?'chýba '+i.short+' '+ks(i.short)+' do konca liečby':(i.out||i.left===0)?'zásoba došla':'vydrží do '+nice(i.last)+' ('+i.left+' '+ks(i.left)+')';
+        const why=isCos(m)?'nemáš ďalšie balenie':m.kind==='swap'?'nemáš náhradné, kúp nové':byBottle(m)?'doma už nie je ďalšia '+pkW(m,1):i.course?'chýba '+i.short+' '+ks(i.short)+' do konca liečby':(i.out||i.left===0)?'zásoba došla':'vydrží do '+nice(i.last)+' ('+i.left+' '+ks(i.left)+')';
         return '<div class="ord"><span class="pillbox">'+picM(m,28)+'</span><div class="t"><div>'+esc(nm(m))+'</div><div>'+why+'</div></div><button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button></div>';
       }).join('')+'</section>';
     $('orders').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
@@ -1369,7 +1422,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('opened').innerHTML='<section class="opened'+(oop?'':' closed')+playCls('opened')+'" aria-label="Výmeny a otvorené balenia"><button type="button" class="opened-h" data-tog="opened" data-def="false" aria-expanded="'+oop+'"><span class="hico">'+SWAPICO+'</span><span>Výmeny a otvorené balenia<span class="cnt">· '+list.length+'</span></span>'+(urgent&&!oop?'<span class="ordtag">'+urgent+' čoskoro</span>':'')+'<span class="bh-r">'+CHEV+'</span></button><div class="olist"'+(oop?'':' hidden')+'>'+
       grouped(list).map(m=>m.__h?'<div class="plh">'+(m.__h==='doma'?HOMEICO+'Doma':KEYICO+'Prechodný byt')+'</div>':(()=>{
         const o=openInfo(m); const st=o?o.state:'ok';
-        const swap=m.kind==='swap';
+        const swap=m.kind==='swap'&&!isCos(m);
         const lines=[o?openText(m):(m.openDays?'zatiaľ neotvorené':''),m.mode==='need'&&!swap?'podľa potreby':'',stockShort(m)].filter(Boolean).join(' · ');
         return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div></div>'+
           (m.openDays?'<button class="btn ghost sm" type="button" data-open="'+m.id+'">'+(swap?'Vymenil som':'Otvoril som nové')+'</button>':'')+'</div>';
@@ -1383,7 +1436,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const before={opened:med.opened,left:med.left};
     const ev={id:rid(),m:id,d:today,prev:med.opened||null,dl:med.left!=null&&byBottle(med)&&med.left>0?1:0}; extra.sw.push(ev);
     meds=meds.map(x=>x.id===id?{...x,opened:today,left:x.left!=null&&byBottle(x)?Math.max(0,x.left-1):x.left}:x); saveMeds(); saveExtra(); render();
-    toast(nm(med)+(med.kind==='swap'?' · vymenené dnes':' · otvorené dnes'),()=>{meds=meds.map(x=>x.id===id?{...x,...before}:x);extra.sw=extra.sw.filter(e=>e.id!==ev.id);saveMeds();saveExtra();render()});
+    toast(nm(med)+(med.kind==='swap'&&!isCos(med)?' · vymenené dnes':' · otvorené dnes'),()=>{meds=meds.map(x=>x.id===id?{...x,...before}:x);extra.sw=extra.sw.filter(e=>e.id!==ev.id);saveMeds();saveExtra();render()});
   }
 
   function renderHero(isToday,items,log){
@@ -1418,7 +1471,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       return '<li><span class="pillbox" data-minfo="'+m.id+'">'+picM(m,30)+'</span><div class="t" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="Detail: '+esc(m.name)+'"><div class="mn">'+esc(m.name)+'</div><div>'+esc(freqText(m))+(m.kind==='swap'?'':' · '+durText(m))+(m.place?' · '+(m.place==='doma'?'doma':'prechodný byt'):'')+(m.dose?' · '+esc(m.dose):'')+'</div>'+(stx?'<div class="'+(needsOrder(m)?'stk warn':'stk')+'">'+esc(stx)+(m.left!=null&&!/^doma/.test(stx)?' · doma '+m.left+' '+un(m,m.left):'')+'</div>':'')+(openText(m)?'<div class="stk">'+esc(openText(m))+'</div>':'')+'</div>'+
         '<div class="macts">'+(m.left!=null?'<button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplniť')+'</button>':'')+
         '<button class="btn ghost sm" type="button" data-edit="'+m.id+'">Upraviť</button><button class="btn ghost sm" type="button" data-askdel="'+m.id+'" aria-label="Zmazať '+esc(m.name)+'">Zmazať</button></div></li>';
-    }).join(''):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať liek.</div></div></li>';
+    }).join(''):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať.</div></div></li>';
     $('mlist').querySelectorAll('[data-minfo]').forEach(t=>{t.onclick=()=>showInfo(t.dataset.minfo);t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showInfo(t.dataset.minfo)}}});
     $('mlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(b.dataset.edit));
     $('mlist').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
@@ -1477,7 +1530,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   function refill(id){
     const med=meds.find(x=>x.id===id); if(!med) return;
-    if(med.kind==='swap'){const b=med.left||0;meds=meds.map(x=>x.id===id?{...x,left:b+1}:x);saveMeds();render();toast(nm(med)+' · +1 náhradný',()=>{meds=meds.map(x=>x.id===id?{...x,left:b}:x);saveMeds();render()});return}
+    if(med.kind==='swap'){const b=med.left||0;meds=meds.map(x=>x.id===id?{...x,left:b+1}:x);saveMeds();render();toast(nm(med)+(isCos(med)?' · +1 balenie':' · +1 náhradný'),()=>{meds=meds.map(x=>x.id===id?{...x,left:b}:x);saveMeds();render()});return}
     if(byBottle(med)){const b=med.left||0;meds=meds.map(x=>x.id===id?{...x,left:b+1}:x);saveMeds();render();toast(nm(med)+' · +1 '+pkW(med,1),()=>{meds=meds.map(x=>x.id===id?{...x,left:b}:x);saveMeds();render()});return}
     if(!med.pack){startEdit(id);openPanel(true);$('fPack').focus();toast('Zadaj, koľko kusov je v balení');return}
     const before=med.left||0;
@@ -1519,18 +1572,32 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const nm=$('fName').value.trim();
     $('kindHint').hidden=!((radio('fKind')||'med')==='med'&&(curShape()==='brush'||curShape()==='tuft'||curShape()==='ebrush'||/kef|hlavic|filter|šošov|sosov/i.test(nm)));
   }
-  const kindVal=()=>radio('fKind')||'med';
-  const swapDays=()=>{const n=numVal('fSwapN');if(!(n>=1&&n<=24))return null;return radio('fSwapU')==='w'?n*7:n*30};
+  const grpVal=()=>radio('fKind')||'med';
+  const kindVal=()=>{const g=grpVal();return g==='swap'||g==='cosm'?'swap':'med'};
+  const swapDays=()=>{const n=numVal('fSwapN');if(!(n>=1&&n<=36))return null;return radio('fSwapU')==='w'?n*7:n*30};
   function updKind(){
-    const sw=kindVal()==='swap';
-    $('medOnly').hidden=sw; $('swapOnly').hidden=!sw; $('swapPresets').hidden=!sw||!!editId;
-    $('fName').placeholder=sw?'Hlavica na kefku':'Euthyrox';
+    const g=grpVal(), sw=kindVal()==='swap', cos=g==='cosm';
+    $('medOnly').hidden=sw; $('swapOnly').hidden=!sw; $('swapPresets').hidden=g!=='swap'||!!editId; $('cosmPresets').hidden=!cos||!!editId;
+    const okS=GRP_SHAPES[g]||GRP_SHAPES.med;
+    document.querySelectorAll('#fShapes .chip').forEach(c=>{c.hidden=!okS.includes(c.querySelector('input').value)});
+    if(!okS.includes(curShape())){setRadio('fShape',okS[0]);updPreview()}
+    $('fNameL').textContent=g==='med'?'Názov lieku':'Názov';
+    $('fName').placeholder={med:'Euthyrox',care:'Betadine',cosm:'Šampón',swap:'Hlavica na kefku'}[g];
+    $('fDoseL').textContent=sw?'Poznámka':'Poznámka k dávke';
+    document.querySelectorAll('[data-pao]').forEach(b=>{const on=radio('fSwapU')==='m'&&numVal('fSwapN')==+b.dataset.pao;b.classList.toggle('pri',on);b.classList.toggle('ghost',!on)});
+    $('swLeg').textContent=cos?'Po otvorení vydrží':'Vymieňať každé'; $('paoRow').hidden=!cos;
+    $('fSwapLastL').firstChild.textContent=cos?'Otvorené dňa ':'Naposledy vymenené ';
+    $('fSpareL').firstChild.textContent=cos?'Neotvorených doma ':'Náhradných doma ';
     if(sw&&!$('fSwapLast').value) $('fSwapLast').value=today;
     const dd=swapDays(); const last=$('fSwapLast').value;
-    $('swapPreview').textContent=sw&&dd&&last?'Ďalšia výmena '+nice(addDays(last,dd))+'. Upozorním týždeň vopred.':'';
-    if(!editId){ $('formTitle').textContent=sw?'Pridať vec na výmenu':'Pridať liek'; $('fSubmit').textContent=sw?'Pridať':'Pridať liek'; }
+    $('swapPreview').textContent=sw&&dd&&last?(cos?'Spotrebovať do '+niceS(addDays(last,dd))+'. Upozorním týždeň vopred.':'Ďalšia výmena '+niceS(addDays(last,dd))+'. Upozorním týždeň vopred.'):'';
+    if(!editId){ $('formTitle').textContent='Pridať '+GRP_TITLE[g]; $('fSubmit').textContent='Pridať'; }
   }
-  document.querySelectorAll('input[name=fKind],input[name=fSwapU]').forEach(i=>i.addEventListener('change',()=>{$('fErr').hidden=true;if(kindVal()==='swap'&&!editId&&curShape()==='tab'){setRadio('fShape','brush');updPreview()}updKind()}));
+  document.querySelectorAll('[data-pao]').forEach(b=>b.onclick=()=>{$('fSwapN').value=b.dataset.pao;setRadio('fSwapU','m');$('fErr').hidden=true;updKind()});
+  document.querySelectorAll('input[name=fSwapU]').forEach(i=>i.addEventListener('change',()=>{$('fErr').hidden=true;updKind()}));
+  document.querySelectorAll('input[name=fKind]').forEach(i=>i.addEventListener('change',()=>{$('fErr').hidden=true;const g=grpVal();
+    if(!editId){if(g==='care')setRadio('fMode','need');if(g==='med')setRadio('fMode','slots');if(g==='cosm'){$('fSwapN').value=12;setRadio('fSwapU','m')}if(g==='swap'){$('fSwapN').value=3;setRadio('fSwapU','m')}}
+    updKind();updForm()}));
   ['fSwapN','fSwapLast','fSpare'].forEach(id=>$(id).addEventListener('input',()=>{$('fErr').hidden=true;updKind()}));
   document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{
     const [n,num,u,sh]=b.dataset.preset.split('|'); $('fName').value=n; $('fSwapN').value=num; setRadio('fSwapU',u); setRadio('fShape',sh); updPreview(); updKind(); $('fSpare').focus();
@@ -1540,7 +1607,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const d=formDraft();
     $('slotsRow').hidden=d.mode!=='slots'; $('hoursRow').hidden=d.mode!=='hours'; $('needRow').hidden=d.mode!=='need';
     if(d.openDays>0&&!d.opened){$('fOpened').value=today;d.opened=today}
-    $('openPreview').textContent=d.openDays>0&&d.opened?'Použiteľné do '+nice(addDays(d.opened,d.openDays-1))+'. Upozorním 3 dni vopred.':'';
+    $('openPreview').textContent=d.openDays>0&&d.opened?'Použiteľné do '+niceS(addDays(d.opened,d.openDays-1))+'. Upozorním 3 dni vopred.':'';
     $('daysRow').hidden=!$('fDurDays').checked;
     $('hoursPreview').textContent=d.mode!=='hours'?'':d.rolling?(()=>{const f=d.first;const nx=fromMin((toMin(f)+d.every*60)%1440);return d.every>=24?'Prvá dávka o '+f+'. Keď ju užiješ inokedy, ďalšia sa posunie o '+d.every+' h od toho času.':'Napríklad užitie o '+f+' znamená ďalšiu dávku o '+nx+'. Keď užiješ neskôr, ďalšia sa posunie.'})():'Pevné časy dávok: '+hourTimes({first:d.first,every:d.every}).join(', ');
     const n=numVal('fDays');
@@ -1550,7 +1617,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('packGrid').hidden=bot;
     $('fCountL').innerHTML=bot?(curShape()==='tube'?'Túb doma':'Fľaštičiek doma')+' <span class="note">(spolu s otvorenou)</span>':'Kusov doma spolu <span class="note">(aj s načatým balením)</span>';
     $('fCount').placeholder=bot?'napr. 2':'napr. 47';
-    $('fDose').placeholder=curShape()==='tube'?'napr. 1 prst, tenká vrstva':curShape()==='drop'?'napr. 1 kvapka do každého oka':'po jedle';
+    $('fDose').placeholder=kindVal()==='swap'?'napr. na suché vlasy':curShape()==='tube'?'napr. 1 prst, tenká vrstva':curShape()==='drop'?'napr. 1 kvapka do každého oka':'po jedle';
     if(bot){const fm={kind:'med',shape:curShape()},tu=fm.shape==='tube';$('stockPreview').textContent=(d.count!=null&&d.count>=0?'Doma '+d.count+' '+pkW(fm,d.count)+'. ':editId&&cur!=null?'Teraz doma '+cur+' '+pkW(fm,cur)+'. ':'')+(tu?'Jednotlivé natretia sa nerátajú, zásoba ubudne až pri otvorení novej tuby.':'Kvapky sa nerátajú, zásoba ubudne až pri otvorení novej fľaštičky.');return}
     let leftIn=null;
     if(d.count!=null&&d.count>=0) leftIn=d.count;
@@ -1594,7 +1661,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const c=[];
     meds.filter(m=>m.kind!=='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Objednať: '+m.name,'meds']));
     visitsSorted().forEach(v=>{const d=diffDays(today,v.date);if(v.type==='rx'?d<=7:d<=2)c.push([d<0?'bad':'',(v.type==='rx'?'Recept: ':'')+v.title+' · '+(d===0?'dnes':d===1?'zajtra':d<0?'prešlo':nice(v.date)),'more'])});
-    meds.forEach(m=>{const o=openInfo(m);if(!o||o.state==='ok')return;c.push([o.state==='exp'?'bad':'warn',(m.kind==='swap'?'Vymeniť: ':'Spotrebovať čoskoro: ')+nm(m),m.kind==='swap'||m.mode!=='need'?'opened':'prn'])});
+    meds.forEach(m=>{const o=openInfo(m);if(!o||o.state==='ok')return;c.push([o.state==='exp'?'bad':'warn',(m.kind==='swap'&&!isCos(m)?'Vymeniť: ':'Spotrebovať čoskoro: ')+nm(m),m.kind==='swap'||m.mode!=='need'?'opened':'prn'])});
     meds.filter(m=>m.kind==='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Kúpiť: '+m.name,'opened']));
     $('chips').innerHTML=c.map(x=>'<button type="button" class="achip '+x[0]+'" data-go="'+x[2]+'">'+esc(hideNames(x[1]))+'</button>').join('');
     $('chips').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==='opened'||g==='prn'){const el=$(g);if(el)el.scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'})}else setTab(g)});
@@ -1610,11 +1677,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     slotBoxes().forEach(b=>b.checked=m.slots.includes(b.value));
     $('fDurDays').checked=!!m.days; $('fDurAlways').checked=!m.days; $('fDays').value=m.days||7;
     $('fPack').value=m.pack||''; $('fLeft').value=''; $('fCount').value=m.left!=null?m.left:''; $('fOpenDays').value=m.openDays||''; $('fOpened').value=m.opened||''; $('fGap').value=m.gapH||''; $('fMax').value=m.maxDay||'';
-    setRadio('fShape',m.shape); setRadio('fColor',m.color); updPreview(); updForm();
-    setRadio('fKind',m.kind);
+    setRadio('fKind',grpOf(m)); setRadio('fShape',m.shape); setRadio('fColor',m.color); updPreview(); updForm();
     if(m.kind==='swap'){const d=m.openDays||90;if(d%30===0){$('fSwapN').value=d/30;setRadio('fSwapU','m')}else{$('fSwapN').value=Math.max(1,Math.round(d/7));setRadio('fSwapU','w')} $('fSwapLast').value=m.opened||today; $('fSpare').value=m.left!=null?m.left:''; setRadio('fPlace',m.place||'');$('placeBoth').hidden=true}
     updForm();
-    $('formTitle').textContent=m.kind==='swap'?'Upraviť vec na výmenu':'Upraviť liek'; $('fSubmit').textContent='Uložiť zmeny'; $('form').hidden=false;
+    $('formTitle').textContent='Upraviť '+GRP_TITLE[grpOf(m)]; $('fSubmit').textContent='Uložiť zmeny'; $('form').hidden=false;
     $('form').scrollIntoView({block:'start'}); $('fName').focus();
   }
   function resetForm(){
@@ -1630,12 +1696,13 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     e.preventDefault();
     const name=$('fName').value.trim(); const dose=$('fDose').value.trim(); const d=formDraft();
     if(kindVal()==='swap'){
-      if(!name) return err('Napíš, čo vymieňaš.',$('fName'));
-      const sd=swapDays(); if(!sd) return err('Zadaj, ako často vymieňaš (1 až 24).',$('fSwapN'));
-      const last=$('fSwapLast').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(last)) return err('Zadaj dátum poslednej výmeny.',$('fSwapLast'));
-      if(last>today) return err('Dátum výmeny nemôže byť v budúcnosti.',$('fSwapLast'));
+      const cos=grpVal()==='cosm';
+      if(!name) return err(cos?'Napíš názov.':'Napíš, čo vymieňaš.',$('fName'));
+      const sd=swapDays(); if(!sd) return err(cos?'Zadaj, koľko mesiacov vydrží po otvorení (1 až 36).':'Zadaj, ako často vymieňaš (1 až 36).',$('fSwapN'));
+      const last=$('fSwapLast').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(last)) return err(cos?'Zadaj, kedy si ho otvoril.':'Zadaj dátum poslednej výmeny.',$('fSwapLast'));
+      if(last>today) return err('Dátum nemôže byť v budúcnosti.',$('fSwapLast'));
       const sp=numVal('fSpare'); if(sp!=null&&!(sp>=0&&sp<=50)) return err('Náhradných kusov môže byť 0 až 50.',$('fSpare'));
-      const sb={kind:'swap',name,dose,mode:'need',slots:['rano'],days:null,openDays:sd,opened:last,left:sp==null?null:sp,pack:null,per:1,shape:curShape(),color:curColor(),place:radio('fPlace')||null}; const both=sb.place==='both'; if(both) sb.place=editId?null:'doma';
+      const sb={kind:'swap',sub:cos?'cosm':undefined,name,dose,mode:'need',slots:['rano'],days:null,openDays:sd,opened:last,left:sp==null?null:sp,pack:null,per:1,shape:curShape(),color:curColor(),place:radio('fPlace')||null}; const both=sb.place==='both'; if(both) sb.place=editId?null:'doma';
       if(editId){meds=meds.map(m=>m.id===editId?normMed({...m,...sb}):m);toast('Zmeny uložené')}
       else{const nid=()=>'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);meds=meds.concat(both?[normMed({id:nid(),start:today,...sb,place:'doma'}),normMed({id:nid(),start:today,...sb,place:'prech'})]:[normMed({id:nid(),start:today,...sb})]);toast(name+(both?' pridané do oboch bytov':' pridané'))}
       resetForm(); saveMeds(); sel=today; render(); window.scrollTo({top:0,behavior:reduce()?'auto':'smooth'}); return;
@@ -1928,7 +1995,11 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const m=meds.find(x=>x.id===id); if(!m) return;
     const rows=[];
     const add=(k,v)=>{if(v)rows.push('<div class="ir"><span>'+esc(k)+'</span><b>'+esc(v)+'</b></div>')};
-    if(m.kind==='swap'){
+    if(isCos(m)){
+      add('Po otvorení',Math.round((m.openDays||360)/30)+' mesiacov');
+      add('Otvorené',m.opened?nice(m.opened):'');
+      add('Spotrebovať',openText(m));
+    } else if(m.kind==='swap'){
       add('Výmena',freqText(m).replace('výmena ',''));
       add('Naposledy vymenené',m.opened?nice(m.opened):'');
       add('Ďalšia výmena',openText(m));
@@ -1957,10 +2028,10 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const day=tab==='week'&&sel<=today?sel:null; let dsec='';
     if(day){
       const dl=day===today?'Dnes':DAYS[parse(day).getDay()]+' '+nice(day);
-      const ti=(attr,val)=>'<input type="text" inputmode="numeric" maxlength="5" class="tinput dti" '+attr+' value="'+esc(val||'')+'" placeholder="08:30" aria-label="Čas">';
+      const ti=(attr,val)=>'<input type="text" inputmode="numeric" maxlength="5" class="tinput dti tm" autocomplete="off" '+attr+' value="'+esc(val||'')+'" placeholder="08:30" aria-label="Čas">';
       let opsec='';
       if(m.kind==='swap'||m.openDays){
-        const was=extra.sw.some(e=>e.m===m.id&&e.d===day); const sw=m.kind==='swap';
+        const was=extra.sw.some(e=>e.m===m.id&&e.d===day); const sw=m.kind==='swap'&&!isCos(m);
         dsec='<div class="drow"><span class="dl">'+(was?(sw?'Vymenené v tento deň ✓':'Otvorené v tento deň ✓'):(sw?'V tento deň nevymenené':'V tento deň neotvorené'))+'</span>'+
           (was?'<button class="btn ghost sm" type="button" data-iswun="1">Zrušiť</button>':'<button class="btn pri sm" type="button" data-isw="1">'+(sw?'Vymenil som v tento deň':'Otvoril som v tento deň')+'</button>')+'</div>'+
           '<div class="drow"><label class="dl" for="iswDate">'+(sw?'Naposledy vymenené':'Otvorené')+'</label><input type="date" id="iswDate" class="tinput" style="font-size:16px" max="'+today+'" value="'+(m.opened||'')+'"><button class="btn ghost sm" type="button" data-iswset="1">Uložiť dátum</button></div>';
@@ -2012,7 +2083,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       toast('Záznam zmazaný',()=>{extra.prn.push(e);if(st){adjustStock(meds.find(x=>x.id===m.id)||m,-m.per);saveMeds()}saveExtra();again()})});
     const swMark=d=>{const cur=meds.find(x=>x.id===id);const dec=(cur.kind==='swap'||byBottle(cur))&&cur.left!=null&&cur.left>0?1:0;const ev={id:rid(),m:id,d,prev:cur.opened||null,dl:dec};extra.sw.push(ev);
       meds=meds.map(x=>x.id===id?{...x,opened:lastSw(id)||d,left:dec?x.left-1:x.left}:x);saveMeds();saveExtra();again();
-      toast(nm(cur)+(cur.kind==='swap'?' · vymenené ':' · otvorené ')+nice(d),()=>{extra.sw=extra.sw.filter(e=>e.id!==ev.id);meds=meds.map(x=>x.id===id?{...x,opened:ev.prev,left:x.left!=null?x.left+dec:x.left}:x);saveMeds();saveExtra();again()})};
+      toast(nm(cur)+(cur.kind==='swap'&&!isCos(cur)?' · vymenené ':' · otvorené ')+nice(d),()=>{extra.sw=extra.sw.filter(e=>e.id!==ev.id);meds=meds.map(x=>x.id===id?{...x,opened:ev.prev,left:x.left!=null?x.left+dec:x.left}:x);saveMeds();saveExtra();again()})};
     B.querySelectorAll('[data-istart]').forEach(b=>b.onclick=()=>{const old=m.start;meds=meds.map(x=>x.id===id?{...x,start:sel}:x);saveMeds();again();toast(nm(m)+' · v appke od '+nice(sel),()=>{meds=meds.map(x=>x.id===id?{...x,start:old}:x);saveMeds();again()})});
     B.querySelectorAll('[data-isw]').forEach(b=>b.onclick=()=>swMark(sel));
     B.querySelectorAll('[data-iswset]').forEach(b=>b.onclick=()=>{const d=$('iswDate').value;if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){toast('Vyber dátum');return}if(d>today){toast('Dátum nemôže byť v budúcnosti');return}
@@ -2041,11 +2112,11 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     B.querySelectorAll('.dti').forEach(i=>i.addEventListener('blur',()=>{const v=normTime(i.value);if(v)i.value=v}));
     window.scrollTo({top:0,behavior:reduce()?'auto':'smooth'});
   }
-  function stkHint(m){return byBottle(m)?(m.shape==='tube'?'Počíta sa v celých tubách, nie v natretiach.':'Počíta sa v celých fľaštičkách, nie v kvapkách.')+' Pri „nové balenie“ jedna ubudne sama.':m.kind==='swap'?'Pridal si omylom? Uprav počet a ulož.':'Chýbajú kusy v otvorenom balení alebo si omylom pridal balenie? Uprav počet a ulož.'}
+  function stkHint(m){return isCos(m)?'Koľko neotvorených balení máš doma. Pri „nové balenie“ jedno ubudne samo.':byBottle(m)?(m.shape==='tube'?'Počíta sa v celých tubách, nie v natretiach.':'Počíta sa v celých fľaštičkách, nie v kvapkách.')+' Pri „nové balenie“ jedna ubudne sama.':m.kind==='swap'?'Pridal si omylom? Uprav počet a ulož.':'Chýbajú kusy v otvorenom balení alebo si omylom pridal balenie? Uprav počet a ulož.'}
   function stkEd(m){
     if(m.left==null&&!m.pack&&!byBottle(m)) return '';
     const v=m.left!=null?m.left:'', p=m.kind!=='swap'&&!byBottle(m)&&m.pack>0?m.pack:0;
-    return '<div class="ih">'+(m.kind==='swap'?'Náhradných doma':'Zásoba doma')+'</div><div class="dsec">'+
+    return '<div class="ih">'+(isCos(m)?'Neotvorené v zásobe':m.kind==='swap'?'Náhradných doma':'Zásoba doma')+'</div><div class="dsec">'+
       '<div class="stk-ed"><button class="sbtn" type="button" data-sd="-1" aria-label="Ubrať 1">−</button>'+
       '<input id="iStk" type="number" inputmode="numeric" min="0" max="5000" step="1" class="tinput" value="'+v+'" placeholder="0" aria-label="Počet kusov doma">'+
       '<button class="sbtn" type="button" data-sd="1" aria-label="Pridať 1">+</button><span class="stk-u" id="iStkU">'+(v===''?'':un(m,v))+'</span></div>'+
