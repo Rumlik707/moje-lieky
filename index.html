@@ -373,6 +373,54 @@ button,input,select{font:inherit;color:inherit}
 .rf svg{width:40px;height:40px;padding:9px;box-sizing:border-box;border-radius:50%;background:var(--acc-soft);transition:transform .2s}
 .rf:active svg{transform:scale(.88)}
 .rf.hot svg{background:var(--acc);color:#fff}
+.ic3{overflow:visible}
+.ic3 [class^="a-"],.ic3 [class*=" a-"]{transform-box:fill-box;transform-origin:center}
+.ic3 .a-shd{transform-origin:center}
+.ic3 .a-drip{opacity:1}
+:is(.go,.play) .ic3 .a-body{animation:ic-hop .9s cubic-bezier(.34,1.56,.64,1)}
+:is(.go,.play) .ic3 .a-shd{animation:ic-shd .9s cubic-bezier(.34,1.56,.64,1)}
+:is(.go,.play) .ic-tab .a-body{animation:ic-flip 1.2s cubic-bezier(.34,1.4,.64,1)}
+:is(.go,.play) .ic-cap .a-body{animation:ic-wig 1.1s ease-in-out}
+:is(.go,.play) .ic-cap .a-gran{animation:ic-jig .35s ease-in-out 3}
+:is(.go,.play) .ic-drop .a-body{animation:ic-squeeze 1.3s ease-in-out}
+:is(.go,.play) .ic-drop .a-drip{animation:ic-drip 1.3s cubic-bezier(.55,0,.85,.4)}
+:is(.go,.play) :is(.ic-bottle,.ic-pump,.ic-jar,.ic-drop) .a-wave{animation:ic-wave 1.4s ease-in-out}
+:is(.go,.play) .ic-bottle .a-body{animation:ic-tilt 1.4s ease-in-out}
+:is(.go,.play) .ic-pump .a-body{animation:none}
+:is(.go,.play) .ic-pump .a-pump{animation:ic-press .55s ease-in-out 2}
+:is(.go,.play) .ic-pump .a-bub{animation:ic-bub 1.4s ease-out}
+:is(.go,.play) .ic-jar .a-body{animation:none}
+:is(.go,.play) .ic-jar .a-lid{animation:ic-lid 1.4s cubic-bezier(.34,1.4,.64,1)}
+:is(.go,.play) .ic-tube .a-body{animation:none}
+:is(.go,.play) .ic-tube .a-sq{animation:ic-sq 1.1s ease-in-out}
+:is(.go,.play) .ic-tube .a-cap{animation:ic-cap 1.1s cubic-bezier(.34,1.56,.64,1)}
+:is(.go,.play) :is(.ic-brush,.ic-tuft) .a-body{animation:ic-brush .5s ease-in-out 3}
+:is(.go,.play) .ic-ebrush .a-body{animation:ic-buzz .09s linear 12}
+:is(.go,.play) .ic-ebrush .a-spin{animation:ic-osc .18s ease-in-out 7}
+:is(.go,.play) .ic-razor .a-body{animation:ic-shave 1.2s ease-in-out}
+:is(.go,.play) .ic-razor .a-glint{animation:ic-glint 1.2s ease-in-out}
+:is(.go,.play) .ic3 .a-warn{animation:ic-warn .6s cubic-bezier(.34,1.56,.64,1) 2}
+@keyframes ic-hop{0%,100%{transform:none}35%{transform:translateY(-7px) scale(1.04)}60%{transform:translateY(1px) scaleY(.95)}80%{transform:translateY(-1.5px)}}
+@keyframes ic-shd{0%,100%{transform:none;opacity:1}35%{transform:scaleX(.7);opacity:.5}}
+@keyframes ic-flip{0%,100%{transform:none}30%{transform:translateY(-9px) rotate(-20deg)}55%{transform:translateY(-4px) rotate(10deg) scaleY(.9)}75%{transform:translateY(1px) scaleY(.94)}}
+@keyframes ic-wig{0%,100%{transform:none}20%{transform:rotate(-14deg) translateY(-3px)}45%{transform:rotate(10deg)}70%{transform:rotate(-5deg)}}
+@keyframes ic-jig{50%{transform:translate(1px,-1px)}}
+@keyframes ic-squeeze{0%,100%{transform:none}25%{transform:scaleX(.9) scaleY(1.03)}40%{transform:none}}
+@keyframes ic-drip{0%{transform:translateY(-4px);opacity:0}20%{opacity:1;transform:translateY(0)}75%{transform:translateY(26px);opacity:1}100%{transform:translateY(32px);opacity:0}}
+@keyframes ic-wave{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}55%{transform:translateX(4px)}80%{transform:translateX(-3px)}}
+@keyframes ic-tilt{0%,100%{transform:none}25%{transform:rotate(-9deg)}55%{transform:rotate(6deg)}80%{transform:rotate(-2deg)}}
+@keyframes ic-press{50%{transform:translateY(3.5px)}}
+@keyframes ic-bub{0%{transform:translateY(0);opacity:0}25%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes ic-lid{0%,100%{transform:none}30%{transform:translateY(-8px) rotate(-14deg)}60%{transform:translateY(-6px) rotate(6deg)}}
+@keyframes ic-sq{0%,100%{transform:none}30%{transform:scaleY(.8) scaleX(1.03)}55%{transform:scaleY(1.04)}}
+@keyframes ic-cap{0%,100%{transform:none}30%{transform:translateX(5px) rotate(18deg)}60%{transform:translateX(-1px)}}
+@keyframes ic-brush{0%,100%{transform:none}50%{transform:translate(-4px,3px) rotate(-4deg)}}
+@keyframes ic-buzz{50%{transform:translate(.6px,-.4px)}}
+@keyframes ic-osc{0%,100%{transform:rotate(0)}50%{transform:rotate(28deg)}}
+@keyframes ic-shave{0%,100%{transform:none}35%{transform:translate(-5px,6px)}70%{transform:translate(3px,-3px)}}
+@keyframes ic-glint{0%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(42px) skewX(-20deg)}}
+@keyframes ic-warn{50%{transform:scale(1.35)}}
+@media (prefers-reduced-motion: reduce){.ic3 *{animation:none!important}}
 .msearch{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:0 12px;margin:0 0 6px;color:var(--muted)}
 .msearch input{flex:1;border:0;background:transparent;min-height:46px;font:inherit;font-size:16px;color:var(--ink);outline:none}
 .msearch:focus-within{border-color:var(--acc)}
@@ -1074,72 +1122,120 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     r=Math.round((f-r)*p+r); g=Math.round((f-g)*p+g); b=Math.round((f-b)*p+b);
     return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
   }
-  function pillSvg(shape,color,size){
-    size=size||30; const id='p'+(++_pid);
-    const hi=shade(color,.55), lo=shade(color,-.22), edge=shade(color,-.35);
-    const open='<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true">';
-    const shadow='<ellipse cx="16.5" cy="27.6" rx="9" ry="1.8" fill="rgba(15,37,71,.16)"/>';
-    if(shape==='cap'){
-      const wh='#FFFFFF', whLo='#D9E2EE';
-      return open+'<defs><linearGradient id="'+id+'a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+hi+'"/><stop offset=".55" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient>'+
-        '<linearGradient id="'+id+'b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#F3F6FA"/><stop offset="1" stop-color="'+whLo+'"/></linearGradient></defs>'+shadow+
-        '<g transform="rotate(-35 16 15)"><path d="M16 8.5h-6.5a6.5 6.5 0 0 0 0 13H16z" fill="url(#'+id+'a)" stroke="'+edge+'" stroke-width=".8"/>'+
-        '<path d="M16 8.5h6.5a6.5 6.5 0 0 1 0 13H16z" fill="url(#'+id+'b)" stroke="#AEBBCD" stroke-width=".8"/>'+
-        '<path d="M16 8.5v13" stroke="rgba(15,37,71,.28)" stroke-width="1"/>'+
-        '<path d="M6 11.6c2-1.3 5-1.6 8.5-1.6M18 10h6" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round" fill="none"/></g></svg>';
+  /* ---------- "Živé 3D" pictograms: realistic soft 3D, live state, animated parts ---------- */
+
+  function shd(hex,a){const n=parseInt(String(hex||'#2D6BE4').slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;
+    if(a>0){r+=(255-r)*a;g+=(255-g)*a;b+=(255-b)*a}else{r*=1+a;g*=1+a;b*=1+a}
+    return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('')}
+  function pillSvg(shape,c,size,st){
+    st=st||{}; size=size||30; c=c||'#2D6BE4';
+    const lvl=st.lvl==null?1:Math.max(0,Math.min(1,st.lvl)), wear=Math.max(0,Math.min(1,st.wear||0));
+    const u='p'+(++_pid), hi=shd(c,.6), mid=shd(c,.18), lo=shd(c,-.3), dk=shd(c,-.5);
+    const D='<defs>'+
+      '<linearGradient id="'+u+'cy" x1="0" x2="1"><stop offset="0" stop-color="'+lo+'"/><stop offset=".22" stop-color="'+mid+'"/><stop offset=".42" stop-color="'+hi+'"/><stop offset=".7" stop-color="'+c+'"/><stop offset="1" stop-color="'+dk+'"/></linearGradient>'+
+      '<radialGradient id="'+u+'sp" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="'+hi+'"/><stop offset=".5" stop-color="'+c+'"/><stop offset="1" stop-color="'+lo+'"/></radialGradient>'+
+      '<linearGradient id="'+u+'wh" x1="0" x2="1"><stop offset="0" stop-color="#C9D3E2"/><stop offset=".35" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#EEF2F8"/><stop offset="1" stop-color="#AEBBCD"/></linearGradient>'+
+      '<linearGradient id="'+u+'ch" x1="0" x2="1"><stop offset="0" stop-color="#8E9AAD"/><stop offset=".3" stop-color="#F4F7FB"/><stop offset=".55" stop-color="#B9C3D1"/><stop offset=".8" stop-color="#E9EEF5"/><stop offset="1" stop-color="#7F8B9F"/></linearGradient>'+
+      '<linearGradient id="'+u+'gl" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="#fff" stop-opacity=".15"/><stop offset=".6" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient>'+
+      '<linearGradient id="'+u+'lq" x1="0" x2="1"><stop offset="0" stop-color="'+lo+'"/><stop offset=".4" stop-color="'+c+'"/><stop offset="1" stop-color="'+dk+'"/></linearGradient>'+
+      '</defs>';
+    const shadow=w=>'<ellipse class="a-shd" cx="32" cy="58.5" rx="'+(w||17)+'" ry="3.2" fill="rgba(15,35,75,.22)"/>';
+    const spec=(x,y,rx,ry,r,o)=>'<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="#fff" opacity="'+(o||.8)+'"'+(r?' transform="rotate('+r+' '+x+' '+y+')"':'')+'/>';
+    const liquid=(x,y,w,h,r)=>{const top=y+h*(1-lvl)+(lvl>=.98?2:0), cid=u+'cl';
+      return '<clipPath id="'+cid+'"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+r+'"/></clipPath>'+
+        '<g clip-path="url(#'+cid+')"><g class="a-wave"><path d="M'+(x-14)+' '+top+' q'+(w/4+3.5)+' -3.2 '+(w/2+7)+' 0 t'+(w/2+7)+' 0 t'+(w/2+7)+' 0 V'+(y+h+4)+' H'+(x-14)+'z" fill="url(#'+u+'lq)"/>'+
+        (lvl>.04&&lvl<.98?'<path d="M'+(x-14)+' '+top+' q'+(w/4+3.5)+' -3.2 '+(w/2+7)+' 0 t'+(w/2+7)+' 0 t'+(w/2+7)+' 0" stroke="'+hi+'" stroke-width="1.4" fill="none" opacity=".9"/>':'')+'</g></g>'};
+    const warn=wear>.85?'<g class="a-warn"><circle cx="51" cy="10" r="5.2" fill="#E5484D" stroke="#fff" stroke-width="1.4"/><path d="M51 7.2v3.4M51 12.8v.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></g>':'';
+    let b='';
+    switch(shape){
+    case 'cap':
+      b=shadow(18)+'<g class="a-body"><g transform="rotate(-35 32 31)"><rect x="8" y="22.5" width="48" height="21" rx="10.5" fill="rgba(15,35,75,.25)" transform="translate(1 2)"/>'+
+        '<path d="M32 21.5H18.5a10.5 10.5 0 0 0 0 21H32z" fill="url(#'+u+'sp)"/>'+
+        '<path d="M32 21.5h13.5a10.5 10.5 0 0 1 0 21H32z" fill="#fff" fill-opacity=".55" stroke="#C3CEDD" stroke-width=".8"/>'+
+        '<g class="a-gran" fill="'+c+'" opacity=".85"><circle cx="38" cy="33" r="1.7"/><circle cx="42.5" cy="36.5" r="1.5"/><circle cx="46" cy="31" r="1.6"/><circle cx="41" cy="28.5" r="1.2"/><circle cx="49.5" cy="35" r="1.3"/><circle cx="36.5" cy="38" r="1.2"/></g>'+
+        '<rect x="31" y="21.5" width="2.4" height="21" fill="'+lo+'" opacity=".55"/>'+
+        '<path d="M32 21.5h13.5a10.5 10.5 0 0 1 0 21H32z" fill="url(#'+u+'gl)"/>'+spec(19,26,8,2.2,0,.85)+spec(44,25.5,7,1.6,0,.95)+'</g></g>';
+      break;
+    case 'drop':
+      b=shadow(13)+'<g class="a-body"><path d="M28.5 4.5h7l-1 7h-5z" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/><rect x="25" y="11" width="14" height="7" rx="2" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/>'+
+        '<rect x="19" y="17" width="26" height="39" rx="8" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".8"/>'+
+        '<rect x="23" y="24" width="18" height="26" rx="4" fill="#EAF2FB"/>'+liquid(23,24,18,26,4)+'<rect x="23" y="24" width="18" height="26" rx="4" fill="url(#'+u+'gl)" stroke="'+lo+'" stroke-width=".8" stroke-opacity=".5"/>'+spec(22.5,22,1.4,9,0,.75)+'</g>'+
+        '<g class="a-drip"><path d="M50 14c2.3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1.7-4 4-7z" fill="url(#'+u+'sp)"/>'+spec(48.6,19.5,.9,1.6,0,.9)+'</g>';
+      break;
+    case 'bottle':
+      b=shadow(16)+'<g class="a-body"><rect x="24" y="3" width="16" height="9" rx="2.5" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/><path d="M24.5 6.5h15M24.5 9h15" stroke="#C3CEDD" stroke-width=".7"/>'+
+        '<path d="M26 12h12v4.5c5 1.5 12 4 12 10V50a7 7 0 0 1-7 7H21a7 7 0 0 1-7-7V26.5c0-6 7-8.5 12-10z" fill="'+shd(c,.75)+'" fill-opacity=".55" stroke="'+lo+'" stroke-width="1"/>'+
+        liquid(14,18,36,39,7)+
+        '<rect x="18" y="30" width="28" height="17" rx="3" fill="#fff" opacity=".95"/><path d="M32 33.5v10M27 38.5h10" stroke="#E04848" stroke-width="3.2" stroke-linecap="round"/>'+
+        '<path d="M26 12h12v4.5c5 1.5 12 4 12 10V50a7 7 0 0 1-7 7H21a7 7 0 0 1-7-7V26.5c0-6 7-8.5 12-10z" fill="url(#'+u+'gl)"/>'+spec(18.5,40,1.6,10,0,.7)+spec(30,15,3,1,0,.6)+'</g>';
+      break;
+    case 'tube': { const sq=1-lvl, t1=22+sq*5, t2=42-sq*5;
+      b=shadow(20)+'<g class="a-body"><g transform="rotate(-26 32 33)"><g class="a-sq">'+
+        '<path d="M5 '+(t1-1)+'h7v'+(t2-t1+2)+'H5z" fill="url(#'+u+'ch)"/><path d="M6.5 '+t1+'v'+(t2-t1)+'M8.5 '+t1+'v'+(t2-t1)+'M10.5 '+t1+'v'+(t2-t1)+'" stroke="#8E9AAD" stroke-width=".6"/>'+
+        '<path d="M12 '+t1+'C24 '+(t1+sq*3)+' 33 22 42 23.5a4.5 4.5 0 0 1 4 4.5v8a4.5 4.5 0 0 1-4 4.5C33 42 24 '+(t2-sq*3)+' 12 '+t2+'z" fill="url(#'+u+'sp)"/>'+
+        '<path d="M18 '+(t1+3)+'C26 '+(t1+3)+' 33 26 40 26.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".8"/>'+
+        '<rect x="21" y="28.5" width="14" height="7" rx="2" fill="#fff" opacity=".9"/><path d="M24 32h8" stroke="'+lo+'" stroke-width="1.6" stroke-linecap="round"/>'+
+        '<rect x="46" y="27" width="4.5" height="10" fill="url(#'+u+'wh)"/></g><g class="a-cap"><rect x="50" y="24" width="10" height="16" rx="3" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/><path d="M52 25v14M54.5 25v14M57 25v14" stroke="#D5DDE8" stroke-width=".8"/></g></g></g>';
+      break; }
+    case 'pump':
+      b=shadow(17)+'<g class="a-body"><g class="a-pump"><rect x="30.5" y="2.5" width="3" height="9" fill="url(#'+u+'ch)"/><path d="M23 4.5h17a2 2 0 0 1 2 2v3h-6v-2H23z" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/></g>'+
+        '<rect x="25" y="11" width="14" height="7" rx="2" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/>'+
+        '<rect x="13" y="17" width="38" height="40" rx="10" fill="'+shd(c,.82)+'" fill-opacity=".6" stroke="'+lo+'" stroke-width="1"/>'+liquid(13,17,38,40,10)+
+        '<g class="a-bub" fill="#fff" opacity=".85"><circle cx="40" cy="50" r="1.6"/><circle cx="36" cy="53" r="1.1"/><circle cx="43" cy="54" r=".9"/></g>'+
+        '<rect x="19" y="29" width="26" height="15" rx="3.5" fill="#fff" opacity=".93"/><path d="M24 34.5h16M24 39h10" stroke="'+lo+'" stroke-width="2" stroke-linecap="round"/>'+
+        '<rect x="13" y="17" width="38" height="40" rx="10" fill="url(#'+u+'gl)"/>'+spec(18,36,1.8,11,0,.75)+'</g>';
+      break;
+    case 'jar':
+      b=shadow(19)+'<g class="a-body"><rect x="10" y="25" width="44" height="30" rx="9" fill="'+shd(c,.8)+'" fill-opacity=".6" stroke="'+lo+'" stroke-width="1"/>'+liquid(10,25,44,30,9)+
+        '<rect x="18" y="34" width="28" height="11" rx="3" fill="#fff" opacity=".93"/><path d="M23 39.5h18" stroke="'+lo+'" stroke-width="2" stroke-linecap="round"/>'+
+        '<rect x="10" y="25" width="44" height="30" rx="9" fill="url(#'+u+'gl)"/>'+
+        '<g class="a-lid"><rect x="8" y="14" width="48" height="12" rx="4" fill="url(#'+u+'cy)"/><path d="M12 15.5v9M17 15.5v9M22 15.5v9M27 15.5v9M32 15.5v9M37 15.5v9M42 15.5v9M47 15.5v9M52 15.5v9" stroke="'+lo+'" stroke-width=".8" opacity=".6"/>'+spec(20,17,8,1.4,0,.7)+'</g></g>';
+      break;
+    case 'brush': { const fan=wear*16; let tufts='';
+      for(let i=0;i<6;i++){const y=3+i*3, m=(i-2.5)/2.5, ang=m*fan, len=12.5+wear*1.5;
+        const col=i%2?'#DCEBFB':'#FFFFFF', tip=i%2?shd(c,.5):'#F4F8FD';
+        tufts+='<g transform="rotate('+(-ang).toFixed(1)+' 28 '+(y+1.3)+')"><rect x="'+(28-len)+'" y="'+y+'" width="'+len+'" height="2.6" rx="1.3" fill="'+col+'" stroke="#A6B4C7" stroke-width=".4"/><path d="M'+(28-len+1.4)+' '+(y+.7)+'h'+(len-3)+'" stroke="#fff" stroke-width=".6" opacity=".9"/><rect x="'+(28-len)+'" y="'+y+'" width="2.6" height="2.6" rx="1.3" fill="'+tip+'"/></g>';}
+      b=shadow(13)+'<g class="a-body"><g transform="translate(33 34) rotate(-36) translate(-32 -32)">'+
+        '<path d="M29.4 26h7.2c.8 8 1.8 15 1.8 25.6a5.4 5.4 0 0 1-10.8 0c0-10.6 1-17.6 1.8-25.6z" fill="url(#'+u+'cy)"/>'+
+        '<path d="M29.7 33h6.6c.4 4.6.8 8.6.9 13.6h-8.4c.1-5 .5-9 .9-13.6z" fill="'+shd(c,-.18)+'"/><path d="M29.7 36h6.6M29.5 39.5h7M29.3 43h7.4" stroke="'+dk+'" stroke-width=".8" opacity=".45"/>'+
+        '<path d="M29.6 19.5h5.6l1.4 6.8h-8.4z" fill="url(#'+u+'cy)"/><rect x="27.6" y="1.4" width="9.2" height="20" rx="4" fill="url(#'+u+'cy)"/>'+
+        tufts+spec(34.6,10,1,6.5,0,.75)+spec(35.4,49,1.1,6,0,.55)+'</g></g>'+warn;
+      break; }
+    case 'ebrush': { const ind=1-wear*.9; let t='';
+      for(let k=0;k<12;k++){const a=k/12*Math.PI*2, x=32+Math.cos(a)*7.6, y=12+Math.sin(a)*6.4;
+        t+='<circle cx="'+x.toFixed(2)+'" cy="'+(y+.7).toFixed(2)+'" r="1.9" fill="#9AAAC0"/><circle cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="1.9" fill="'+(k%3===0?c:'#FFFFFF')+'" fill-opacity="'+(k%3===0?ind.toFixed(2):1)+'" stroke="#B2C0D2" stroke-width=".4"/>';}
+      for(let k=0;k<6;k++){const a=k/6*Math.PI*2+.5, x=32+Math.cos(a)*3.7, y=12+Math.sin(a)*3.1;
+        t+='<circle cx="'+x.toFixed(2)+'" cy="'+(y+.6).toFixed(2)+'" r="1.7" fill="#9AAAC0"/><circle cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="1.7" fill="#EAF3FE" stroke="#B2C0D2" stroke-width=".4"/>';}
+      t+='<circle cx="32" cy="12.5" r="1.7" fill="#9AAAC0"/><circle cx="32" cy="12" r="1.7" fill="#fff" stroke="#B2C0D2" stroke-width=".4"/>';
+      const splay=wear>.45?'<ellipse cx="32" cy="12" rx="'+(11.6+wear*2)+'" ry="'+(9.8+wear*1.6)+'" fill="none" stroke="#fff" stroke-width="'+(wear*1.6).toFixed(1)+'" stroke-dasharray="1.1 1.4"/>':'';
+      b=shadow(12)+'<g class="a-body"><g transform="translate(32 33) rotate(-30) scale(1.06) translate(-32 -32)">'+
+        '<path d="M26.8 41h10.4l1.8 18H25z" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/><rect x="25.2" y="53.4" width="13.6" height="3.6" rx="1" fill="url(#'+u+'cy)"/>'+
+        '<path d="M29.2 19h5.6l2.4 22.4H26.8z" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/>'+
+        '<ellipse cx="32" cy="13.8" rx="11.6" ry="9.8" fill="#C3CEDE"/><ellipse cx="32" cy="12" rx="11.6" ry="9.8" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".7"/>'+
+        splay+'<g class="a-spin">'+t+'</g>'+spec(29,32,1,6,0,.8)+'</g></g>'+warn;
+      break; }
+    case 'tuft': { const f=wear*4;
+      b=shadow(12)+'<g class="a-body"><g transform="translate(33 34) rotate(-36) translate(-32 -32)">'+
+        '<path d="M29.6 24h6.4c.7 9 1.8 16 1.8 27.4a5.2 5.2 0 0 1-10.4 0c0-11.4 1.1-18.4 1.8-27.4z" fill="url(#'+u+'cy)"/>'+
+        '<path d="M29.8 31h6.2M29.6 34h6.6" stroke="#fff" stroke-width="1" opacity=".55"/>'+spec(35,44,1,6,0,.6)+
+        '<path d="M30 24.5l.4-9.5 3-3.2 2.4 1.8-.4 10.9z" fill="url(#'+u+'cy)"/>'+
+        '<g transform="rotate(-28 32 11)"><rect x="28.6" y="8" width="7.2" height="5.4" rx="2" fill="url(#'+u+'ch)"/>'+
+        '<path d="M28.8 8.6C27.6 4 '+(29.4-f)+' -1.6 32.2 -2.6 '+(35+f)+' -1.6 36.8 4 35.6 8.6z" fill="#FFFFFF" stroke="#A6B4C7" stroke-width=".5"/>'+
+        '<path d="M30.6 8V1.6M32.2 8V-1M33.8 8V1.6" stroke="'+shd(c,.45)+'" stroke-width=".9" stroke-linecap="round"/><path d="M29.6 7.6c-.4-2 .2-4.2 1-5.6" stroke="#fff" stroke-width=".9" fill="none"/></g></g></g>'+warn;
+      break; }
+    case 'razor':
+      b=shadow(14)+'<g class="a-body"><g transform="rotate(-32 32 33)"><rect x="28.5" y="24" width="7" height="36" rx="3.5" fill="url(#'+u+'cy)"/><path d="M30 33h4M30 37h4M30 41h4" stroke="'+lo+'" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>'+
+        '<rect x="12" y="8" width="40" height="17" rx="6" fill="url(#'+u+'wh)" stroke="#AEBBCD" stroke-width=".8"/>'+
+        '<rect x="14.5" y="10" width="35" height="4" rx="2" fill="url(#'+u+'sp)"/>'+
+        '<rect x="15" y="16" width="34" height="2.2" fill="url(#'+u+'ch)"/><rect x="15" y="19.4" width="34" height="2.2" fill="url(#'+u+'ch)"/>'+
+        '<clipPath id="'+u+'rz"><rect x="15" y="16" width="34" height="5.6"/></clipPath><g clip-path="url(#'+u+'rz)"><rect class="a-glint" x="2" y="15" width="5" height="8" fill="#fff" opacity=".9" transform="skewX(-20)"/></g>'+spec(22,11.5,5,.8,0,.9)+'</g></g>';
+      break;
+    default: // tablet: thick disc with visible edge
+      b=shadow(18)+'<g class="a-body"><ellipse cx="32" cy="36" rx="21" ry="13" fill="'+dk+'"/><rect x="11" y="30" width="42" height="6" fill="url(#'+u+'cy)"/><ellipse cx="32" cy="30" rx="21" ry="13" fill="url(#'+u+'sp)"/>'+
+        '<path d="M15 31.5Q32 27 49 28.5" stroke="'+lo+'" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M15.5 33Q32 28.6 48.5 30" stroke="'+hi+'" stroke-width="1" stroke-linecap="round" fill="none" opacity=".7"/>'+spec(23,23.5,7,2.6,-12,.85)+'</g>';
+      shape='tab';
     }
-    if(shape==='drop'){
-      return open+'<defs><radialGradient id="'+id+'" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="'+hi+'"/><stop offset=".5" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></radialGradient></defs>'+shadow+
-        '<path d="M16 3.5c4.6 6.1 9 10.6 9 15.6a9 9 0 0 1-18 0C7 14.1 11.4 9.6 16 3.5z" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
-        '<path d="M11.6 18.6a4.6 4.6 0 0 0 3 4.4" stroke="rgba(255,255,255,.8)" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="13.2" cy="14.6" r="1.1" fill="rgba(255,255,255,.75)"/></svg>';
-    }
-    if(shape==='bottle'){
-      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+lo+'"/><stop offset=".35" stop-color="'+hi+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
-        '<rect x="13" y="2.5" width="6" height="5" rx="1.5" fill="#F2F5F9" stroke="#AEBBCD" stroke-width=".8"/><rect x="11.8" y="7" width="8.4" height="3.2" rx="1" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/>'+
-        '<path d="M10.5 10.2h11a2.5 2.5 0 0 1 2.5 2.5v11.8a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3V12.7a2.5 2.5 0 0 1 2.5-2.5z" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
-        '<rect x="11" y="15" width="10" height="7" rx="1.5" fill="#FFFFFF" opacity=".9"/><path d="M13 18.5h6" stroke="'+edge+'" stroke-width="1.4" stroke-linecap="round"/>'+
-        '<path d="M11.4 13v10" stroke="rgba(255,255,255,.6)" stroke-width="1.4" stroke-linecap="round"/></svg>';
-    }
-    if(shape==='tube'){
-      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+hi+'"/><stop offset=".5" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
-        '<g transform="rotate(-32 16 16)">'+
-        '<rect x="3.6" y="10.4" width="3.4" height="11.2" rx=".8" fill="'+lo+'" stroke="'+edge+'" stroke-width=".7"/><path d="M4.6 11.4v9.2M6 11.4v9.2" stroke="rgba(255,255,255,.45)" stroke-width=".7"/>'+
-        '<path d="M7 10.4L20.2 11.8a2.4 2.4 0 0 1 2.1 2.4v3.6a2.4 2.4 0 0 1-2.1 2.4L7 21.6z" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
-        '<rect x="10.4" y="13.2" width="7.4" height="5.6" rx="1.2" fill="#FFFFFF" opacity=".92"/><path d="M12 16h4.2" stroke="'+edge+'" stroke-width="1.3" stroke-linecap="round"/>'+
-        '<path d="M8.6 12l11.2 1.2" stroke="rgba(255,255,255,.7)" stroke-width="1.2" stroke-linecap="round"/>'+
-        '<rect x="22.2" y="14" width="1.8" height="4" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".6"/>'+
-        '<rect x="23.9" y="12.6" width="4.8" height="6.8" rx="1.3" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M25.3 13.6v4.8M26.6 13.6v4.8M27.9 13.6v4.8" stroke="#D2DAE6" stroke-width=".6"/></g></svg>';
-    }
-    if(shape==='pump'){
-      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+lo+'"/><stop offset=".38" stop-color="'+hi+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
-        '<rect x="15" y="2.6" width="2" height="4.6" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".6"/><path d="M12.4 5.2h9.2v2.4h-2.2v-.8h-7z" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".7" stroke-linejoin="round"/>'+
-        '<rect x="12.6" y="7.6" width="6.8" height="3.6" rx="1" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/>'+
-        '<rect x="8.6" y="11" width="14.8" height="16.6" rx="3.4" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
-        '<rect x="10.8" y="15.4" width="10.4" height="7.4" rx="1.6" fill="#FFFFFF" opacity=".9"/><path d="M13 18.2h6M13 20.4h4" stroke="'+edge+'" stroke-width="1.1" stroke-linecap="round"/>'+
-        '<path d="M10.4 13.6v11.4" stroke="rgba(255,255,255,.6)" stroke-width="1.3" stroke-linecap="round"/></svg>';
-    }
-    if(shape==='jar'){
-      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+lo+'"/><stop offset=".38" stop-color="'+hi+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
-        '<rect x="6.4" y="14" width="19.2" height="13" rx="3.6" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
-        '<rect x="5.6" y="8.4" width="20.8" height="6.2" rx="2.2" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M9 9.6v3.8M12 9.6v3.8M15 9.6v3.8M18 9.6v3.8M21 9.6v3.8M24 9.6v3.8" stroke="#D2DAE6" stroke-width=".7"/>'+
-        '<rect x="10" y="17.6" width="12" height="5.6" rx="1.4" fill="#FFFFFF" opacity=".9"/><path d="M12.6 20.4h6.8" stroke="'+edge+'" stroke-width="1.2" stroke-linecap="round"/>'+
-        '<path d="M8.4 16.6v7.6" stroke="rgba(255,255,255,.6)" stroke-width="1.3" stroke-linecap="round"/></svg>';
-    }
-    if(shape==='razor'){
-      return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 1) rotate(-38 16 16)">'+
-        '<rect x="14.5" y="12.6" width="3" height="17.4" rx="1.5" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><path d="M15.2 20v7" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>'+
-        '<rect x="14" y="10.6" width="4" height="3.2" rx="1" fill="'+lo+'"/>'+
-        '<rect x="7.4" y="4.4" width="17.2" height="7" rx="2.2" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/>'+
-        '<rect x="8.4" y="5.4" width="15.2" height="1.8" rx=".9" fill="'+hi+'"/><path d="M8.6 9.2h14.8" stroke="#8A98AC" stroke-width="1.1"/><path d="M8.6 10.4h14.8" stroke="#C4CEDB" stroke-width=".6"/></g></svg>';
-    }
-    if(shape==='ebrush') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 1.5) rotate(-40 16 16)"><rect x="14.9" y="6" width="2.2" height="8" rx="1.1" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".7"/><rect x="12" y="12.5" width="8" height="18" rx="4" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><circle cx="16" cy="18.5" r="1.9" fill="#FFFFFF" stroke="'+edge+'" stroke-width=".6"/><path d="M13.8 22v6" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-linecap="round"/><circle cx="16" cy="4.6" r="3.6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><g fill="'+color+'"><circle cx="16" cy="4.6" r=".9"/><circle cx="14.2" cy="3.6" r=".7"/><circle cx="17.8" cy="3.6" r=".7"/><circle cx="14.2" cy="5.6" r=".7"/><circle cx="17.8" cy="5.6" r=".7"/></g></g></svg>';
-    if(shape==='tuft') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 2) rotate(-40 16 16)"><rect x="13.2" y="15" width="5.6" height="15" rx="2.8" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><rect x="14.7" y="8.5" width="2.6" height="8" rx="1.3" fill="'+color+'" stroke="'+edge+'" stroke-width=".7"/><ellipse cx="16" cy="8.4" rx="4.2" ry="2.6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M12.6 7.6Q16 -2.8 19.4 7.6Z" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8" stroke-linejoin="round"/><path d="M14.3 6.6L15 2.6M16 6.6V1.4M17.7 6.6L17 2.6" stroke="'+color+'" stroke-width="1.3" stroke-linecap="round"/><path d="M14.7 18v9" stroke="rgba(255,255,255,.6)" stroke-width="1.1" stroke-linecap="round"/></g></svg>';
-    if(shape==='brush') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="rotate(-40 16 16)"><rect x="13" y="12" width="6" height="18" rx="3" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><rect x="11.5" y="2.5" width="9" height="11" rx="3" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M13.5 4.5v7M16 4.5v7M18.5 4.5v7" stroke="'+color+'" stroke-width="1.6" stroke-linecap="round"/><path d="M14.5 15v12" stroke="rgba(255,255,255,.6)" stroke-width="1.2" stroke-linecap="round"/></g></svg>';
-    return open+'<defs><radialGradient id="'+id+'" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="'+hi+'"/><stop offset=".55" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></radialGradient></defs>'+shadow+
-      '<circle cx="16" cy="16.6" r="11" fill="'+edge+'"/>'+
-      '<circle cx="16" cy="15.4" r="10.6" fill="url(#'+id+')"/>'+
-      '<path d="M8.4 15.4h15.2" stroke="'+edge+'" stroke-width="1.5" stroke-linecap="round" opacity=".75"/><path d="M8.8 16.7h14.4" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>'+
-      '<ellipse cx="12.3" cy="10.6" rx="3.6" ry="1.9" fill="rgba(255,255,255,.7)" transform="rotate(-25 12.3 10.6)"/></svg>';
+    return '<svg class="ic3 ic-'+shape+'" width="'+size+'" height="'+size+'" viewBox="0 0 64 64" aria-hidden="true">'+D+b+'</svg>';
   }
 
   let meds=[]; const months={}; let today=dk(new Date()); let sel=today;
@@ -1561,7 +1657,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const coAll=meds.filter(isCos);
     const needRow=m=>{
       const ent=extra.prn.filter(p=>p.m===m.id&&p.t.slice(0,10)===sel).sort((a,b)=>a.t<b.t?-1:1);
-      let r='<div class="ord wk-row"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div class="wk-times">'+(ent.length?ent.map(p=>'<span class="wk-chip">'+p.t.slice(11)+'<button type="button" class="wk-x" data-wkdel="'+p.id+'" aria-label="Zmazať záznam o '+p.t.slice(11)+'">×</button></span>').join(''):'<span class="note">v tento deň nič</span>')+'</div></div>';
+      let r='<div class="ord wk-row"><span class="pillbox">'+picM(m,34)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div class="wk-times">'+(ent.length?ent.map(p=>'<span class="wk-chip">'+p.t.slice(11)+'<button type="button" class="wk-x" data-wkdel="'+p.id+'" aria-label="Zmazať záznam o '+p.t.slice(11)+'">×</button></span>').join(''):'<span class="note">v tento deň nič</span>')+'</div></div>';
       if(wkAdd===m.id) r+='<div class="wk-add"><label class="sr" for="wkT">Čas</label><input id="wkT" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" value="'+(sel===today?nowHM():'12:00')+'"><button type="button" class="btn pri sm" id="wkSave" data-m="'+m.id+'">Uložiť</button><button type="button" class="btn ghost sm" id="wkCancel">Zrušiť</button></div>';
       else r+='<button type="button" class="btn ghost sm" data-wkadd="'+m.id+'">+ '+actLabel(m)+'</button>';
       return r+'</div>';
@@ -1569,7 +1665,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const swRow=m=>{
       const swap=m.kind==='swap'&&!isCos(m);
       const was=extra.sw.some(e=>e.m===m.id&&e.d===sel);
-      return '<div class="ord wk-row"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div>'+(was?(swap?'vymenené v tento deň ✓':'otvorené v tento deň ✓'):(m.opened?(swap?'naposledy vymenené ':'otvorené ')+nice(m.opened):'zatiaľ bez dátumu'))+'</div></div>'+
+      return '<div class="ord wk-row"><span class="pillbox">'+picM(m,34)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div>'+(was?(swap?'vymenené v tento deň ✓':'otvorené v tento deň ✓'):(m.opened?(swap?'naposledy vymenené ':'otvorené ')+nice(m.opened):'zatiaľ bez dátumu'))+'</div></div>'+
         (was?'<button type="button" class="btn ghost sm" data-wkun="'+m.id+'">Zrušiť</button>':'<button type="button" class="btn ghost sm" data-wksw="'+m.id+'">'+(swap?'Vymenil som v tento deň':'Otvoril som v tento deň')+'</button>')+'</div>';
     };
     const groups=[
@@ -1637,7 +1733,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       list.map(m=>{
         const i=stockInfo(m)||{};
         const why=m.kind==='swap'&&m.left>0&&supplyInfo(m)?'posledná '+(isCos(m)?'zásoba':'náhradná')+' vydrží do '+nice(supplyInfo(m).end)+', objednaj včas':isCos(m)?'nemáš ďalšie balenie':m.kind==='swap'?'nemáš náhradné, kúp nové':byBottle(m)?'doma už nie je ďalšia '+pkW(m,1):i.course?'chýba '+i.short+' '+ks(i.short)+' do konca liečby':(i.out||i.left===0)?'zásoba došla':'vydrží do '+nice(i.last)+' ('+i.left+' '+ks(i.left)+')';
-        return '<div class="ord"><span class="pillbox">'+picM(m,28)+'</span><div class="t"><div>'+esc(nm(m))+'</div><div>'+why+'</div></div><button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button></div>';
+        return '<div class="ord"><span class="pillbox">'+picM(m,34)+'</span><div class="t"><div>'+esc(nm(m))+'</div><div>'+why+'</div></div><button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button></div>';
       }).join('')+'</section>';
     $('orders').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
   }
@@ -1646,8 +1742,16 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const KEYICO='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="4.2" fill="none" stroke="#7C74EA" stroke-width="2.4"/><path d="M12 12h9M18 12v3.5M21 12v2.5" stroke="#7C74EA" stroke-width="2.4" stroke-linecap="round"/></svg>';
   const PLACE_LBL={doma:'doma',prech:'prechodný byt'};
   const nm=m=>m.name+(m.place?' · '+PLACE_LBL[m.place]:'');
+  function goIcon(el){if(!el||reduce())return;el.classList.remove('go');void el.offsetWidth;el.classList.add('go');clearTimeout(el._gt);el._gt=setTimeout(()=>el.classList.remove('go'),1700)}
+  document.addEventListener('pointerdown',e=>{const p=e.target.closest&&e.target.closest('.pillbox,.ipill,.tile');if(p&&p.querySelector('.ic3'))goIcon(p)},{passive:true});
+  function iconState(m){
+    const o=openInfo(m); const br=m.shape==='brush'||m.shape==='tuft'||m.shape==='ebrush';
+    if(o&&m.openDays){const rem=Math.max(0,Math.min(1,(o.left+(m.kind==='swap'?0:1))/m.openDays));return br?{wear:1-rem}:{lvl:Math.max(.06,rem)}}
+    if(byBottle(m)&&m.left===0) return {lvl:.08};
+    return {};
+  }
   function picM(m,size){
-    const svg=pillSvg(m.shape,m.color,size);
+    const svg=pillSvg(m.shape,m.color,size,iconState(m));
     if(!m.place) return svg;
     return '<span class="plw">'+svg+'<span class="plb plb-'+m.place+'" title="'+PLACE_LBL[m.place]+'">'+(m.place==='doma'?HOMEICO:KEYICO)+'</span></span>';
   }
@@ -1668,7 +1772,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         const o=openInfo(m); const st=o?o.state:'ok';
         const swap=m.kind==='swap'&&!isCos(m);
         const lines=[o?openText(m):(m.openDays?'zatiaľ neotvorené':''),m.mode==='need'&&m.kind!=='swap'?'podľa potreby':''].filter(Boolean).join(' · '); const sup=supplyInfo(m);
-        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div>'+(m.left!=null?'<div class="mchips">'+stockChip(m)+(sup&&m.left>0?'<span class="sp-note">vydrží do '+nice(sup.end)+'</span>':'')+'</div>':'')+'</div>'+
+        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,34)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div>'+(m.left!=null?'<div class="mchips">'+stockChip(m)+(sup&&m.left>0?'<span class="sp-note">vydrží do '+nice(sup.end)+'</span>':'')+'</div>':'')+'</div>'+
           (m.openDays?'<button class="btn ghost sm" type="button" data-open="'+m.id+'">'+(swap?'Vymenil som':'Otvoril som nové')+'</button>':'')+'</div>';
       })()).join('')+'</div></section>';
     $('opened').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openedNew(b.dataset.open));
@@ -1726,7 +1830,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         line=[i&&!i.need?(i.course?(i.enough?'na celú liečbu':'chýba '+i.short+' '+ks(i.short)):i.out||i.left===0?'došlo':'vydrží do '+nice(i.last)):'',o?openText(m):''].filter(Boolean).join(' · ');}
       const al=m.kind==='swap'?'Kúpil som':'Doplniť';
       const plus=m.left!=null||(m.kind!=='swap'&&m.pack)?'<button class="qa'+(st==='warn'||st==='bad'?' hot':'')+'" type="button" data-refill="'+m.id+'" aria-label="'+al+': '+esc(m.name)+'" title="'+al+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>':'<span class="qa-sp"></span>';
-      return '<li class="mr2 st-'+st+(ended?' ended':'')+'" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="'+esc(m.name+(chip?', '+chip:''))+'"><span class="pillbox">'+picM(m,26)+'<i class="sdot" aria-hidden="true"></i></span>'+
+      return '<li class="mr2 st-'+st+(ended?' ended':'')+'" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="'+esc(m.name+(chip?', '+chip:''))+'"><span class="pillbox">'+picM(m,36)+'<i class="sdot" aria-hidden="true"></i></span>'+
         '<span class="mn2w"><span class="mn2">'+esc(m.name)+'</span>'+(line?'<span class="ml2">'+(line.startsWith('#H')?line.slice(2):esc(line))+'</span>':'')+'</span>'+(chip?'<span class="mc2 '+st+'">'+esc(chip)+'</span>':'')+plus+'</li>';
     };
     const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -1805,7 +1909,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     if(sel>today){toast('Tento deň ešte neprišiel');return}
     if(taken(dayLog(sel),med,k)){confirmId=key;timeKey=null;render();return}
     if(sel<today){openTime(key);return}
-    setTaken(key,nowHM()); render();
+    setTaken(key,nowHM()); render(); setTimeout(()=>goIcon(document.querySelector('[data-key="'+key+'"] .pillbox')),30);
     const i=dosesOf(med,sel).find(x=>x.k===k)||{t:null,s:k};
     toast(nm(med)+' · '+doseLabel(i)+' ✓',()=>unmark(key,true));
   }
@@ -1956,7 +2060,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const q=$('quick');
     if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
     $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qi" role="menuitem" data-qg="'+x.g+'" style="animation-delay:'+(i*55)+'ms"><span class="pillbox">'+pillSvg(x.sh,x.c,30)+'</span><span>'+x.l+'<small>'+x.d+'</small></span></button>').join('');
-    q.hidden=false; $('plusTab').classList.add('on'); $('plusTab').setAttribute('aria-expanded','true');
+    q.hidden=false; $('plusTab').classList.add('on');
+    $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
     $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
     const f=$('qMenu').querySelector('.qi'); if(f) f.focus({preventScroll:true});
   }
@@ -2506,7 +2611,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end)}
   function showInfo(id){
     const m=meds.find(x=>x.id===id); if(!m) return;
-    if(cardId!==id) delAsk=false; cardId=id;
+    const fresh=cardId!==id||$('infoSheet').hidden; if(cardId!==id) delAsk=false; cardId=id;
+    if(fresh) setTimeout(()=>goIcon($('infoBody').querySelector('.ipill')),160);
     if(tab!=='week') sel=today;
     const rows=[];
     const add=(k,v)=>{if(v)rows.push('<div class="ir"><span>'+esc(k)+'</span><b>'+esc(v)+'</b></div>')};
@@ -2658,6 +2764,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   applyDiscreet(); applyTheme();
   init();
   function idlePulse(){
+    if(!document.hidden&&tab==='meds'&&!reduce()&&$('infoSheet').hidden){const r=[...document.querySelectorAll('#mlist .mr2 .pillbox')].filter(p=>{const b=p.getBoundingClientRect();return b.top>0&&b.bottom<innerHeight-90});if(r.length)goIcon(r[Math.floor(Math.random()*r.length)])}
     if(!document.hidden&&tab==='today'&&!reduce()){
       const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')].filter(e=>!e.classList.contains('play'));
       if(els.length){
