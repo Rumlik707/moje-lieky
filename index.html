@@ -1049,6 +1049,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v23</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2780,7 +2781,19 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 
 <script>
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
-  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{
+      const chk=()=>r.update().catch(()=>{}); chk();
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
+      setInterval(chk,30*60000);
+    }).catch(()=>{});
+    let reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloaded)return;reloaded=true;
+      const busy=document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+      if(!busy) location.reload();});
+    navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='version'){const el=document.getElementById('appVer');if(el)el.textContent='Verzia appky: '+e.data.v}});
+    navigator.serviceWorker.ready.then(r=>{if(r.active)r.active.postMessage('version')});
+  });
 }
 try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
 </script>

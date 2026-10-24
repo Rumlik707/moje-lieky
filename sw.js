@@ -2,7 +2,7 @@
 // Appka sa uloží do telefónu, takže funguje aj bez internetu.
 // Pri pripojení si vždy najprv skúsi stiahnuť najnovšiu verziu.
 // Ak zmeníš ikonky alebo tento súbor, zvýš číslo verzie nižšie.
-const VERSION = 'v22';
+const VERSION = 'v23';
 const APP = 'moje-lieky-app-' + VERSION;
 const FONTS = 'moje-lieky-fonts';
 const FILES = [
@@ -15,7 +15,7 @@ const FILES = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(APP).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(APP).then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
@@ -31,7 +31,7 @@ async function page(req) {
   const cache = await caches.open(APP);
   try {
     const res = await Promise.race([
-      fetch(req),
+      fetch(req, { cache: 'no-cache' }),
       new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 3000))
     ]);
     if (res && res.ok) cache.put('index.html', res.clone());
@@ -102,4 +102,10 @@ self.addEventListener('notificationclick', e => {
     for (const c of list) { if ('focus' in c) return c.focus(); }
     return self.clients.openWindow ? self.clients.openWindow('./') : null;
   }));
+});
+
+// Appka sa môže opýtať na verziu alebo požiadať o okamžitú aktiváciu.
+self.addEventListener('message', e => {
+  if (e.data === 'version' && e.source) e.source.postMessage({ type: 'version', v: VERSION });
+  if (e.data === 'skip') self.skipWaiting();
 });
