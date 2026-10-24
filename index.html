@@ -331,7 +331,10 @@ button,input,select{font:inherit;color:inherit}
 .mlist li.mr2{display:flex;align-items:center;gap:10px;padding:8px 2px;min-height:52px;border-bottom:1px solid var(--line);flex-wrap:nowrap;cursor:pointer}
 .mr2:active{background:var(--card2)}
 .mr2 .pillbox{flex:none}
-.mn2{flex:1;min-width:0;font-weight:800;font-size:15px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.mn2w{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ml2{font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.3}
+.mr2.st-warn .ml2{color:var(--warn-ink)}.mr2.st-bad .ml2{color:var(--miss-ink)}
+.mn2{min-width:0;font-weight:800;font-size:15px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
 .mn2 small{font-weight:600;font-size:12px;color:var(--muted);margin-left:6px}
 .mc2{flex:none;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:999px;padding:3px 9px;font-size:12.5px;font-weight:800;background:var(--card2);color:var(--muted)}
 .mc2.ok{background:var(--ok-soft);color:var(--ok)}.mc2.warn{background:var(--warn-soft);color:var(--warn-ink)}.mc2.bad{background:var(--miss-soft);color:var(--miss-ink)}
@@ -1704,17 +1707,18 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const sorted=[...meds].sort((a,b)=>{const ea=a.days&&endKey(a)<today, eb=b.days&&endKey(b)<today;return ea-eb||a.name.localeCompare(b.name,'sk')});
     const row=m=>{
       const st=itemState(m), o=openInfo(m), sup=supplyInfo(m), ended=m.days&&endKey(m)<today;
-      let chip='';
+      let chip='', line='';
       if(m.kind==='swap'){const n=m.left;
-        chip=n==null?(o?(isCos(m)?'do ':'vymeniť ')+niceS(o.last):''):n<=0?(isCos(m)?'žiadne v zásobe':'žiadna v zásobe'):n+' v zásobe';
-        if(st!=='ok'&&o&&o.state!=='ok') chip=(o.state==='exp'?'po termíne':(isCos(m)?'spotrebovať ':'vymeniť ')+niceS(o.last))+(n!=null?' · '+(n>0?n+' v zás.':'0 v zás.'):'');}
+        chip=n==null?'':n<=0?(isCos(m)?'žiadne v zásobe':'žiadna v zásobe'):n+' v zásobe';
+        const nx=o?(o.state==='exp'?(isCos(m)?'po spotrebe':'vymeniť už teraz'):(isCos(m)?'spotrebovať do ':'vymeniť ')+nice(o.last)):'';
+        line=[nx,sup&&n>0?'so zásobou do '+nice(sup.end):''].filter(Boolean).join(' · ');}
       else{const i=stockInfo(m);
-        if(m.left!=null) chip=(byBottle(m)?m.left+' '+pkW(m,m.left):m.left+' ks')+(i&&!i.need&&st!=='ok'?(i.course?' · chýba '+i.short:i.out||i.left===0?' · došlo':' · do '+niceS(i.last)):'');
-        else if(o) chip='do '+niceS(o.last);}
+        if(m.left!=null) chip=byBottle(m)?m.left+' '+pkW(m,m.left):m.left+' ks';
+        line=[i&&!i.need?(i.course?(i.enough?'na celú liečbu':'chýba '+i.short+' '+ks(i.short)):i.out||i.left===0?'došlo':'vydrží do '+nice(i.last)):'',o?openText(m):''].filter(Boolean).join(' · ');}
       const al=m.kind==='swap'?'Kúpil som':'Doplniť';
       const plus=m.left!=null||(m.kind!=='swap'&&m.pack)?'<button class="qa'+(st==='warn'||st==='bad'?' hot':'')+'" type="button" data-refill="'+m.id+'" aria-label="'+al+': '+esc(m.name)+'" title="'+al+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>':'<span class="qa-sp"></span>';
       return '<li class="mr2 st-'+st+(ended?' ended':'')+'" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="'+esc(m.name+(chip?', '+chip:''))+'"><span class="pillbox">'+picM(m,26)+'<i class="sdot" aria-hidden="true"></i></span>'+
-        '<span class="mn2">'+esc(m.name)+'</span>'+(chip?'<span class="mc2 '+st+'">'+esc(chip)+'</span>':'')+plus+'</li>';
+        '<span class="mn2w"><span class="mn2">'+esc(m.name)+'</span>'+(line?'<span class="ml2">'+esc(line)+'</span>':'')+'</span>'+(chip?'<span class="mc2 '+st+'">'+esc(chip)+'</span>':'')+plus+'</li>';
     };
     const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const sw=$('mSearchW'); sw.hidden=meds.length<6; if(sw.hidden) mq='';
