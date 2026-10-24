@@ -1487,7 +1487,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       return '<section class="block '+s.k+(isNow?' now':'')+(op?'':' closed')+playCls(ck2)+'"><button type="button" class="block-h" data-tog="'+ck2+'" data-def="false" aria-expanded="'+op+'"><span class="ico"><span class="hico">'+BADGE_ICO[s.k]+'</span>'+s.l+'<span class="cnt">· '+list.length+'</span></span><span class="bh-r">'+tag+CHEV+'</span></button><div class="rows"'+(op?'':' hidden')+'>'+
         list.map(i=>{
           const m=i.m; const key=m.id+'@'+i.k; const t=taken(log,m,i.k);
-          if(timeKey===key) return '<div class="confirm timeedit" id="te"><label for="tIn">Kedy si užil '+esc(dname(m.name))+'?</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" id="tIn" class="tm" value="'+defTime(key)+'"><button class="btn pri sm" type="button" id="tSave">Uložiť</button><button class="btn ghost sm" type="button" id="tCancel">Zrušiť</button><p class="err" id="tErr" hidden></p></div>';
+          if(timeKey===key) return '<div class="confirm timeedit" id="te"><label for="tIn">Kedy si užil '+esc(dname(m.name))+'?</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" id="tIn" class="tm" value="'+defTime(key)+'"><button class="btn pri sm" type="button" id="tSave">Potvrdiť</button><button class="btn ghost sm" type="button" id="tCancel">Zrušiť</button><p class="err" id="tErr" hidden></p></div>';
           if(confirmId===key) return '<div class="confirm"><p>'+esc(dname(m.name))+' užitý o '+esc(t)+'.</p><button class="btn ghost sm" type="button" data-chtime="'+key+'">Zmeniť čas</button><button class="btn ghost sm" type="button" data-fx="'+m.id+'">Vedľajší účinok</button><button class="btn danger sm" type="button" data-undo="'+key+'">Zrušiť záznam</button><button class="btn ghost sm" type="button" data-keep="1">Nechať</button></div>';
           const sub=[i.t?'o '+i.t:'',m.per>1?m.per+' '+ks(m.per):'',m.dose,m.days?durText(m):''].filter(Boolean).join(' · ');
           const sst=stockShort(m);
@@ -2538,7 +2538,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     });
     const B=$('infoBody'), again=()=>{render();showInfo(id)};
     const okT=(v,d)=>{v=normTime(v||'');if(!/^\d{2}:\d{2}$/.test(v)){toast('Zadaj čas, napr. 830');return null}if(d===today&&v>nowHM()){toast('Tento čas ešte nebol');return null}return v};
-    B.querySelectorAll('[data-dok]').forEach(b=>b.onclick=()=>{const k=b.dataset.dok;const v=okT(B.querySelector('[data-dt="'+k+'"]').value,sel);if(!v)return;
+    B.querySelectorAll('[data-dok]').forEach(b=>b.onclick=()=>{
+      if(/Zmeniť/.test(b.textContent)&&b.dataset.mode!=='edit'){const i=B.querySelector('[data-dt="'+b.dataset.dok+'"]');b.dataset.mode='edit';b.dataset.lab=b.dataset.lab||b.textContent;b.textContent='Potvrdiť';b.classList.add('pri','confirm-pulse');b.classList.remove('ghost');if(i){i.focus();i.select()}return}const k=b.dataset.dok;const v=okT(B.querySelector('[data-dt="'+k+'"]').value,sel);if(!v)return;
       const lg=dayLog(sel),dk=k.split('@')[1],prev=taken(lg,m,dk)||(skipped(lg,m,dk)?'x':null);if(prev==='x')setSkip(k,false);setTaken(k,v);again();toast(nm(m)+' · užité o '+v,()=>{setTaken(k,null);if(prev==='x')setSkip(k,true);else if(prev)setTaken(k,prev);again()})});
     B.querySelectorAll('[data-dskip]').forEach(b=>b.onclick=()=>{const k=b.dataset.dskip;setSkip(k,true);again();toast('Zaznamenané ako vynechané',()=>{setSkip(k,false);again()})});
     B.querySelectorAll('[data-dclr]').forEach(b=>b.onclick=()=>{const k=b.dataset.dclr,dk=k.split('@')[1],lg=dayLog(sel),prev=taken(lg,m,dk);
