@@ -420,6 +420,12 @@ button,input,select{font:inherit;color:inherit}
 @keyframes ic-shave{0%,100%{transform:none}35%{transform:translate(-5px,6px)}70%{transform:translate(3px,-3px)}}
 @keyframes ic-glint{0%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(42px) skewX(-20deg)}}
 @keyframes ic-warn{50%{transform:scale(1.35)}}
+@keyframes ic-shine{0%{transform:rotate(20deg) translateX(0);opacity:0}15%{opacity:.55}100%{transform:rotate(20deg) translateX(110px);opacity:0}}
+@keyframes ic-foam{50%{transform:translateY(-2px) scale(1.15)}}
+:is(.go,.play) .ic3 .a-shine{animation:ic-shine 1s ease-out .15s}
+:is(.go,.play) .ic-pump .a-foam{animation:ic-foam .55s ease-in-out 2}
+.pillbox .ic3,.ipill .ic3,.qi .ic3{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.pillbox:active .ic3{transform:scale(.92)}
 @media (prefers-reduced-motion: reduce){.ic3 *{animation:none!important}}
 .msearch{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:0 12px;margin:0 0 6px;color:var(--muted)}
 .msearch input{flex:1;border:0;background:transparent;min-height:46px;font:inherit;font-size:16px;color:var(--ink);outline:none}
@@ -1049,7 +1055,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v23</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v24</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1128,7 +1134,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   function shd(hex,a){const n=parseInt(String(hex||'#2D6BE4').slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;
     if(a>0){r+=(255-r)*a;g+=(255-g)*a;b+=(255-b)*a}else{r*=1+a;g*=1+a;b*=1+a}
     return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('')}
-  function pillSvg(shape,c,size,st){
+  function pillOld(shape,c,size,st){
     st=st||{}; size=size||30; c=c||'#2D6BE4';
     const lvl=st.lvl==null?1:Math.max(0,Math.min(1,st.lvl)), wear=Math.max(0,Math.min(1,st.wear||0));
     const u='p'+(++_pid), hi=shd(c,.6), mid=shd(c,.18), lo=shd(c,-.3), dk=shd(c,-.5);
@@ -1237,6 +1243,61 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       shape='tab';
     }
     return '<svg class="ic3 ic-'+shape+'" width="'+size+'" height="'+size+'" viewBox="0 0 64 64" aria-hidden="true">'+D+b+'</svg>';
+  }
+
+  /* ---------- premium tile wrapper + more recognizable shapes ---------- */
+  function pillSvg(shape,c,size,st){
+    st=st||{}; size=size||30; c=c||'#2D6BE4';
+    const u='t'+(++_pid), lvl=st.lvl==null?1:Math.max(0,Math.min(1,st.lvl));
+    const hi=shd(c,.6), lo=shd(c,-.3), dk=shd(c,-.5);
+    let inner='';
+    const G='<defs>'+
+      '<linearGradient id="'+u+'tl" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="'+shd(c,.93)+'"/><stop offset="1" stop-color="'+shd(c,.74)+'"/></linearGradient>'+
+      '<linearGradient id="'+u+'fo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F5F7FA"/><stop offset=".45" stop-color="#C7CFDA"/><stop offset=".7" stop-color="#EEF1F5"/><stop offset="1" stop-color="#A9B3C1"/></linearGradient>'+
+      '<radialGradient id="'+u+'dm" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#C9D5E6" stop-opacity=".6"/></radialGradient>'+
+      '<radialGradient id="'+u+'pl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="'+hi+'"/><stop offset=".55" stop-color="'+c+'"/><stop offset="1" stop-color="'+lo+'"/></radialGradient>'+
+      '<filter id="'+u+'ds" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="1.6" stdDeviation="1.3" flood-color="#0F2347" flood-opacity=".33"/></filter>'+
+      '</defs>';
+    if(shape==='tab'||!shape){ // blister strip: number of filled pockets follows the stock
+      const n=6, full=st.lvl==null?5:Math.max(0,Math.min(n,Math.ceil(lvl*n)));
+      let pk='';
+      for(let i=0;i<n;i++){const col=i%3, row=Math.floor(i/3), x=17+col*15, y=23+row*16, has=i>=n-full;
+        pk+='<ellipse cx="'+x+'" cy="'+(y+1.4)+'" rx="6.6" ry="6.2" fill="rgba(60,75,100,.25)"/>'+
+          (has?'<ellipse cx="'+x+'" cy="'+y+'" rx="5" ry="4.6" fill="url(#'+u+'pl)"/><path d="M'+(x-4)+' '+(y+.3)+'h8" stroke="'+lo+'" stroke-width="1" stroke-linecap="round"/>'+
+            '<ellipse cx="'+x+'" cy="'+y+'" rx="6.4" ry="6" fill="url(#'+u+'dm)" stroke="#fff" stroke-width=".6"/><ellipse cx="'+(x-2.2)+'" cy="'+(y-2.4)+'" rx="2" ry="1.1" fill="#fff" opacity=".95" transform="rotate(-30 '+(x-2.2)+' '+(y-2.4)+')"/>'
+          :'<ellipse cx="'+x+'" cy="'+y+'" rx="5.4" ry="5" fill="#4E5A6C"/><ellipse cx="'+x+'" cy="'+(y+1)+'" rx="4.2" ry="3.4" fill="#39444F"/><path d="M'+(x-5.4)+' '+y+'q1.6-3.6 4.4-1.8M'+(x+5.2)+' '+(y-.6)+'q-1.4 3.8-4.6 2.6" stroke="#E8EDF3" stroke-width="1.6" fill="none" stroke-linecap="round"/>');}
+      inner='<g class="a-body"><g transform="rotate(-10 32 32)"><rect x="7" y="13" width="50" height="38" rx="6" fill="#8B96A8" transform="translate(0 1.6)"/><rect x="7" y="13" width="50" height="38" rx="6" fill="url(#'+u+'fo)"/>'+
+        '<path d="M8 32h48" stroke="#9AA5B5" stroke-width=".7" stroke-dasharray="1.6 1.4"/><path d="M24.5 14v36M39.5 14v36" stroke="#AEB8C6" stroke-width=".5"/>'+pk+
+        '<path d="M10 15.5h44" stroke="#fff" stroke-width="1.2" opacity=".8"/></g></g>';
+      shape='tab';
+    } else if(shape==='cap'){ // two crossed capsules
+      const cp=(tx,ty,r,s)=>'<g transform="translate('+tx+' '+ty+') rotate('+r+') scale('+s+')"><rect x="-22" y="-9.5" width="44" height="19" rx="9.5" fill="rgba(15,35,75,.25)" transform="translate(1 1.8)"/>'+
+        '<path d="M0 -9.5H-12.5a9.5 9.5 0 0 0 0 19H0z" fill="url(#'+u+'pl)"/><path d="M0 -9.5h12.5a9.5 9.5 0 0 1 0 19H0z" fill="#fff"/><path d="M0 -9.5h12.5a9.5 9.5 0 0 1 0 19H0z" fill="url(#'+u+'dm)" stroke="#C3CEDD" stroke-width=".6"/>'+
+        '<g fill="'+c+'" opacity=".8"><circle cx="5" cy="1" r="1.5"/><circle cx="9" cy="4" r="1.3"/><circle cx="12" cy="-1.5" r="1.4"/><circle cx="7.5" cy="-4" r="1.1"/><circle cx="15" cy="3" r="1.1"/></g>'+
+        '<rect x="-1.2" y="-9.5" width="2.4" height="19" fill="'+lo+'" opacity=".5"/><ellipse cx="-12" cy="-5" rx="7" ry="1.9" fill="#fff" opacity=".85"/><ellipse cx="11" cy="-5.6" rx="6" ry="1.4" fill="#fff" opacity=".95"/></g>';
+      inner='<ellipse class="a-shd" cx="32" cy="57" rx="20" ry="3" fill="rgba(15,35,75,.2)"/><g class="a-body">'+cp(30,38,-18,1)+'<g class="a-gran">'+cp(34,24,32,.92)+'</g></g>';
+    } else if(shape==='jar'){
+      const top=29+20*(1-lvl);
+      inner='<ellipse class="a-shd" cx="32" cy="58.5" rx="19" ry="3" fill="rgba(15,35,75,.2)"/><g class="a-body">'+
+        '<path d="M10 30h44v18a8 8 0 0 1-8 8H18a8 8 0 0 1-8-8z" fill="'+shd(c,.78)+'"/><path d="M10 30h44v18a8 8 0 0 1-8 8H18a8 8 0 0 1-8-8z" fill="url(#'+u+'pl)" opacity=".55"/>'+
+        '<rect x="17" y="37" width="30" height="11" rx="3" fill="#fff" opacity=".95"/><path d="M22 41h20M24 44.5h16" stroke="'+lo+'" stroke-width="1.5" stroke-linecap="round"/>'+
+        '<path d="M12.5 33v13" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".6"/>'+
+        '<ellipse cx="32" cy="30" rx="22" ry="5" fill="'+lo+'"/><ellipse cx="32" cy="29.4" rx="20" ry="4.2" fill="#FBFCFE"/>'+
+        '<path d="M20 29.6c3-3.6 8-4.4 12-2.6 3.6 1.6 1.4 4.2-2 3.6-2.6-.4-2-2.6.6-2.8 3.8-.2 7.6 1.4 10.4 3" stroke="#D9E2EE" stroke-width="1.4" fill="none" stroke-linecap="round"/>'+
+        '<g class="a-lid"><g transform="rotate(-16 54 24)"><rect x="9" y="12" width="46" height="11" rx="4" fill="'+lo+'" transform="translate(0 1.4)"/><rect x="9" y="12" width="46" height="11" rx="4" fill="url(#'+u+'pl)"/>'+
+        '<path d="M13 13.5v8M18 13.5v8M23 13.5v8M28 13.5v8M33 13.5v8M38 13.5v8M43 13.5v8M48 13.5v8M53 13.5v8" stroke="'+lo+'" stroke-width=".9" opacity=".55"/><path d="M13 14.4h38" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/></g></g></g>';
+    } else {
+      inner=pillOld(shape,c,size,st).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'').replace(/<ellipse class="a-shd"[^>]*\/>/,'');
+      if(shape==='bottle') inner=inner.replace(/(<path d="M32 33\.5v10M27 38\.5h10"[^>]*\/>)/,'<rect x="18" y="30" width="28" height="3" fill="'+lo+'"/>$1');
+      if(shape==='pump') inner=inner.replace('<g class="a-bub"','<g class="a-foam" fill="#fff" stroke="#DCE4EF" stroke-width=".5"><circle cx="21" cy="9.5" r="2.2"/><circle cx="18.2" cy="11" r="1.6"/><circle cx="19.6" cy="7" r="1.2"/></g><g class="a-bub"');
+      if(shape==='razor') inner=inner.replace(/(<rect x="14\.5" y="10" width="35" height="4" rx="2" fill="url\(#[^)]+\)"\/>)/,'$1<rect x="14.5" y="10" width="35" height="2" rx="1" fill="#8FE0B8" opacity=".9"/><path d="M17 12.6h30" stroke="#fff" stroke-width=".6" stroke-dasharray="1 1.2" opacity=".8"/>');
+      if(shape==='drop') inner=inner.replace(/<rect x="23" y="24" width="18" height="26" rx="4" fill="url\(#[^)]+\)" stroke[^>]*\/>/,'$&<rect x="22" y="27" width="20" height="13" rx="2.5" fill="#fff"/><path d="M24.5 33.5q7.5-7 15 0q-7.5 7-15 0z" fill="#fff" stroke="'+lo+'" stroke-width="1.1"/><circle cx="32" cy="33.5" r="3" fill="'+c+'"/><circle cx="32" cy="33.5" r="1.3" fill="'+dk+'"/><circle cx="33" cy="32.5" r=".7" fill="#fff"/>');
+    }
+    const m=inner.match(/^<defs>[\s\S]*?<\/defs>/); const defs=m?m[0]:''; if(m) inner=inner.slice(m[0].length);
+    return '<svg class="ic3 ic-'+shape+'" width="'+size+'" height="'+size+'" viewBox="0 0 64 64" aria-hidden="true">'+G+defs+
+      '<rect x="1" y="1" width="62" height="62" rx="17" fill="url(#'+u+'tl)"/><path d="M8 2.2h48" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/><rect x="1" y="1" width="62" height="62" rx="17" fill="none" stroke="'+shd(c,.55)+'" stroke-opacity=".55" stroke-width="1"/>'+
+      '<g filter="url(#'+u+'ds)" transform="translate(4.5 3.5) scale(.86)">'+inner+'</g>'+
+      '<clipPath id="'+u+'tc"><rect x="1" y="1" width="62" height="62" rx="17"/></clipPath><g clip-path="url(#'+u+'tc)"><rect class="a-shine" x="-40" y="-10" width="16" height="90" fill="#fff" opacity=".0" transform="rotate(20 32 32)"/></g></svg>';
   }
 
   let meds=[]; const months={}; let today=dk(new Date()); let sel=today;
@@ -1749,6 +1810,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const o=openInfo(m); const br=m.shape==='brush'||m.shape==='tuft'||m.shape==='ebrush';
     if(o&&m.openDays){const rem=Math.max(0,Math.min(1,(o.left+(m.kind==='swap'?0:1))/m.openDays));return br?{wear:1-rem}:{lvl:Math.max(.06,rem)}}
     if(byBottle(m)&&m.left===0) return {lvl:.08};
+    if((m.shape==='tab'||!m.shape)&&m.kind!=='swap'&&m.left!=null){if(m.left<=0)return {lvl:0};if(m.pack>0)return {lvl:((m.left-1)%m.pack+1)/m.pack};return {lvl:Math.min(1,m.left/6)}}
     return {};
   }
   function picM(m,size){
