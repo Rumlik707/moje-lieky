@@ -1,0 +1,2014 @@
+<!doctype html><html lang="sk"><head><meta charset="utf-8">
+<title>Moje lieky</title>
+<meta name="theme-color" content="#EAF2FC">
+<meta name="description" content="Jednoduchá appka na odškrtávanie denných liekov.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@200..800&display=swap&subset=latin-ext">
+<style>
+/* Layout: greeting + streak, big "now" card, week card (7 back / today + 6 ahead), then the day as soft blue blocks; manage panel below. Single light blue look. */
+:root{
+  --bg:#EAF2FC; --card:#FFFFFF; --card2:#F3F7FD; --ink:#0F2547; --muted:#5A6C8A; --line:#D3DFF0; --ring:#B7C8E2;
+  --acc:#2D6BE4; --acc-ink:#FFFFFF; --acc-soft:#DCE8FC; --acc-deep:#1B4FB8;
+  --sun:#1C86C6; --sun-soft:#E0F1FC; --mint:#2D6BE4; --mint-soft:#E2EBFD; --lav:#4B4FC9; --lav-soft:#E8E8FA; --sky:#1D3A7A; --sky-soft:#E1E6F2;
+  --ok:#1E9E73; --ok-ink:#FFFFFF; --ok-soft:#DDF3EA; --warn:#E9A21F; --warn-soft:#FDF1D9; --miss:#E06666; --miss-soft:#FCE4E4; --future:#F3F7FD;
+  --focus:#1B4FB8;
+  --f-display:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-body:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font:500 16px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+::selection{background:var(--acc);color:var(--acc-ink)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:12px}
+.wrap{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px calc(100px + env(safe-area-inset-bottom,0px))}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding-top:6px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));box-shadow:0 -8px 24px -16px rgba(15,37,71,.35)}
+.tab{flex:1;max-width:130px;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-weight:800;font-size:12px;padding:4px 0;cursor:pointer;position:relative;min-height:54px}
+.tab svg{width:24px;height:24px;padding:4px 18px;box-sizing:content-box;border-radius:16px;transition:background .2s;flex:none}
+.tab[aria-current=page]{color:var(--acc-deep)}
+.tab[aria-current=page] svg{background:var(--acc-soft)}
+.badge{position:absolute;top:4px;left:calc(50% + 12px);width:11px;height:11px;border-radius:50%;background:var(--warn);border:2px solid var(--card)}
+.vhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.achips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.achips:empty{display:none}
+.achip{border:0;border-radius:999px;padding:8px 13px;font-weight:800;font-size:13px;cursor:pointer;background:var(--acc-soft);color:var(--acc-deep);min-height:36px}
+.achip.warn{background:var(--warn-soft);color:#7A5205}
+.achip.bad{background:var(--miss-soft);color:#A33A3A}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{text-align:left;background:var(--card);border:0;border-radius:20px;padding:14px;cursor:pointer;display:grid;gap:4px;box-shadow:0 1px 2px rgba(15,37,71,.06);min-width:0}
+.tile b{font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--acc-deep);line-height:1.2}
+.tile span{font-size:13px;color:var(--muted)}
+.backup-panel{margin-top:22px}
+.backup-panel .actions{margin-top:4px}
+.tile b{font-size:16px!important}
+.daytitle{font-family:var(--f-display);font-weight:600;font-size:19px;margin:20px 4px 0}
+.note{font-size:13px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.date{font-size:14px;color:var(--muted);font-weight:600}
+.hello{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,8vw,32px);line-height:1.1;margin:2px 0 0;text-wrap:balance}
+.streak{flex:none;background:var(--card);color:var(--acc);box-shadow:0 1px 2px rgba(15,37,71,.06);border-radius:18px;padding:8px 12px;text-align:center;min-width:72px}
+.streak b{display:block;font-family:var(--f-display);font-size:26px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.streak span{font-size:11px;font-weight:700;line-height:1.2;display:block;margin-top:2px}
+.past-note{margin-top:12px;font-size:14px;background:var(--card);border-radius:999px;padding:8px 14px;display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap}
+.past-note button{background:none;border:0;color:var(--acc);font-weight:700;text-decoration:underline;padding:0;cursor:pointer}
+
+/* hero */
+.hero{margin-top:18px;background:var(--acc);color:var(--acc-ink);border-radius:28px;padding:18px 18px 16px;box-shadow:0 10px 24px -12px rgba(45,107,228,.55)}
+.hero.done{background:var(--ok);color:var(--ok-ink);box-shadow:0 10px 24px -12px rgba(30,158,115,.5)}
+.hero-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.hero-med{display:flex;align-items:center;gap:14px;margin:14px 0 16px}
+.hero-pill{flex:none;width:56px;height:56px;border-radius:18px;background:#FFFFFF;display:grid;place-items:center}
+.hero-name{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1.1;overflow-wrap:anywhere}
+.hero-sub{font-size:14px;font-weight:600}
+.hero-btn{width:100%;border:0;border-radius:999px;background:#FFFFFF;color:var(--acc-deep);font-weight:800;font-size:17px;min-height:54px;cursor:pointer;transition:transform .12s cubic-bezier(.16,1,.3,1)}
+.hero-btn:active{transform:scale(.98)}
+.hero.done .hero-name{font-size:22px}
+.hero-more{font-size:13px;font-weight:700;margin-top:10px;text-align:center}
+
+/* week card */
+.week{margin-top:20px;background:var(--card);border-radius:24px;padding:14px 12px 12px;box-shadow:0 1px 2px rgba(15,37,71,.06)}
+.week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wl{grid-column:1/-1;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:2px 4px}
+.wl:not(:first-child){margin-top:8px}
+.wl-row{display:flex;justify-content:space-between;align-items:center}
+.wl-btn{background:none;border:0;color:var(--acc);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;padding:6px 4px;min-height:32px}
+.g{border:0;padding:6px 0 7px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--card2);border-radius:14px;color:var(--ink);min-height:70px}
+.g .dl{font-size:11px;font-weight:700;color:var(--muted);line-height:1.1}
+.g .dn{font-family:var(--f-display);font-size:18px;font-weight:600;line-height:1.1}
+.g .bd{margin-top:3px;font-size:11px;font-weight:800;line-height:1;border-radius:999px;padding:3px 6px;min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
+.g .bd svg{width:12px;height:12px;vertical-align:-2px}
+.g.full .bd{background:var(--ok);color:#fff}
+.g.part .bd{background:var(--warn-soft);color:#7A5205}
+.g.none .bd{background:var(--miss-soft);color:#A33A3A}
+.g.fut .bd{background:var(--acc-soft);color:var(--acc-deep)}
+.g.empty .bd{color:var(--muted)}
+.g.today{background:var(--acc);color:#fff}
+.g.today .dl{color:#DCE8FC}
+.g.today .bd{background:#fff;color:var(--acc-deep)}
+.g.sel{box-shadow:inset 0 0 0 2px var(--acc-deep)}
+.g.today.sel{box-shadow:inset 0 0 0 2px var(--acc-deep),0 0 0 2px #fff inset}
+.grid-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:10px;font-size:12px;color:var(--muted);padding:0 4px}
+.grid-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* day blocks */
+.blocks{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.block{border-radius:24px;background:var(--card);padding:6px 6px 8px;box-shadow:0 1px 2px rgba(15,37,71,.06)}
+.block-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px 6px;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.block-h .ico{display:inline-flex;align-items:center;gap:8px}
+.block-h svg{width:18px;height:18px}
+.block.rano .block-h{color:var(--sun)} .block.obed .block-h{color:var(--mint)} .block.vecer .block-h{color:var(--lav)} .block.noc .block-h{color:var(--sky)}
+.block.now{box-shadow:inset 0 0 0 2px currentColor} .block.now.rano{background:var(--sun-soft);color:var(--sun)} .block.now.obed{background:var(--mint-soft);color:var(--mint)} .block.now.vecer{background:var(--lav-soft);color:var(--lav)} .block.now.noc{background:var(--sky-soft);color:var(--sky)}
+.block.now .med{color:var(--ink)}
+.tag{font-size:11px;padding:3px 9px;border-radius:999px;background:currentColor}
+.tag span{color:#fff}
+.rows{display:flex;flex-direction:column;gap:4px}
+.med{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;border:0;border-radius:18px;padding:10px 12px;cursor:pointer;min-height:58px;transition:background .15s,transform .12s cubic-bezier(.16,1,.3,1)}
+.med:hover{background:var(--card2)}
+.block.now .med:not(.taken){background:var(--card)}
+.med.future{cursor:default}
+.med.future .chk{border-style:dashed}
+.med:active{transform:scale(.985)}
+.pillbox{flex:none;width:38px;height:38px;display:grid;place-items:center}
+.med-t{flex:1;min-width:0}
+.med-n{font-weight:800;overflow-wrap:anywhere}
+.med-s{font-size:13px;color:var(--muted)}
+.med-time{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ok);font-size:14px}
+.chk{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--ring);display:grid;place-items:center;color:var(--ok-ink)}
+.chk svg{width:17px;height:17px;opacity:0}
+.med.taken .chk{background:var(--ok);border-color:var(--ok)}
+.med.taken .chk svg{opacity:1}
+.med.taken .med-n{text-decoration:line-through;text-decoration-thickness:2px;color:var(--muted)}
+.med.taken .pillbox{opacity:.5}
+.confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border-radius:18px;background:var(--card);color:var(--ink);border:1.5px dashed var(--miss)}
+.confirm p{margin:0;flex:1 1 150px;font-size:14px}
+.grp{display:grid;gap:16px}
+.sheet{margin-top:16px;background:var(--card);border-radius:26px;padding:18px;display:grid;gap:14px;box-shadow:0 10px 30px -14px rgba(15,37,71,.35);border:2px solid var(--acc-soft)}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sheet-h h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:21px}
+.x{width:44px;height:44px;border-radius:50%;border:0;background:var(--card2);font-size:24px;line-height:1;cursor:pointer;color:var(--ink)}
+.sheet .fld{display:grid;gap:6px;font-size:14px;font-weight:700}
+.txt,.sel{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:10px 14px;width:100%}
+.safety{margin:0;background:var(--miss-soft);color:#8A2A2A;border-radius:14px;padding:10px 14px;font-weight:700;font-size:14px}
+.report{margin:0;white-space:pre-wrap;background:var(--card2);border-radius:16px;padding:14px;font:500 13px/1.55 var(--f-body);max-height:360px;overflow:auto;overflow-wrap:anywhere}
+.soon{margin-top:14px;display:grid;gap:6px}
+.soon div{background:var(--acc);color:#fff;border-radius:18px;padding:10px 14px;display:flex;flex-direction:column}
+.soon b{font-weight:800}
+.soon span{font-size:13px;color:#DCE8FC}
+.prn{margin-top:12px}
+.prn .block-h{color:var(--acc-deep)}
+.prn-row{display:flex;align-items:center;gap:12px;padding:10px 12px;flex-wrap:wrap}
+.prn-row .med-t{flex:1;min-width:150px}
+.prn-act{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.linkbtn{background:none;border:0;color:var(--acc);font-weight:700;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px 2px}
+.vt{flex:none;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:3px 9px}
+.vform{display:grid;gap:12px;background:var(--card2);border-radius:18px;padding:12px}
+.vform .fld{display:grid;gap:6px;font-size:14px;font-weight:700}
+.stock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stock-grid input{text-align:center;font-variant-numeric:tabular-nums}
+.form input[type=number]{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:10px 8px;width:100%}
+.tinput{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:8px 12px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.orders{margin-top:16px;background:var(--warn-soft);border-radius:24px;padding:12px 14px;display:grid;gap:6px}
+.orders-h{display:flex;align-items:center;gap:8px;font-weight:800;color:#7A5205;font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+.ord{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border-radius:16px;padding:8px 10px}
+.ord .t{flex:1;min-width:120px}
+.ord .t div:first-child{font-weight:800;overflow-wrap:anywhere}
+.ord .t div:last-child{font-size:13px;color:var(--muted)}
+.ordtag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:var(--warn-soft);color:#7A5205;border-radius:999px;padding:1px 8px;vertical-align:2px;text-decoration:none}
+.stk{font-size:13px;color:var(--ok);font-weight:700}
+.opened{margin-top:22px;background:var(--card);border-radius:24px;padding:12px 14px;display:grid;gap:6px;box-shadow:0 1px 2px rgba(15,37,71,.06)}
+.opened-h{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--acc-deep);font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+.opened .ord{background:var(--card2)}
+.opened .op-soon{background:var(--warn-soft)}
+.opened .op-exp{background:var(--miss-soft)}
+.ordtag.exp{background:var(--miss);color:#fff}
+.med-stock{font-size:13px;font-weight:700;color:var(--acc-deep);display:flex;align-items:center;gap:5px}
+.med-stock::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.med-stock.warn{color:#9A6A08}
+.med.taken .med-stock{color:var(--muted)}
+.stk.warn{color:#9A6A08}
+.rowx{display:flex;align-items:center;gap:4px}
+.rowx .med{flex:1;min-width:0}
+.tbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:transparent;color:var(--acc);display:grid;place-items:center;cursor:pointer}
+.tbtn:hover{background:var(--acc-soft)}
+.timeedit{border:1.5px solid var(--acc);border-style:solid}
+.timeedit label{font-size:14px;font-weight:700;flex:1 1 100%}
+.timeedit input{min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--card2);padding:6px 12px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.timeedit .err{flex:1 1 100%}
+.hero-alt{display:block;margin:10px auto 0;background:none;border:0;color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px}
+
+.empty{margin:22px 0;padding:24px;background:var(--card);border-radius:24px;box-shadow:0 1px 2px rgba(15,37,71,.06)}
+.empty h2{margin:0 0 6px;font-family:var(--f-display);font-size:22px;font-weight:600}
+.empty p{margin:0 0 16px;color:var(--muted)}
+
+.btn{border:0;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;min-height:46px}
+.btn.pri{background:var(--acc);color:var(--acc-ink)}
+.btn.ghost{background:var(--card);border:1.5px solid var(--line);color:var(--ink)}
+.btn.danger{background:transparent;border:1.5px solid var(--miss);color:var(--miss)}
+.btn.sm{padding:8px 14px;min-height:40px;font-size:14px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.dsec{display:grid;gap:8px;background:var(--acc-soft);border-radius:16px;padding:10px 12px}
+.drow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.drow .dl{flex:1 1 100%;font-weight:700;font-size:14px}
+.dti{width:84px;min-height:44px;text-align:center;font-size:17px}
+.wk-row .nm{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:22px 0 28px}
+
+.panel{background:var(--card);border-radius:26px;padding:20px;margin:12px 0 0;box-shadow:0 1px 2px rgba(15,37,71,.06)}
+.panel h2{margin:0 0 12px;font-family:var(--f-display);font-weight:600;font-size:21px}
+.panel h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:18px}
+.mlist{display:flex;flex-direction:column;margin:0 0 22px;padding:0;list-style:none}
+.mlist li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mlist li:last-child{border-bottom:0}
+.mlist .t div:not(:first-child){font-size:13px;line-height:1.35;color:var(--muted);font-weight:500}
+.mlist .t .stk{font-weight:700;color:var(--ok)}.mlist .t .stk.warn{color:#9A6A08}
+.mlist .t div:first-child{font-size:16px}
+.macts{flex-basis:100%;display:flex;gap:8px;flex-wrap:wrap;padding-left:42px}
+.mlist li{padding:12px 0}
+
+.mlist .t{flex:1;min-width:140px}
+.mlist .t div:first-child{font-weight:800;overflow-wrap:anywhere}
+.mlist .t div:last-child{font-size:13px;color:var(--muted)}
+.form{display:grid;gap:16px;padding-top:18px;border-top:1px solid var(--line)}
+.form label.fld{display:grid;gap:6px;font-size:14px;font-weight:700}
+.form input[type=text],.form input:not([type]){min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:10px 14px;width:100%}
+.fs{border:0;margin:0;padding:0;display:grid;gap:8px;min-width:0}
+.fs legend{font-size:14px;font-weight:700;padding:0;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;cursor:pointer}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip span{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;transition:background .15s,border-color .15s}
+.chip input:checked + span{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.chip input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.chip.shape span{padding:8px 14px}
+.chip.shape svg{width:24px;height:24px}
+.sw{position:relative;cursor:pointer}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{display:block;width:40px;height:40px;border-radius:50%;border:3px solid transparent;box-shadow:inset 0 0 0 1.5px rgba(15,37,71,.25)}
+.sw input:checked + span{border-color:var(--ink)}
+.sw input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.preview{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:18px;padding:12px 14px}
+.days-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.days-row input{width:80px;text-align:center;min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);font-variant-numeric:tabular-nums}
+.step{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--line);background:var(--card2);font-size:22px;cursor:pointer;line-height:1}
+.err{color:var(--miss);font-size:14px;margin:0;font-weight:700}
+.backup{display:grid;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:999px;padding:12px 18px;font-size:15px;font-weight:700;display:flex;gap:12px;align-items:center;z-index:20;max-width:calc(100% - 32px)}
+.toast button{background:#fff;color:var(--acc-deep);border:0;border-radius:999px;font-weight:800;cursor:pointer;padding:4px 12px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.hero.mini{margin-top:14px;border-radius:20px;padding:8px 8px 8px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 18px -12px rgba(45,107,228,.55)}
+.hero.mini.done{box-shadow:0 8px 18px -12px rgba(30,158,115,.5);padding-right:14px}
+.hero.mini .hero-pill{width:40px;height:40px;border-radius:12px}
+.hero-t{flex:1;min-width:0}
+.hero.mini .hero-top{display:block;font-size:11px;letter-spacing:.05em}
+.hero.mini .hero-name{font-size:18px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero.mini .hero-btn{width:auto;flex:none;min-height:44px;padding:0 16px;font-size:15px}
+.hero-clock{flex:none;width:40px;height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.2);color:#fff;display:grid;place-items:center;cursor:pointer}
+.hello,.daytitle,.panel h2,.panel h3,.sheet-h h2,.empty h2,.tile b,.hero-name,.streak b{font-weight:800;letter-spacing:-.01em}
+.g .dn{font-weight:800}
+.week-body{display:block}
+.week .wl{padding:0 4px;font-size:11px;line-height:1.2}
+.week .wl:not(:first-child){margin-top:2px}
+.week .wl-row{min-height:30px}
+.week .wl-btn{min-height:30px;padding:2px 4px}
+.week .g{min-height:60px;padding:5px 0 6px}
+.prn-row{flex-wrap:wrap}
+.prn-act{flex-basis:100%;flex-direction:row!important;align-items:stretch!important;gap:8px;margin-top:6px}
+.prn-act .btn.pri{flex:1.3;min-height:52px;font-size:16px}
+.prn-act .linkbtn{flex:1;min-height:52px;border:1.5px solid var(--line);border-radius:999px;text-decoration:none;background:var(--card);font-size:14px;color:var(--acc-deep);padding:6px 10px;line-height:1.2}
+.prn-act .linkbtn[data-prnrm]{color:var(--miss);border-color:var(--miss-soft)}
+.linkbtn{min-height:44px}
+.ord .btn.sm,.mlist .btn.sm{min-height:44px}
+.med{min-height:64px}
+.chk{width:34px;height:34px}
+.streak span{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#opened .opened{margin-top:14px;border:1.5px solid var(--ring);box-shadow:none;background:var(--card)}
+.kindhint{margin:0;background:var(--warn-soft);color:#7A5205;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+.kindhint .linkbtn{color:#7A5205;font-weight:800}
+#hello{font-size:20px;line-height:1.2}
+.head{align-items:center}
+body{font-weight:400}
+.med-n,.mlist .t div:first-child,.ord .t div:first-child{font-weight:800}
+.med-s,.note{font-weight:400}
+button.block-h,button.opened-h{width:100%;background:none;border:0;cursor:pointer;font-family:inherit;text-align:left;min-height:44px}
+button.block-h{font-size:13px}
+.bh-r{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
+.cnt{margin-left:6px;opacity:.7;font-weight:700}
+.chev{transition:transform .2s cubic-bezier(.16,1,.3,1);flex:none}
+[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.block.closed{padding:2px 6px}
+.plw{position:relative;display:inline-grid;place-items:center}
+.plb{position:absolute;right:-5px;bottom:-4px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(15,37,71,.3);display:grid;place-items:center}
+.plb svg{width:11px;height:11px}
+.plh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--acc-deep);padding:8px 4px 0}
+.plh svg{width:16px;height:16px}
+.opened-h{display:flex;align-items:center;gap:8px;padding:2px 0}
+.opened.closed{padding:6px 14px}
+.olist{display:grid;gap:6px}
+.hright{display:flex;align-items:center;gap:8px;flex:none}
+.disc{border:2px solid var(--acc);color:var(--acc-deep);background:var(--card);border-radius:999px;padding:5px 11px;font-weight:800;font-size:12px;min-height:36px;display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-family:inherit}
+.disc[aria-pressed=true]{background:var(--acc);color:#fff}
+.discnote{margin:8px 2px 0}
+body.discreet #v-today .nm,body.discreet #v-week .nm{color:transparent!important;background:var(--line);border-radius:6px;text-decoration:none!important;display:inline-block;min-width:5.5em;max-width:9em;overflow:hidden;white-space:nowrap;vertical-align:middle;line-height:1.15;transition:color .15s,background .15s}
+body.discreet .hero .nm{background:rgba(255,255,255,.35)!important}
+body.discreet .peek .nm{color:inherit!important;background:transparent!important}
+body.discreet .hero.peek .nm{color:#fff!important}
+body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.peek{outline:2px dashed var(--acc);outline-offset:2px;border-radius:16px}
+.hero.thero{margin-top:14px;border-radius:22px;padding:10px 12px 12px;box-shadow:0 8px 18px -12px rgba(45,107,228,.55)}
+.thead{display:flex;justify-content:space-between;gap:8px}
+.thead .hero-top{display:block;font-size:12px;letter-spacing:.05em}
+.htiles{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.htile{position:relative;width:60px;height:60px;border:0;border-radius:18px;background:#fff;display:grid;place-items:center;cursor:pointer;transition:transform .12s cubic-bezier(.16,1,.3,1)}
+.htile:active{transform:scale(.94)}
+.hring{position:absolute;right:-4px;bottom:-4px;width:22px;height:22px;border-radius:50%;background:#fff;border:2.5px solid var(--acc)}
+.hall{margin-left:auto;width:56px;height:56px;border-radius:50%;border:3px solid #fff;background:transparent;color:transparent;display:grid;place-items:center;cursor:pointer;transition:background .15s,transform .12s cubic-bezier(.16,1,.3,1)}
+.hall svg{width:28px;height:28px}
+.hall:hover{background:rgba(255,255,255,.15)}
+.hall:active{transform:scale(.92);background:#fff;color:var(--acc-deep)}
+.htile{cursor:default;position:relative}
+.hero.thero.s-rano{background:#1C86C6}
+.hero.thero.s-obed{background:#2D6BE4}
+.hero.thero.s-vecer{background:#4B4FC9}
+.hero.thero.s-noc{background:#1D3A7A}
+.htile.s-rano{background:#FFF3D1}
+.htile.s-obed{background:#FFFFFF}
+.htile.s-vecer{background:#ECEBFF}
+.htile.s-noc{background:#DCE4F4}
+.sbadge{position:absolute;top:-9px;right:-9px;width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 1px 3px rgba(15,37,71,.25)}
+.sbadge svg{width:24px;height:24px}
+.htile.s-rano .sbadge{color:#C98712}
+.htile.s-obed .sbadge{color:#2D6BE4}
+.htile.s-vecer .sbadge{color:#4B4FC9}
+.htile.s-noc .sbadge{color:#1D3A7A}
+.hall.ok{background:#fff;color:var(--ok);border-color:#fff;animation:pop .6s cubic-bezier(.16,1,.3,1)}
+.hall.ok svg{animation:draw .6s ease-out}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes draw{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion: reduce){.hall.ok,.hall.ok svg{animation:none}}
+.med .med-t,.prn-row .med-t{cursor:pointer}
+.med .med-n .nm{text-decoration-line:underline;text-decoration-color:var(--ring);text-decoration-thickness:1.5px;text-underline-offset:3px}
+.med.taken .med-n .nm{text-decoration-line:line-through;text-decoration-color:currentColor}
+.ihead{display:flex;align-items:center;gap:14px}
+.ihead h2{margin:0;font-weight:800;font-size:22px;overflow-wrap:anywhere}
+.ipill{width:60px;height:60px;border-radius:18px;background:var(--card2);display:grid;place-items:center;flex:none}
+.irows{display:grid;background:var(--card2);border-radius:16px;padding:4px 14px}
+.ir{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.ir:last-child{border-bottom:0}
+.ir span{color:var(--muted)}
+.ir b{text-align:right;font-weight:800}
+.ih{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.idays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.id{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);font-weight:700}
+.id i{font-style:normal;font-weight:800;font-size:11px;border-radius:999px;padding:3px 0;width:100%;text-align:center;background:var(--card2);color:var(--ink)}
+.id i.f{background:var(--ok);color:#fff}.id i.p{background:var(--warn-soft);color:#7A5205}.id i.n{background:var(--miss-soft);color:#A33A3A}.id i.t{background:var(--acc-soft);color:var(--acc-deep)}
+.hico{width:30px;height:30px;border-radius:50%;background:#fff;display:inline-grid;place-items:center;flex:none;box-shadow:0 1px 3px rgba(15,37,71,.18)}
+.hico svg{width:22px!important;height:22px!important}
+.block-h .ico{gap:10px}
+.block.closed .block-h,.opened.closed .opened-h{min-height:52px}
+.play .rays,.play .swap,.play .moon,.play .fork{transform-box:view-box;transform-origin:12px 12px}
+.play .fork{transform-origin:12px 20px}
+.play .rays{animation:i-spin 2.6s cubic-bezier(.16,1,.3,1)}
+.play .fork{animation:i-wig 1.6s ease-out}
+.play .sun{animation:i-set 2.4s cubic-bezier(.16,1,.3,1)}
+.play .moon{animation:i-rock 2.4s cubic-bezier(.16,1,.3,1)}
+.play .star{animation:i-tw 1s ease-in-out 3}
+.play .swap{animation:i-spin2 2s cubic-bezier(.16,1,.3,1)}
+.play .drip{animation:i-drip 1.7s cubic-bezier(.16,1,.3,1)}
+@keyframes i-spin{from{transform:rotate(-120deg)}to{transform:rotate(0)}}
+@keyframes i-spin2{from{transform:rotate(-360deg)}to{transform:rotate(0)}}
+@keyframes i-wig{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}50%{transform:rotate(10deg)}75%{transform:rotate(-5deg)}}
+@keyframes i-set{from{transform:translateY(-6px)}to{transform:translateY(0)}}
+@keyframes i-rock{from{transform:rotate(-30deg)}to{transform:rotate(0)}}
+@keyframes i-tw{50%{opacity:.15}}
+@keyframes i-drip{0%{transform:translateY(-7px);opacity:.2}60%{transform:translateY(1.5px);opacity:1}100%{transform:translateY(0)}}
+.play.long .rays{animation:i-spinL 5s cubic-bezier(.22,1,.36,1)}
+.play.long .fork{animation:i-wig 1.3s ease-in-out 4}
+.play.long .sun{animation:i-setL 5s ease-in-out}
+.play.long .moon{animation:i-rockL 5s ease-in-out}
+.play.long .star{animation:i-tw .9s ease-in-out 6}
+.play.long .swap{animation:i-spinL 5s cubic-bezier(.22,1,.36,1)}
+.play.long .drip{animation:i-drip 1.4s cubic-bezier(.16,1,.3,1) 4}
+@keyframes i-spinL{from{transform:rotate(-720deg)}to{transform:rotate(0)}}
+@keyframes i-setL{0%{transform:translateY(-7px)}22%{transform:translateY(1.5px)}40%{transform:translateY(-4px)}60%{transform:translateY(1px)}78%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+@keyframes i-rockL{0%{transform:rotate(-30deg)}20%{transform:rotate(18deg)}40%{transform:rotate(-12deg)}60%{transform:rotate(8deg)}80%{transform:rotate(-4deg)}100%{transform:rotate(0)}}
+.obag{transform-box:view-box;transform-origin:12px 21px}.opk{transform-box:view-box}
+.play .obag{animation:o-wig 1.4s ease-out}.play .opk{animation:o-peek 1.4s cubic-bezier(.34,1.56,.64,1)}
+.play.long .obag{animation:o-wig 1.25s ease-in-out 4}.play.long .opk{animation:o-peek 1.25s cubic-bezier(.34,1.56,.64,1) 4}
+@keyframes o-wig{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}55%{transform:rotate(6deg)}80%{transform:rotate(-2deg)}}
+@keyframes o-peek{0%,100%{transform:translateY(0)}40%{transform:translateY(-3px)}70%{transform:translateY(1px)}}
+@media (prefers-reduced-motion: reduce){.play *{animation:none!important}}
+.htile.hop{animation:t-hop 1.4s cubic-bezier(.16,1,.3,1)}
+.htile.hop>svg{animation:t-tilt 1.4s cubic-bezier(.16,1,.3,1)}
+@keyframes t-hop{0%{transform:translateY(0)}35%{transform:translateY(-8px) scale(1.06)}70%{transform:translateY(1px)}100%{transform:translateY(0)}}
+@keyframes t-tilt{0%{transform:rotate(0)}35%{transform:rotate(-12deg)}70%{transform:rotate(6deg)}100%{transform:rotate(0)}}
+@media (prefers-reduced-motion: reduce){.htile.hop,.htile.hop>svg{animation:none}}
+.wkstat{text-align:right;border-radius:16px;padding:6px 12px;background:var(--card);box-shadow:0 1px 2px rgba(15,37,71,.06);line-height:1.15}
+.wkstat b{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.wkstat span{font-size:11px;font-weight:700;color:var(--muted)}
+.wkstat.good b{color:var(--ok)}.wkstat.mid b{color:#B57A06}.wkstat.low b{color:var(--miss)}
+.review{margin-top:14px;background:var(--card);border:2px solid var(--warn);border-radius:22px;padding:10px 12px;display:grid;gap:6px}
+.review.ok{border-color:var(--ok-soft)}
+.rv-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#7A5205}
+.review.ok .rv-h{color:var(--ok)}
+.rv-n{text-transform:none;letter-spacing:0;font-size:13px}
+.rv-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--line)}
+.rv-t{flex:1;min-width:120px}
+.rv-act{display:flex;gap:6px}
+.rv-act .btn{min-height:44px}
+.rv-all{width:100%;min-height:50px;margin-top:4px}
+.med-skip{font-size:12px;font-weight:800;color:var(--miss)}
+.wkx{margin-top:14px}
+.wk-row{flex-wrap:wrap}
+.wk-times{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.wk-chip{display:inline-flex;align-items:center;gap:2px;background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:2px 2px 2px 10px;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+.wk-x{width:32px;height:32px;border:0;background:none;color:var(--acc-deep);font-size:18px;cursor:pointer;border-radius:50%}
+.wk-add{display:flex;gap:8px;align-items:center;flex-basis:100%;flex-wrap:wrap}
+.wk-nav{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.wk-range{flex:1;text-align:center;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+.wk-strip{display:grid;grid-template-columns:20px minmax(0,1fr) 20px;gap:2px;align-items:stretch}
+.wk-arr.side{width:20px;height:auto;min-height:100px;padding:0;border-radius:10px;font-size:26px;font-weight:800;background:transparent;color:var(--acc)}
+.wk-arr.side:active{background:var(--acc-soft)}
+.wd2 .dn{display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.wd2 .dn b{font-size:17px;color:var(--ink)}
+.wd2.sel .dn b,.wd2.today .dn b{color:inherit}
+.wd2 .dl{font-size:11px!important;letter-spacing:0!important}
+.wk-arr{width:44px;height:40px;border:0;border-radius:12px;background:var(--card2);color:var(--acc-deep);font-size:24px;line-height:1;cursor:pointer}
+.wk-today{border:0;border-radius:999px;background:var(--acc-soft);color:var(--acc-deep);font-weight:800;font-family:inherit;font-size:13px;min-height:36px;padding:0 12px;cursor:pointer}
+.wg{display:grid;grid-template-columns:30px repeat(7,minmax(0,1fr));gap:4px;align-items:stretch}
+.wg-rows{margin-top:4px}
+.wd{border:0;background:var(--card2);border-radius:12px;padding:5px 0 6px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--ink);font-family:inherit;min-width:0}
+.wd .dl{font-size:10px;font-weight:800;color:var(--muted)}
+.wd .dn{font-size:16px;font-weight:800;line-height:1}
+.wd .wbar{display:flex;width:80%;height:6px;border-radius:3px;overflow:hidden;gap:1px;background:var(--line)}
+.wd .wn{font-size:10px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+.wd.today{background:var(--acc);color:#fff}.wd.today .dl,.wd.today .wn{color:#DCE8FC}.wd.today .wbar{background:rgba(255,255,255,.3)}
+.wd.sel{box-shadow:inset 0 0 0 2px var(--acc-deep)}
+.wd.today.sel{box-shadow:inset 0 0 0 2px var(--acc-deep),inset 0 0 0 4px #fff}
+.wd.none .wn{color:var(--miss)}.wd.part .wn{color:#B57A06}.wd.full .wn{color:var(--ok)}
+.wr-ico{display:grid;place-items:center}
+.wr-ico svg{width:22px;height:22px}
+.wc{background:var(--card2);border-radius:10px;min-height:30px;display:flex;flex-wrap:wrap;gap:1px;justify-content:center;align-content:center;padding:3px 1px;cursor:pointer}
+.wc.today{background:var(--acc-soft)}
+.wc.sel{box-shadow:inset 0 0 0 2px var(--acc-deep)}
+.mp{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;flex:none}
+.mp.st-miss{box-shadow:inset 0 0 0 2px var(--miss);background:#fff}
+.mp.st-miss svg{opacity:.35;filter:grayscale(1)}
+.mp.st-wait,.mp.st-due{box-shadow:inset 0 0 0 2px var(--acc);background:#fff}
+.mp.st-wait svg{opacity:.45}
+.mp.st-due{box-shadow:inset 0 0 0 2px var(--acc),0 0 0 2px var(--acc-soft)}
+.mp.more{font-size:10px;font-weight:800;color:var(--acc-deep);background:#fff}
+.wk-leg{display:flex;flex-wrap:wrap;gap:4px 14px;margin:10px 4px 0;font-size:12px;color:var(--muted);font-weight:700}
+.wk-leg>span{display:inline-flex;align-items:center;gap:5px}
+@media (max-width:360px){.wg{grid-template-columns:24px repeat(7,minmax(0,1fr));gap:3px}.mp{width:16px;height:16px}}
+.wg2{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd2{border:0;background:var(--card2);border-radius:14px;padding:6px 0 8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--ink);font-family:inherit;min-width:0;min-height:120px}
+.wd2 .dl{font-size:12px;font-weight:800;color:var(--acc-deep);text-transform:uppercase;letter-spacing:.03em}
+.wd2 .dn{font-size:12px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;border-bottom:1.5px solid var(--line);padding-bottom:4px;width:80%;text-align:center}
+.wd2.today{background:var(--acc)}.wd2.today .dl{color:#fff}.wd2.today .dn{color:#DCE8FC;border-color:rgba(255,255,255,.35)}
+.wd2{position:relative;transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s,background .25s}
+.wd2.today{background:var(--acc-soft)}.wd2.today .dl{color:var(--acc-deep)}.wd2.today .dn{color:var(--acc-deep);border-color:var(--ring)}
+.wd2.sel,.wd2.today.sel{background:var(--sel,#2D6BE4);transform:translateY(-4px);box-shadow:0 10px 22px -8px var(--sel,#2D6BE4)}
+.wd2.sel .dl,.wd2.sel .dn{color:#fff}.wd2.sel .dn{border-color:rgba(255,255,255,.35)}
+.wd2.sel::after{content:"";position:absolute;left:50%;bottom:-6px;width:12px;height:12px;background:var(--sel,#2D6BE4);transform:translateX(-50%) rotate(45deg);border-radius:0 0 3px 0}
+.wg2{padding-bottom:6px}
+@media (prefers-reduced-motion: reduce){.wd2.sel{transform:none}}
+.wis{display:flex;flex-direction:column;align-items:center;gap:4px}
+.wi{display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:10px;padding:3px 3px 2px;min-width:34px}
+.wi svg{width:22px;height:22px}
+.wi b{font-size:11px;font-weight:800;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums}
+.wi.st-full{box-shadow:inset 0 0 0 2px var(--ok)}.wi.st-full b{color:var(--ok)}
+.wi.st-part{box-shadow:inset 0 0 0 2px var(--warn)}.wi.st-part b{color:#9A6A08}
+.wi.st-none{box-shadow:inset 0 0 0 2px var(--miss)}.wi.st-none b{color:var(--miss)}
+.wi.st-todo{box-shadow:inset 0 0 0 2px var(--acc)}.wi.st-fut{opacity:.6}
+.wi.empty{background:none;color:var(--muted);font-weight:800}
+.wk-leg svg{width:18px;height:18px}
+.wk-filt{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.wf{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:4px 12px 4px 6px;min-height:40px;font-family:inherit;font-weight:800;font-size:13px;color:var(--ink);cursor:pointer}
+.wf svg{width:22px;height:22px}
+.wf.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.wf.all{padding-left:12px;color:var(--acc-deep)}
+.wi[data-cat]{cursor:pointer}
+.rv-h{width:100%;background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px;padding:0}
+.review.closed{padding:4px 12px}
+.rv-body{display:grid;gap:6px}
+.wd2.dim{opacity:.4}
+.wd2.hit{background:#fff}
+.wd2.hit.f-meds{box-shadow:inset 0 0 0 2.5px #2D6BE4}
+.wd2.hit.f-drop{box-shadow:inset 0 0 0 2.5px #26B5CC;background:#E3F6F9}
+.wd2.hit.f-bottle{box-shadow:inset 0 0 0 2.5px #A0522D;background:#F6ECE5}
+.wd2.hit.f-other{box-shadow:inset 0 0 0 2.5px #7C74EA;background:#EEEDFD}
+.wd2.hit.f-swap{box-shadow:inset 0 0 0 2.5px #7C74EA;background:#EEEDFD}
+.wd2.hit.f-meds{--fc:#2D6BE4;--fs:#E2EBFD}.wd2.hit.f-drop{--fc:#1FA3B8;--fs:#DDF4F8}.wd2.hit.f-bottle{--fc:#A0522D;--fs:#F6ECE5}.wd2.hit.f-other,.wd2.hit.f-swap{--fc:#6E66E0;--fs:#ECEBFD}
+.wd2.hit{background:var(--fs)!important;box-shadow:inset 0 0 0 2.5px var(--fc)!important}
+.wd2.hit .dl{color:var(--fc)!important}
+.wd2.hit.sel{background:var(--fc)!important;box-shadow:0 10px 22px -8px var(--fc)!important}
+.wd2.hit.sel .dl,.wd2.hit.sel .dn{color:#fff!important}
+.wd2.hit.sel::after{background:var(--fc)}
+.wf[data-f=meds]{--fc:#2D6BE4}.wf[data-f=drop]{--fc:#1FA3B8}.wf[data-f=bottle]{--fc:#A0522D}.wf[data-f=swap]{--fc:#6E66E0}
+.wf{border-color:var(--fc,var(--line))}
+.wf.on{background:var(--fc,var(--acc))!important;border-color:var(--fc,var(--acc))!important;color:#fff}
+.wf.on svg{background:#fff;border-radius:50%;padding:2px}
+.wsub{display:grid;gap:6px;padding-top:6px}
+.wsub+.wsub{border-top:1px solid var(--line);margin-top:4px}
+.wsub-h{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--acc-deep)}
+.hico.sm{width:26px;height:26px}.hico.sm svg{width:18px!important;height:18px!important}
+.wsub-icons{display:inline-flex;gap:3px;margin-left:6px}
+.hico.xs{width:22px;height:22px;box-shadow:none;background:var(--card2)}.hico.xs svg{width:15px!important;height:15px!important}
+
+/* week strip: smooth slide, only today raised */
+.wk-view{touch-action:pan-y;user-select:none;-webkit-user-select:none;overflow:hidden;padding:9px 2px 10px;margin:-9px -2px -4px}
+.wg2{align-items:stretch}
+.wd2.sel,.wd2.today.sel{transform:none}
+.wd2.today{transform:translateY(-7px);box-shadow:0 10px 18px -10px rgba(27,79,184,.55)}
+.wd2.today.sel{transform:translateY(-7px)}
+.wg2.slide-n{animation:wk-n .38s cubic-bezier(.22,1,.36,1)}
+.wg2.slide-p{animation:wk-p .38s cubic-bezier(.22,1,.36,1)}
+@keyframes wk-n{from{transform:translateX(43.4%);opacity:.35}to{transform:none;opacity:1}}
+@keyframes wk-p{from{transform:translateX(-43.4%);opacity:.35}to{transform:none;opacity:1}}
+.wd2.empty{margin:0;padding:6px 0 8px;border-radius:14px;box-shadow:none;background:var(--card2)}
+.wd2.empty.today{background:var(--acc-soft)}
+.wd2.empty.sel{background:var(--sel,#2D6BE4)}
+@media (prefers-reduced-motion: reduce){.wd2.today{transform:none}}
+</style>
+
+<main class="wrap">
+  <section class="sheet" id="fxSheet" hidden aria-labelledby="fxTitle">
+    <div class="sheet-h"><h2 id="fxTitle">Vedľajší účinok</h2><button type="button" class="x" id="fxClose" aria-label="Zavrieť">×</button></div>
+    <label class="fld" for="fxMed">Po ktorom lieku
+      <select id="fxMed" class="sel"></select>
+    </label>
+    <fieldset class="fs">
+      <legend>Čo sa deje</legend>
+      <div class="chips" id="fxSyms"></div>
+      <input id="fxOther" class="txt" autocomplete="off" placeholder="Iné, napíš vlastnými slovami">
+    </fieldset>
+    <fieldset class="fs">
+      <legend>Ako silno</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="fxLvl" id="fxL1" value="1"><span>Mierne</span></label>
+        <label class="chip"><input type="radio" name="fxLvl" id="fxL2" value="2" checked><span>Stredne</span></label>
+        <label class="chip"><input type="radio" name="fxLvl" id="fxL3" value="3"><span>Silno</span></label>
+      </div>
+    </fieldset>
+    <div class="stock-grid">
+      <label class="fld" for="fxDate">Dátum
+        <input id="fxDate" type="date" class="tinput" style="font-size:16px;width:100%">
+      </label>
+      <label class="fld" for="fxTime">Čas
+        <input id="fxTime" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" style="width:100%">
+      </label>
+    </div>
+    <label class="fld" for="fxNote">Poznámka <span class="note">(nepovinné)</span>
+      <input id="fxNote" class="txt" autocomplete="off" placeholder="hneď po užití, trvalo asi 10 minút">
+    </label>
+    <p class="safety" id="fxSafety" hidden>Pri opuchu tváre, pier, jazyka alebo hrdla, alebo keď sa ťažko dýcha, volaj hneď 112.</p>
+    <p class="err" id="fxErr" hidden></p>
+    <div class="actions">
+      <button class="btn pri" type="button" id="fxSave">Uložiť záznam</button>
+      <button class="btn ghost" type="button" id="fxCancel">Zrušiť</button>
+    </div>
+  </section>
+  <section class="sheet" id="infoSheet" hidden aria-labelledby="infoTitle">
+    <div class="sheet-h"><span class="note" style="font-weight:800;letter-spacing:.05em;text-transform:uppercase">O lieku</span><button type="button" class="x" id="infoClose" aria-label="Zavrieť">×</button></div>
+    <div id="infoBody"></div>
+  </section>
+  <section class="sheet" id="repSheet" hidden aria-labelledby="repTitle">
+    <div class="sheet-h"><h2 id="repTitle">Prehľad pre lekára</h2><button type="button" class="x" id="repClose" aria-label="Zavrieť">×</button></div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="repN" id="rep7" value="7"><span>7 dní</span></label>
+      <label class="chip"><input type="radio" name="repN" id="rep30" value="30" checked><span>30 dní</span></label>
+      <label class="chip"><input type="radio" name="repN" id="rep90" value="90"><span>90 dní</span></label>
+    </div>
+    <pre class="report" id="repText" tabindex="0"></pre>
+    <div class="actions">
+      <button class="btn pri" type="button" id="repCopy">Kopírovať text</button>
+      <button class="btn ghost" type="button" id="repSave">Uložiť ako súbor</button>
+    </div>
+  </section>
+
+  <div class="view" id="v-today">
+  <header class="head">
+    <div>
+      <div class="date" id="date"></div>
+      <h1 class="hello" id="hello">Moje lieky</h1>
+    </div>
+    <div class="hright"><button type="button" class="disc" id="discBtn" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M10.6 6.1A9.8 9.8 0 0 1 12 6c5 0 9 6 9 6a16 16 0 0 1-3 3.6M6.4 7.6C4.3 9.1 3 12 3 12s4 6 9 6a8.9 8.9 0 0 0 4-1"/><path d="M9.9 10a3 3 0 0 0 4.1 4.1"/></svg><span>skryť názvy</span></button>
+    <div class="streak" id="streak" hidden></div></div>
+  </header>
+    <span id="discNote" hidden></span>
+    <div id="chips" class="achips"></div>
+    <div id="hero"></div>
+    <div id="day"></div>
+    <div id="prn"></div>
+    <div id="opened"></div>
+  </div>
+
+  <div class="view" id="v-week" hidden>
+    <div class="vhead"><h1 class="hello">Týždeň</h1><div class="wkstat" id="wkStat" hidden></div></div>
+    <div id="pastnote"></div>
+  <section class="week" aria-label="Týždeň späť a týždeň dopredu">
+    <div class="week-body" id="grid"></div>
+  </section>
+    <div id="dayW"></div>
+  </div>
+
+  <div class="view" id="v-meds" hidden>
+    <div class="vhead"><h1 class="hello">Lieky</h1><button class="btn pri sm" id="addBtn" type="button">Pridať liek</button></div>
+    <div id="orders"></div>
+    <section class="panel" id="panel">
+      <ul class="mlist" id="mlist"></ul>
+    <form class="form" id="form" novalidate hidden>
+      <h3 id="formTitle">Pridať liek</h3>
+      <fieldset class="fs">
+        <legend>Čo pridávaš</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="fKind" id="fKindMed" value="med" checked><span>Liek</span></label>
+          <label class="chip"><input type="radio" name="fKind" id="fKindSwap" value="swap"><span>Vec na výmenu</span></label>
+        </div>
+        <div class="chips" id="swapPresets" hidden style="margin-top:4px">
+          <button type="button" class="btn ghost sm" data-preset="Hlavica elektrickej kefky|3|m|ebrush">Hlavica elektrickej kefky</button>
+          <button type="button" class="btn ghost sm" data-preset="Zubná kefka|3|m|brush">Zubná kefka</button>
+          <button type="button" class="btn ghost sm" data-preset="Jednozložková kefka|3|m|tuft">Jednozložková kefka</button>
+          <button type="button" class="btn ghost sm" data-preset="Filter do kanvice|1|m|drop">Filter na vodu</button>
+          <button type="button" class="btn ghost sm" data-preset="Šošovky|1|m|drop">Šošovky</button>
+        </div>
+      </fieldset>
+      <label class="fld" for="fName">Názov lieku
+        <input id="fName" autocomplete="off" placeholder="Euthyrox">
+      </label>
+      <p class="kindhint" id="kindHint" hidden>Toto vyzerá na vec, ktorú vymieňaš, nie na liek. <button type="button" class="linkbtn" id="kindSwitch">Prepnúť na vec na výmenu</button></p>
+      <div class="grp" id="medOnly">
+      <fieldset class="fs">
+        <legend>Ako často</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="fMode" id="fModeSlots" value="slots" checked><span>V časti dňa</span></label>
+          <label class="chip"><input type="radio" name="fMode" id="fModeHours" value="hours"><span>Každých pár hodín</span></label>
+          <label class="chip"><input type="radio" name="fMode" id="fModeNeed" value="need"><span>Podľa potreby</span></label>
+        </div>
+        <div class="chips" id="slotsRow" style="margin-top:4px">
+          <label class="chip"><input type="checkbox" id="fs-rano" value="rano"><span>Ráno</span></label>
+          <label class="chip"><input type="checkbox" id="fs-obed" value="obed"><span>Obed</span></label>
+          <label class="chip"><input type="checkbox" id="fs-vecer" value="vecer"><span>Večer</span></label>
+          <label class="chip"><input type="checkbox" id="fs-noc" value="noc"><span>Pred spaním</span></label>
+        </div>
+        <div id="hoursRow" hidden style="display:grid;gap:10px;margin-top:4px">
+          <div class="chips" id="fEvery" role="radiogroup" aria-label="Interval"></div>
+          <div class="days-row">
+            <label for="fFirst" style="font-size:14px;font-weight:700">Prvá dávka o</label>
+            <input id="fFirst" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" value="07:00" class="tinput tm">
+          </div>
+          <div class="chips"><label class="chip"><input type="checkbox" id="fRoll" checked><span>Ďalšiu dávku rátať od času užitia</span></label></div>
+          <p class="note" id="hoursPreview" style="margin:0"></p>
+        </div>
+        <div class="stock-grid" id="needRow" hidden style="margin-top:4px">
+          <label class="fld" for="fGap">Odstup aspoň (hodín)
+            <input id="fGap" type="number" inputmode="numeric" min="1" max="48" placeholder="6">
+          </label>
+          <label class="fld" for="fMax">Najviac za deň
+            <input id="fMax" type="number" inputmode="numeric" min="1" max="24" placeholder="4">
+          </label>
+        </div>
+      </fieldset>
+      <fieldset class="fs">
+        <legend>Ako dlho</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="fDur" id="fDurAlways" value="always" checked><span>Stále</span></label>
+          <label class="chip"><input type="radio" name="fDur" id="fDurDays" value="days"><span>Na počet dní</span></label>
+        </div>
+        <div class="days-row" id="daysRow" hidden>
+          <label for="fDays" class="sr">Počet dní</label>
+          <button type="button" class="step" id="dMinus" aria-label="O deň menej">−</button>
+          <input id="fDays" type="number" inputmode="numeric" min="1" max="365" value="7">
+          <button type="button" class="step" id="dPlus" aria-label="O deň viac">+</button>
+          <span class="note" id="daysEnd"></span>
+        </div>
+      </fieldset>
+      <fieldset class="fs">
+        <legend>Zásoba <span class="note">(nepovinné, kusy potom ubúdajú podľa užitia)</span></legend>
+        <div class="stock-grid">
+          <label class="fld" for="fPack">V balení
+            <input id="fPack" type="number" inputmode="numeric" min="1" max="1000" placeholder="30">
+          </label>
+          <label class="fld" for="fLeft">Balení doma
+            <input id="fLeft" type="number" inputmode="numeric" min="0" max="50" placeholder="1">
+          </label>
+        </div>
+        <p class="note" id="stockPreview" style="margin:0"></p>
+      </fieldset>
+      <fieldset class="fs">
+        <legend>Po otvorení <span class="note">(nepovinné, napr. očné kvapky, ústna voda)</span></legend>
+        <div class="stock-grid">
+          <label class="fld" for="fOpenDays">Použiteľné dní
+            <input id="fOpenDays" type="number" inputmode="numeric" min="1" max="365" placeholder="28">
+          </label>
+          <label class="fld" for="fOpened">Otvorené dňa
+            <input id="fOpened" type="date" class="tinput" style="font-size:16px;width:100%">
+          </label>
+        </div>
+        <p class="note" id="openPreview" style="margin:0"></p>
+      </fieldset>
+      </div>
+      <div class="grp" id="swapOnly" hidden>
+        <fieldset class="fs">
+          <legend>Vymieňať každé</legend>
+          <div class="days-row">
+            <label for="fSwapN" class="sr">Počet</label>
+            <input id="fSwapN" type="number" inputmode="numeric" min="1" max="24" value="3" class="tinput" style="width:80px;text-align:center">
+            <div class="chips">
+              <label class="chip"><input type="radio" name="fSwapU" id="fSwapUw" value="w"><span>týždne</span></label>
+              <label class="chip"><input type="radio" name="fSwapU" id="fSwapUm" value="m" checked><span>mesiace</span></label>
+            </div>
+          </div>
+        </fieldset>
+        <div class="stock-grid">
+          <label class="fld" for="fSwapLast">Naposledy vymenené
+            <input id="fSwapLast" type="date" class="tinput" style="font-size:16px;width:100%">
+          </label>
+          <label class="fld" for="fSpare">Náhradných doma
+            <input id="fSpare" type="number" inputmode="numeric" min="0" max="50" placeholder="2">
+          </label>
+        </div>
+        <fieldset class="fs">
+          <legend>Kde</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="fPlace" value="" checked><span>Nezáleží</span></label>
+            <label class="chip"><input type="radio" name="fPlace" value="doma"><span>Doma</span></label>
+            <label class="chip"><input type="radio" name="fPlace" value="prech"><span>Prechodný byt</span></label>
+            <label class="chip" id="placeBoth"><input type="radio" name="fPlace" value="both"><span>Oba byty</span></label>
+          </div>
+        </fieldset>
+        <p class="note" id="swapPreview" style="margin:0"></p>
+      </div>
+      <fieldset class="fs">
+        <legend>Ako vyzerá</legend>
+        <div class="chips" id="fShapes"></div>
+        <div class="chips" id="fColors" style="margin-top:4px"></div>
+        <div class="preview" aria-hidden="true"><span id="pvPill"></span><span class="note" id="pvText">Takto ho uvidíš v zozname</span></div>
+      </fieldset>
+      <label class="fld" for="fDose">Poznámka k dávke <span class="note">(nepovinné)</span>
+        <input id="fDose" autocomplete="off" placeholder="po jedle">
+      </label>
+      <p class="err" id="fErr" hidden></p>
+      <div class="actions">
+        <button class="btn pri" type="submit" id="fSubmit">Pridať liek</button>
+        <button class="btn ghost" type="button" id="fCancel">Zrušiť</button>
+      </div>
+    </form>
+    </section>
+  </div>
+
+  <div class="view" id="v-more" hidden>
+    <div class="vhead"><h1 class="hello">Viac</h1></div>
+    <div class="tiles">
+      <button class="tile" id="fxBtn" type="button"><b>Vedľajší účinok</b><span>Zapíš, čo sa po lieku dialo</span></button>
+      <button class="tile" id="repBtn" type="button"><b>Prehľad pre lekára</b><span>Užívanie, účinky a termíny</span></button>
+    </div>
+    <div id="soon"></div>
+    <div id="visits"></div>
+    <div id="effects"></div>
+    <section class="opened backup-panel">
+      <div class="opened-h"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11M7.5 9.5L12 14l4.5-4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span>Záloha</span></div>
+      <p class="note" style="margin:0">Ulož si všetky lieky a záznamy do súboru. Zo súboru ich vieš kedykoľvek obnoviť.</p>
+      <div class="actions">
+        <button class="btn ghost sm" type="button" id="bSave">Uložiť zálohu</button>
+        <label class="btn ghost sm" for="bFile" style="display:inline-flex;align-items:center">Obnoviť zo zálohy</label>
+        <input type="file" id="bFile" accept=".json,application/json" class="sr">
+      </div>
+      <div id="bConfirm"></div>
+    </section>
+    <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
+  </div>
+</main>
+<nav class="tabbar" aria-label="Hlavné menu">
+  <button type="button" class="tab" data-tab="today" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg><span>Dnes</span></button>
+  <button type="button" class="tab" data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2"/></svg><span>Týždeň</span></button>
+  <button type="button" class="tab" data-tab="meds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><g transform="rotate(-40 12 12)"><rect x="3" y="8" width="18" height="8" rx="4"/><path d="M12 8v8"/></g></svg><span>Lieky</span><i class="badge" id="medsBadge" hidden></i></button>
+  <button type="button" class="tab" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Viac</span><i class="badge" id="moreBadge" hidden></i></button>
+</nav>
+<div id="toastHost"></div>
+
+<script>
+(function(){
+  const SLOTS=[{k:'rano',l:'Ráno',from:0},{k:'obed',l:'Obed',from:11},{k:'vecer',l:'Večer',from:15},{k:'noc',l:'Pred spaním',from:21}];
+  const SLOT_ICO={
+    rano:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="4"/><path d="M12 4v2M4.9 7.9l1.4 1.4M19.1 7.9l-1.4 1.4M3 17h18"/></svg>',
+    obed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    vecer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="15" r="4"/><path d="M3 19h18M12 6v3M6 9l1.5 1.5M18 9l-1.5 1.5"/></svg>',
+    noc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'
+  };
+  const DROPICO='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 2.5-6.5 6-11z"/></svg>';
+  const CAL='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+  const ALERT='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>';
+  const CLOCK='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  const BOX='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>';
+  const COLORS=['#F6C343','#34B88A','#7C74EA','#2D6BE4','#E98DBA','#EE7E76','#26B5CC','#FFFFFF','#A0522D'];
+  const OLD_COLORS=['#FFC94D','#4CC38A','#9B8CF2','#4A9BF0','#F58FB6','#F2837A','#5FD0D8','#FFFFFF'];
+  const COLOR_NAMES=['žltá','zelená','fialová','modrá','ružová','koralová','tyrkysová','biela','hnedá'];
+  const SHAPES=[{k:'tab',l:'Tableta'},{k:'cap',l:'Kapsula'},{k:'drop',l:'Kvapky'},{k:'bottle',l:'Fľaštička'},{k:'brush',l:'Kefka'},{k:'tuft',l:'Jednozložková'},{k:'ebrush',l:'Elektrická'}];
+  const EVERY=[4,6,8,12,24];
+  const ORDER_DAYS=14;
+  const SLOT_TIME={rano:'08:00',obed:'12:00',vecer:'18:00',noc:'21:30'};
+  const DAYS=['Nedeľa','Pondelok','Utorok','Streda','Štvrtok','Piatok','Sobota'];
+  const DSH=['Ne','Po','Ut','St','Št','Pi','So'];
+  const MON=['januára','februára','marca','apríla','mája','júna','júla','augusta','septembra','októbra','novembra','decembra'];
+  const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const $=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,'0');
+  const dk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const mk=key=>key.slice(0,7);
+  const parse=key=>{const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)};
+  const addDays=(key,n)=>{const d=parse(key);d.setDate(d.getDate()+n);return dk(d)};
+  const diffDays=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+  const nice=key=>{const d=parse(key);return d.getDate()+'. '+(d.getMonth()+1)+'.'};
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const slotIdx=k=>SLOTS.findIndex(x=>x.k===k);
+  const slotLabel=k=>(SLOTS[slotIdx(k)]||SLOTS[0]).l;
+  const reduce=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const toMin=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
+  const fromMin=n=>pad(Math.floor(n/60)%24)+':'+pad(n%60);
+  const nowHM=()=>{const n=new Date();return pad(n.getHours())+':'+pad(n.getMinutes())};
+  const slotOfTime=t=>{const h=+t.slice(0,2);let s=SLOTS[0].k;SLOTS.forEach(x=>{if(h>=x.from)s=x.k});return s};
+  const ks=n=>n===1?'kus':n>1&&n<5?'kusy':'kusov';
+  const dni=n=>n===1?'deň':n>1&&n<5?'dni':'dní';
+
+  let _pid=0;
+  function shade(hex,amt){
+    const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255;
+    const f=amt<0?0:255, p=Math.abs(amt);
+    r=Math.round((f-r)*p+r); g=Math.round((f-g)*p+g); b=Math.round((f-b)*p+b);
+    return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+  }
+  function pillSvg(shape,color,size){
+    size=size||30; const id='p'+(++_pid);
+    const hi=shade(color,.55), lo=shade(color,-.22), edge=shade(color,-.35);
+    const open='<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true">';
+    const shadow='<ellipse cx="16.5" cy="27.6" rx="9" ry="1.8" fill="rgba(15,37,71,.16)"/>';
+    if(shape==='cap'){
+      const wh='#FFFFFF', whLo='#D9E2EE';
+      return open+'<defs><linearGradient id="'+id+'a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+hi+'"/><stop offset=".55" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient>'+
+        '<linearGradient id="'+id+'b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#F3F6FA"/><stop offset="1" stop-color="'+whLo+'"/></linearGradient></defs>'+shadow+
+        '<g transform="rotate(-35 16 15)"><path d="M16 8.5h-6.5a6.5 6.5 0 0 0 0 13H16z" fill="url(#'+id+'a)" stroke="'+edge+'" stroke-width=".8"/>'+
+        '<path d="M16 8.5h6.5a6.5 6.5 0 0 1 0 13H16z" fill="url(#'+id+'b)" stroke="#AEBBCD" stroke-width=".8"/>'+
+        '<path d="M16 8.5v13" stroke="rgba(15,37,71,.28)" stroke-width="1"/>'+
+        '<path d="M6 11.6c2-1.3 5-1.6 8.5-1.6M18 10h6" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round" fill="none"/></g></svg>';
+    }
+    if(shape==='drop'){
+      return open+'<defs><radialGradient id="'+id+'" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="'+hi+'"/><stop offset=".5" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></radialGradient></defs>'+shadow+
+        '<path d="M16 3.5c4.6 6.1 9 10.6 9 15.6a9 9 0 0 1-18 0C7 14.1 11.4 9.6 16 3.5z" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
+        '<path d="M11.6 18.6a4.6 4.6 0 0 0 3 4.4" stroke="rgba(255,255,255,.8)" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="13.2" cy="14.6" r="1.1" fill="rgba(255,255,255,.75)"/></svg>';
+    }
+    if(shape==='bottle'){
+      return open+'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+lo+'"/><stop offset=".35" stop-color="'+hi+'"/><stop offset="1" stop-color="'+lo+'"/></linearGradient></defs>'+shadow+
+        '<rect x="13" y="2.5" width="6" height="5" rx="1.5" fill="#F2F5F9" stroke="#AEBBCD" stroke-width=".8"/><rect x="11.8" y="7" width="8.4" height="3.2" rx="1" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/>'+
+        '<path d="M10.5 10.2h11a2.5 2.5 0 0 1 2.5 2.5v11.8a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3V12.7a2.5 2.5 0 0 1 2.5-2.5z" fill="url(#'+id+')" stroke="'+edge+'" stroke-width=".8"/>'+
+        '<rect x="11" y="15" width="10" height="7" rx="1.5" fill="#FFFFFF" opacity=".9"/><path d="M13 18.5h6" stroke="'+edge+'" stroke-width="1.4" stroke-linecap="round"/>'+
+        '<path d="M11.4 13v10" stroke="rgba(255,255,255,.6)" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    }
+    if(shape==='ebrush') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 1.5) rotate(-40 16 16)"><rect x="14.9" y="6" width="2.2" height="8" rx="1.1" fill="#E8EEF7" stroke="#AEBBCD" stroke-width=".7"/><rect x="12" y="12.5" width="8" height="18" rx="4" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><circle cx="16" cy="18.5" r="1.9" fill="#FFFFFF" stroke="'+edge+'" stroke-width=".6"/><path d="M13.8 22v6" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-linecap="round"/><circle cx="16" cy="4.6" r="3.6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><g fill="'+color+'"><circle cx="16" cy="4.6" r=".9"/><circle cx="14.2" cy="3.6" r=".7"/><circle cx="17.8" cy="3.6" r=".7"/><circle cx="14.2" cy="5.6" r=".7"/><circle cx="17.8" cy="5.6" r=".7"/></g></g></svg>';
+    if(shape==='tuft') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(1 2) rotate(-40 16 16)"><rect x="13.2" y="15" width="5.6" height="15" rx="2.8" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><rect x="14.7" y="8.5" width="2.6" height="8" rx="1.3" fill="'+color+'" stroke="'+edge+'" stroke-width=".7"/><ellipse cx="16" cy="8.4" rx="4.2" ry="2.6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M12.6 7.6Q16 -2.8 19.4 7.6Z" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8" stroke-linejoin="round"/><path d="M14.3 6.6L15 2.6M16 6.6V1.4M17.7 6.6L17 2.6" stroke="'+color+'" stroke-width="1.3" stroke-linecap="round"/><path d="M14.7 18v9" stroke="rgba(255,255,255,.6)" stroke-width="1.1" stroke-linecap="round"/></g></svg>';
+    if(shape==='brush') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 32 32" aria-hidden="true"><g transform="rotate(-40 16 16)"><rect x="13" y="12" width="6" height="18" rx="3" fill="'+color+'" stroke="'+edge+'" stroke-width=".8"/><rect x="11.5" y="2.5" width="9" height="11" rx="3" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><path d="M13.5 4.5v7M16 4.5v7M18.5 4.5v7" stroke="'+color+'" stroke-width="1.6" stroke-linecap="round"/><path d="M14.5 15v12" stroke="rgba(255,255,255,.6)" stroke-width="1.2" stroke-linecap="round"/></g></svg>';
+    return open+'<defs><radialGradient id="'+id+'" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="'+hi+'"/><stop offset=".55" stop-color="'+color+'"/><stop offset="1" stop-color="'+lo+'"/></radialGradient></defs>'+shadow+
+      '<circle cx="16" cy="16.6" r="11" fill="'+edge+'"/>'+
+      '<circle cx="16" cy="15.4" r="10.6" fill="url(#'+id+')"/>'+
+      '<path d="M8.4 15.4h15.2" stroke="'+edge+'" stroke-width="1.5" stroke-linecap="round" opacity=".75"/><path d="M8.8 16.7h14.4" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>'+
+      '<ellipse cx="12.3" cy="10.6" rx="3.6" ry="1.9" fill="rgba(255,255,255,.7)" transform="rotate(-25 12.3 10.6)"/></svg>';
+  }
+
+  let meds=[]; const months={}; let today=dk(new Date()); let sel=today;
+  let wkSlide=null, wkRest=null; let confirmId=null, editId=null, deleteId=null, timeKey=null, showOld=false, weekOff=0, tab='today';
+  const DAYEL=()=>tab==='week'?$('dayW'):$('day');
+  const openState={};
+  let animKey=null;
+  let animLong=false;
+  const playCls=k=>(animKey==='all'||animKey===k)?(animLong?' play long':' play'):'';
+  const isOpen=(k,def)=>k in openState?openState[k]:def;
+  let discreet=false; try{discreet=localStorage.getItem('lieky-discreet')==='1'}catch(e){}
+  const hidingNow=()=>discreet&&(tab==='today'||tab==='week');
+  const dname=n=>hidingNow()?'tento liek':n;
+  function hideNames(t){if(!hidingNow())return t;meds.slice().sort((a,b)=>b.name.length-a.name.length).forEach(m=>{t=t.split(m.name).join('liek')});return t}
+  function applyDiscreet(){
+    document.body.classList.toggle('discreet',discreet);
+    $('discBtn').setAttribute('aria-pressed',String(discreet));
+    $('discBtn').querySelector('span').textContent=discreet?'názvy skryté':'skryť názvy';
+    $('discNote').hidden=!discreet;
+  }
+  $('discBtn').onclick=()=>{discreet=!discreet;try{localStorage.setItem('lieky-discreet',discreet?'1':'0')}catch(e){}applyDiscreet();render();toast(discreet?'Názvy sú skryté':'Názvy sú znova viditeľné')};
+  function normTime(v){
+    const d=String(v||'').replace(/\D/g,'').slice(0,4); if(!d) return '';
+    let h,m; if(d.length<=2){h=+d;m=0} else if(d.length===3){h=+d[0];m=+d.slice(1)} else {h=+d.slice(0,2);m=+d.slice(2)}
+    if(h>23||m>59) return v; return pad(h)+':'+pad(m);
+  }
+  document.addEventListener('input',e=>{const t=e.target;if(!t.classList||!t.classList.contains('tm'))return;
+    if(e.inputType&&e.inputType.startsWith('delete'))return;
+    let d=t.value.replace(/\D/g,'').slice(0,4); if(d.length>=3) d=d.slice(0,d.length-2)+':'+d.slice(-2); if(d.length===4&&!d.includes(':')) d=d.slice(0,2)+':'+d.slice(2);
+    t.value=d;});
+  document.addEventListener('focusout',e=>{const t=e.target;if(t.classList&&t.classList.contains('tm')&&t.value){const n=normTime(t.value);if(n!==t.value){t.value=n;t.dispatchEvent(new Event('input',{bubbles:true}))}}});
+  document.addEventListener('focusin',e=>{const t=e.target;if(t.classList&&t.classList.contains('tm'))setTimeout(()=>{try{t.select()}catch(_){}},30)});
+  const cdFmt=m=>m<60?'<1h':Math.round(m/60)+'h';
+  const BADGE_ICO={
+    rano:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="rays" stroke="#F2A900" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g><circle cx="12" cy="12" r="5.2" fill="#FFC21A" stroke="#F2A900" stroke-width="1.2"/></svg>',
+    obed:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="fork" fill="none" stroke="#2D6BE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 2 2v9M9 3v6M11 3v7a2 2 0 0 1-2 2"/><path d="M17 21V3c-2 1.5-3 4-3 7v3h3"/></g></svg>',
+    vecer:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="sun"><g stroke="#E0662A" stroke-width="2.2" stroke-linecap="round"><path d="M12 4.5v2.4M4.6 8.2l1.7 1.7M19.4 8.2l-1.7 1.7M2 15h2.4M19.6 15h2.4"/></g><path d="M6.5 15a5.5 5.5 0 0 1 11 0z" fill="#F57C3A"/></g><path d="M3 15h18M6 18.5h12" stroke="#B4441E" stroke-width="2" stroke-linecap="round"/></svg>',
+    noc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M19.5 14.8A8 8 0 0 1 9.2 4.5a8 8 0 1 0 10.3 10.3z" fill="#2B4A8F"/><path class="star" d="M17.2 2.8l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7zM21 8.5l.4.9.9.4-.9.4-.4.9-.4-.9-.9-.4.9-.4z" fill="#FFC21A"/></svg>'
+  };
+  const OSTICO='<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="nsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8F88F0"/><stop offset="1" stop-color="#5B53D6"/></linearGradient></defs><g class="opk"><g transform="rotate(16 15 7)"><rect x="13.8" y="3.6" width="2.4" height="9" rx="1.2" fill="#E98DBA"/><rect x="13.3" y="1" width="3.4" height="4" rx="1.2" fill="#fff" stroke="#AEBBCD" stroke-width=".6"/><path d="M14.3 1.8v2.4M15 1.8v2.4M15.7 1.8v2.4" stroke="#E98DBA" stroke-width=".6" stroke-linecap="round"/></g></g><g class="obag"><rect x="3" y="10" width="18" height="11.8" rx="3.4" fill="url(#nsg)"/><rect x="3" y="10" width="18" height="3.6" rx="1.8" fill="#4B4FC9"/><path d="M5.6 11.8h11" stroke="#fff" stroke-width=".9" stroke-dasharray="1 1" opacity=".65"/><circle cx="18.4" cy="11.8" r="1.25" fill="#F6C343"/><rect x="17.8" y="12.4" width="1.2" height="2.8" rx=".6" fill="#F6C343"/><path d="M12 15.6v3.6M10.2 17.4h3.6" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M5.4 15.6v3.4" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity=".35"/></g></svg>';
+  const SWAPICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="swap" fill="none" stroke="#2D6BE4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8a8.5 8.5 0 0 0-15.2-2.6M4 3.5V7h3.5"/><path d="M4 16a8.5 8.5 0 0 0 15.2 2.6M20 20.5V17h-3.5"/></g><circle cx="12" cy="12" r="3" fill="#7C74EA"/></svg>';
+  const NEEDICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="drip"><path d="M12 3c3.2 4.2 6 7.3 6 10.6a6 6 0 0 1-12 0C6 10.3 8.8 7.2 12 3z" fill="#26B5CC"/><path d="M9.6 14a2.6 2.6 0 0 0 1.8 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></g></svg>';
+  const CHEV='<svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-tog]');if(!b)return;const k=b.dataset.tog;openState[k]=!isOpen(k,b.dataset.def==='true');animKey=k;animLong=true;render();animKey=null;animLong=false});
+
+  /* ---------- model ---------- */
+  const posInt=(v,max)=>Number.isInteger(v)&&v>0&&v<=max?v:null;
+  function hashColor(s){let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))>>>0;return COLORS[h%6]}
+  function normMed(m){
+    if(!m||!m.id||!m.name) return null;
+    let slots=Array.isArray(m.slots)?m.slots:(m.slot?[m.slot]:[]);
+    slots=SLOTS.map(s=>s.k).filter(k=>slots.includes(k)); if(!slots.length) slots=['rano'];
+    const mode=m.mode==='hours'&&EVERY.includes(m.every)?'hours':m.mode==='need'?'need':'slots';
+    return {id:String(m.id),name:String(m.name),dose:String(m.dose||''),mode,slots,
+      every:EVERY.includes(m.every)?m.every:8, first:/^\d{2}:\d{2}$/.test(m.first||'')?m.first:'07:00',
+      start:/^\d{4}-\d{2}-\d{2}$/.test(m.start||'')?m.start:'2000-01-01', days:posInt(m.days,365),
+      shape:SHAPES.some(s=>s.k===m.shape)?m.shape:'tab', color:COLORS.includes(m.color)?m.color:OLD_COLORS.includes(m.color)?COLORS[OLD_COLORS.indexOf(m.color)]:hashColor(m.id),
+      per:posInt(m.per,20)||1, pack:posInt(m.pack,1000), left:Number.isFinite(m.left)&&m.left>=0?Math.round(m.left):null,
+      kind:m.kind==='swap'?'swap':'med', rolling:!!m.rolling, gapH:posInt(m.gapH,48), maxDay:posInt(m.maxDay,24),
+      openDays:posInt(m.openDays,730), opened:/^\d{4}-\d{2}-\d{2}$/.test(m.opened||'')?m.opened:null,
+      place:m.place==='doma'||m.place==='prech'?m.place:null,
+      legacy:m.slot&&SLOTS.some(s=>s.k===m.slot)?m.slot:undefined};
+  }
+  const normList=l=>(Array.isArray(l)?l:[]).map(normMed).filter(Boolean);
+  const cleanForSave=()=>meds.map(({legacy,...m})=>legacy?{...m,slot:legacy}:m);
+  const endKey=m=>m.days?addDays(m.start,m.days-1):null;
+  const activeOn=(m,key)=>(key>=m.start||hasLog(m,key))&&(!m.days||key<=endKey(m));
+  const hasLog=(m,key)=>{const lg=dayLog(key),p=m.id+'@';for(const k in lg){if(k.startsWith(p)&&lg[k]&&lg[k]!=='x')return true}return false};
+  function hourTimes(m){const out=[];const f=toMin(m.first);for(let t=f;t<f+1440;t+=m.every*60)out.push(fromMin(t));return out.sort()}
+  function dosesOf(m,key){
+    if(m.mode==='need') return [];
+    if(m.mode==='hours'&&m.rolling){
+      key=key||today; const n=Math.max(1,Math.round(24/m.every)); const step=m.every*60;
+      const lg=dayLog(key), yl=dayLog(addDays(key,-1)); const ok=v=>typeof v==='string'&&/^\d{2}:\d{2}$/.test(v);
+      let t=toMin(m.first);
+      for(let i=n-1;i>=0;i--){const v=yl[m.id+'@r'+i]; if(ok(v)){const c=toMin(v)+step-1440; if(c>=0&&c<1440) t=c; break}}
+      const out=[];
+      for(let i=0;i<n;i++){
+        if(i>0){const p=lg[m.id+'@r'+(i-1)]; t=(ok(p)?toMin(p):t)+step}
+        const tt=fromMin(Math.min(t,1439)); out.push({k:'r'+i,s:slotOfTime(tt),t:tt});
+      }
+      return out;
+    }
+    if(m.mode==='hours') return hourTimes(m).map(t=>({k:'h'+t.replace(':',''),s:slotOfTime(t),t}));
+    return m.slots.map(s=>({k:s,s,t:null}));
+  }
+  const dueMin=d=>d.t?toMin(d.t):SLOTS[slotIdx(d.s)].from*60;
+  function taken(log,m,k){const v=log[m.id+'@'+k]||(m.legacy===k?log[m.id]:'')||'';return v==='x'?'':v}
+  const skipped=(log,m,k)=>log[m.id+'@'+k]==='x';
+  let wkAdd=null, wkFilter=null;
+  const actLabel=m=>m.shape==='drop'?'Kvapkanie':m.shape==='bottle'?'Ošetrenie':'Užil som';
+  function itemsFor(key){
+    const out=[]; meds.forEach(m=>{if(activeOn(m,key)) dosesOf(m,key).forEach(d=>out.push({m,...d}))});
+    return out.sort((a,b)=>slotIdx(a.s)-slotIdx(b.s)||dueMin(a)-dueMin(b)||a.m.name.localeCompare(b.m.name,'sk'));
+  }
+  const doseLabel=i=>i.t?'o '+i.t:slotLabel(i.s).toLowerCase();
+
+  /* stock: how long it lasts */
+  function openInfo(m){
+    if(!m.openDays||!m.opened) return null;
+    const swap=m.kind==='swap';
+    const last=addDays(m.opened,swap?m.openDays:m.openDays-1); const left=diffDays(today,last);
+    return {last,left,state:left<0?'exp':left<=(swap?7:3)?'soon':'ok'};
+  }
+  function openText(m){
+    const o=openInfo(m); if(!o) return '';
+    if(m.kind==='swap'){
+      if(o.left<0) return 'treba vymeniť (od '+nice(o.last)+')';
+      if(o.left===0) return 'vymeniť dnes';
+      return 'vymeniť '+nice(o.last)+' (o '+o.left+' '+dni(o.left)+')';
+    }
+    if(o.state==='exp') return 'po exspirácii od '+nice(addDays(o.last,1));
+    return 'použiteľné do '+nice(o.last)+(o.left===0?' (posledný deň)':' (ešte '+(o.left+1)+' '+dni(o.left+1)+')');
+  }
+  function stockInfo(m){
+    if(m.left==null) return null;
+    const perDay=dosesOf(m).length*m.per;
+    if(!perDay) return {left:m.left,need:true};
+    const lg=dayLog(today);
+    const todayLeft=activeOn(m,today)?dosesOf(m).filter(d=>!taken(lg,m,d.k)).length*m.per:0;
+    const rest=m.left-todayLeft;
+    const info={left:m.left};
+    if(m.days){
+      const e=endKey(m); const after=Math.max(0,diffDays(today,e));
+      const need=todayLeft+(e>=today?after*perDay:0);
+      info.course=true; info.short=Math.max(0,need-m.left); info.enough=m.left>=need;
+      return info;
+    }
+    if(rest<0){info.last=today;info.out=true}
+    else info.last=addDays(today,Math.floor(rest/perDay));
+    info.order=diffDays(today,info.last)<ORDER_DAYS;
+    return info;
+  }
+  function stockText(m){
+    const i=stockInfo(m); if(!i) return '';
+    if(i.need) return 'doma '+i.left+' '+ks(i.left);
+    if(i.course) return i.enough?'zásoba vystačí na celú liečbu':'chýba '+i.short+' '+ks(i.short)+' do konca liečby';
+    if(i.out||i.left===0) return 'zásoba došla';
+    return 'zásoba vydrží do '+nice(i.last);
+  }
+  function stockShort(m){
+    if(m.kind==='swap') return m.left==null?'':m.left>0?'náhradné '+m.left+' '+ks(m.left):'žiadne náhradné';
+    const i=stockInfo(m); if(!i) return '';
+    if(i.need) return 'doma '+i.left+' '+ks(i.left);
+    if(i.course) return i.enough?'zásoba na celú liečbu':'chýba '+i.short+' '+ks(i.short);
+    if(i.out||i.left===0) return 'zásoba došla';
+    return 'zásoba do '+nice(i.last);
+  }
+  const needsOrder=m=>{if(m.kind==='swap')return m.left!=null&&m.left<=0;const i=stockInfo(m);return !!i&&!i.need&&(i.course?!i.enough:i.order)&&(!m.days||endKey(m)>=today)};
+
+  /* ---------- storage ---------- */
+  const LS='lieky-v1';
+  function lsLoad(){try{const o=JSON.parse(localStorage.getItem(LS)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
+  function lsSave(){try{localStorage.setItem(LS,JSON.stringify({meds:cleanForSave(),months,extra}))}catch(e){}}
+  let db=null, uid=null; const chains={};
+  function queue(path,body){
+    chains[path]=(chains[path]||Promise.resolve()).then(()=>db.doc(path).set(body)).catch(e=>{
+      if(e&&e.code==='unavailable'){return new Promise(r=>setTimeout(r,600+Math.random()*600)).then(()=>db.doc(path).set(body)).catch(()=>toast('Nepodarilo sa uložiť. Skús to znova.'))}
+      toast(e&&e.code==='quota_exceeded'?'Úložisko je plné.':'Nepodarilo sa uložiť.');
+    });
+  }
+  function saveMeds(){ if(db) queue('data/users/'+uid+'/meds',{list:cleanForSave()}); lsSave(); }
+  function saveMonth(m){ if(db) queue('data/users/'+uid+'/log-'+m,{days:months[m]||{}}); lsSave(); }
+  const subs={};
+  function watchMonth(m){
+    if(!db||subs[m]) return;
+    subs[m]=db.doc('data/users/'+uid+'/log-'+m).onSnapshot(s=>{
+      months[m]=s.exists?JSON.parse(JSON.stringify(s.data().days||{})):{}; if(!timeKey&&!visitForm&&!wkAdd) render();
+    },()=>{});
+  }
+  async function init(){
+    const local=lsLoad();
+    meds=normList(local.meds);
+    if(local.months) Object.assign(months,local.months);
+    extra=normExtra(local.extra);
+    render();
+    try{
+      if(window.claude&&window.claude.use){
+        const [d,u]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+        const id=u?await u.id():null;
+        if(d&&id){ db=d; uid=id; }
+      }
+    }catch(e){}
+    if(db){
+      $('storenote').textContent='Uložené v tvojom účte, vidíš to len ty.';
+      db.doc('data/users/'+uid+'/meds').onSnapshot(s=>{
+        if(s.exists){ meds=normList(s.data().list); } else if(meds.length){ saveMeds(); }
+        if(!timeKey&&!visitForm&&!wkAdd) render();
+      },()=>{});
+      db.doc('data/users/'+uid+'/extra').onSnapshot(s=>{
+        if(s.exists) extra=normExtra(JSON.parse(JSON.stringify(s.data())));
+        else if(extra.prn.length||extra.fx.length||extra.visits.length) saveExtra();
+        if(!timeKey&&!visitForm&&!wkAdd) render();
+      },()=>{});
+      neededMonths().forEach(watchMonth);
+    } else $('storenote').textContent='Uložené len v tomto telefóne, nikam sa neposiela. Občas si urob zálohu.';
+  }
+
+  /* ---------- day helpers ---------- */
+  function lastDays(n){const out=[];for(let i=n-1;i>=0;i--) out.push(addDays(today,-i));return out}
+  function neededMonths(){return [...new Set(lastDays(92).map(mk))]}
+  function dayLog(key){const m=months[mk(key)];return (m&&m[key])||{}}
+  function nowSlot(){return slotOfTime(nowHM())}
+  function statusOf(key){
+    const items=itemsFor(key); if(!items.length) return 'empty';
+    if(key>today) return 'future';
+    const log=dayLog(key); const n=items.filter(i=>taken(log,i.m,i.k)).length;
+    if(n===items.length) return 'full'; if(n>0) return 'part';
+    return key===today?'todo':'none';
+  }
+  function streak(){
+    let n=0; let k=today;
+    if(statusOf(k)!=='full') k=addDays(k,-1);
+    const first=meds.reduce((a,m)=>m.start<a?m.start:a,today);
+    for(let i=0;i<92&&k>=first;i++,k=addDays(k,-1)){
+      const st=statusOf(k);
+      if(st==='full') n++; else if(st==='empty') continue; else break;
+    }
+    return n;
+  }
+  function durText(m){
+    if(!m.days) return 'stále';
+    const e=endKey(m);
+    if(e<today) return 'skončené '+nice(e);
+    const left=diffDays(today,e)+1;
+    return left===1?'posledný deň':'ešte '+left+' '+dni(left);
+  }
+  const freqText=m=>m.kind==='swap'?(L=>'výmena '+(L==='mesiac'||L==='týždeň'?'každý ':/dní|deň/.test(L)?'každých ':'každé ')+L)(swapLabel(m.openDays)):m.mode==='need'?'podľa potreby':m.mode==='hours'?(m.rolling?'každých '+m.every+' h od posledného užitia':'každých '+m.every+' h ('+hourTimes(m).join(', ')+')'):m.slots.map(slotLabel).join(', ');
+  function swapLabel(d){if(d%30===0){const n=d/30;return n===1?'mesiac':n+(n<5?' mesiace':' mesiacov')}if(d%7===0){const n=d/7;return n===1?'týždeň':n+(n<5?' týždne':' týždňov')}return d+' '+dni(d)}
+  function greeting(){const h=new Date().getHours();return h<10?'Dobré ráno':h<18?'Dobrý deň':'Dobrý večer'}
+
+  /* ---------- render ---------- */
+  const SEL_COL={rano:'#1C86C6',obed:'#2D6BE4',vecer:'#4B4FC9',noc:'#1D3A7A'};
+  function render(){
+    if(tab==='today') sel=today;
+    document.documentElement.style.setProperty('--sel',SEL_COL[nowSlot()]||'#2D6BE4');
+    const d=parse(sel); const isToday=sel===today;
+    $('date').textContent='Dnes';
+    $('hello').textContent=DAYS[d.getDay()]+', '+d.getDate()+'. '+MON[d.getMonth()];
+    const course=meds.filter(m=>m.kind!=='swap'&&m.days&&activeOn(m,today)).sort((a,b)=>endKey(a)<endKey(b)?-1:1)[0];
+    $('streak').hidden=!course;
+    if(course){const dn=diffDays(course.start,today)+1;
+      $('streak').innerHTML='<b>'+dn+'/'+course.days+'</b><span>'+esc(course.name)+'</span>';
+      $('streak').setAttribute('aria-label',course.name+': deň '+dn+' z '+course.days+' liečby');}
+    $('pastnote').innerHTML='';
+    $('dayW').dataset.title=(isToday?'Dnes, ':'')+DAYS[d.getDay()]+' '+d.getDate()+'. '+MON[d.getMonth()];
+
+
+    renderOrders();
+    renderOpened();
+    renderSoon();
+    renderPrn();
+    renderVisits();
+    renderEffects();
+    renderChips();
+    {const nowM=toMin(nowHM());let due=0,done=0;
+      for(let i=6;i>=0;i--){const k=addDays(today,-i);const lg=dayLog(k);itemsFor(k).forEach(it=>{if(k===today&&dueMin(it)>nowM)return;due++;if(taken(lg,it.m,it.k))done++})}
+      const w=$('wkStat'); w.hidden=!due;
+      if(due){const p=Math.round(done*100/due);w.className='wkstat '+(p>=90?'good':p>=70?'mid':'low');w.innerHTML='<b>'+p+' %</b><span>'+done+' z '+due+' dávok · 7 dní</span>';w.setAttribute('aria-label','Za posledných 7 dní užité '+done+' z '+due+' dávok, '+p+' percent')}}
+
+    {
+      const nowM=toMin(nowHM());
+      const days=[]; for(let i=0;i<7;i++) days.push(addDays(today,weekOff-3+i));
+      const ICON_TAB=pillSvg('tab','#2D6BE4',22), ICON_DROP=NEEDICO, ICON_BOT=pillSvg('bottle','#A0522D',22), ICON_CAP=pillSvg('cap','#7C74EA',22), ICON_SW=SWAPICO;
+      let h='<div class="wk-nav"><span class="wk-range">'+nice(days[0])+' – '+nice(days[6])+'</span>'+(weekOff!==0?'<button type="button" class="wk-today" id="wkToday">Dnes</button>':'')+'</div><div class="wk-strip"><button type="button" class="wk-arr side" id="wkPrev" aria-label="O 3 dni späť">‹</button><div class="wk-view"><div class="wg2">';
+      days.forEach(k=>{
+        const dd=parse(k), items=itemsFor(k), lg=dayLog(k);
+        const n=items.filter(i=>taken(lg,i.m,i.k)).length;
+        const s=statusOf(k); const cls={full:'full',part:'part',none:'none',future:'fut',empty:'empty',todo:'todo'}[s];
+        const ev=extra.prn.filter(p=>p.t.slice(0,10)===k).map(p=>meds.find(x=>x.id===p.m)).filter(m=>m&&m.kind!=='swap');
+        const drops=ev.filter(m=>m.shape==='drop').length, bots=ev.filter(m=>m.shape==='bottle').length, other=ev.length-drops-bots;
+        const sw=extra.sw.filter(e=>e.d===k&&meds.some(m=>m.id===e.m)).length;
+        const ic=(cat,svg,txt,c,lab)=>(wkFilter&&wkFilter!==cat)?'':'<span class="wi '+(c||'')+'" data-cat="'+cat+'" title="'+lab+'">'+svg+'<b>'+txt+'</b></span>';
+        let icons='';
+        if(items.length) icons+=ic('meds',ICON_TAB,n+'/'+items.length,'st-'+cls,'užité lieky');
+        if(drops) icons+=ic('drop',ICON_DROP,drops+'×','','kvapkanie');
+        if(bots) icons+=ic('bottle',ICON_BOT,bots+'×','','ošetrenie');
+        if(other) icons+=ic('other',ICON_CAP,other+'×','','podľa potreby');
+        if(sw) icons+=ic('swap',ICON_SW,'','','výmena');
+        const word=[items.length?'užité '+n+' z '+items.length:'',drops?'kvapkanie '+drops+'×':'',bots?'ošetrenie '+bots+'×':'',other?'podľa potreby '+other+'×':'',sw?'výmena':''].filter(Boolean).join(', ')||'nič';
+        const has={meds:items.length>0,drop:drops>0,bottle:bots>0,other:other>0,swap:sw>0};
+        const fcls=wkFilter?(has[wkFilter]?' hit f-'+wkFilter:' dim'):'';
+        h+='<button type="button" class="wd2 '+cls+fcls+(k===sel?' sel':'')+(k===today?' today':'')+'" data-k="'+k+'" aria-pressed="'+(k===sel)+'" aria-label="'+DAYS[dd.getDay()]+' '+dd.getDate()+'. '+MON[dd.getMonth()]+': '+word+'"><span class="dl">'+(k===today?'Dnes':DSH[dd.getDay()])+'</span><span class="dn"><b>'+dd.getDate()+'</b>'+(dd.getMonth()+1)+'.</span><span class="wis">'+(icons||'<span class="wi empty">–</span>')+'</span></button>';
+      });
+      const fb=(f,svg,l)=>'<button type="button" class="wf'+(wkFilter===f?' on':'')+'" data-f="'+f+'" aria-pressed="'+(wkFilter===f)+'">'+svg+'<span>'+l+'</span></button>';
+      h+='</div></div><button type="button" class="wk-arr side" id="wkNext" aria-label="O 3 dni dopredu">›</button></div><div class="wk-filt">'+fb('meds',ICON_TAB,'lieky')+fb('drop',ICON_DROP,'kvapkanie')+fb('bottle',ICON_BOT,'ošetrenie')+fb('swap',ICON_SW,'výmena')+(wkFilter?'<button type="button" class="wf all" data-f="">všetko</button>':'')+'</div>';
+      $('grid').innerHTML=h;
+      if(wkSlide&&!reduce()){const g=$('grid').querySelector('.wg2');g.classList.add(wkSlide==='n'?'slide-n':'slide-p')} wkSlide=null;
+      if(wkRest!=null){const g=$('grid').querySelector('.wg2');g.style.transition='none';g.style.transform='translateX('+wkRest+'px)';void g.offsetWidth;g.style.transition='transform .32s cubic-bezier(.22,1,.36,1)';g.style.transform='';wkRest=null}
+      {const vw=$('grid').querySelector('.wk-view'),g=vw.querySelector('.wg2');let x0=null,y0=0,dx=0,drag=false,moved=false;
+        vw.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;x0=e.clientX;y0=e.clientY;dx=0;drag=false;moved=false});
+        vw.addEventListener('pointermove',e=>{if(x0==null)return;const mx=e.clientX-x0,my=e.clientY-y0;
+          if(!drag){if(Math.abs(mx)>8&&Math.abs(mx)>Math.abs(my)*1.2){drag=true;moved=true;try{vw.setPointerCapture(e.pointerId)}catch(_){}g.style.transition='none'}else if(Math.abs(my)>10){x0=null;return}else return}
+          dx=mx;g.style.transform='translateX('+dx+'px)'});
+        const end=()=>{if(x0==null)return;x0=null;if(!drag)return;drag=false;
+          const col=(g.getBoundingClientRect().width+4)/7;const n=Math.max(-14,Math.min(14,Math.round(-dx/col)));
+          if(n){weekOff+=n;wkRest=dx+n*col;render()}else{g.style.transition='transform .28s cubic-bezier(.22,1,.36,1)';g.style.transform=''}};
+        vw.addEventListener('pointerup',end);vw.addEventListener('pointercancel',end);
+        vw.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);}
+      $('grid').querySelectorAll('[data-k]').forEach(b=>b.onclick=e=>{const c=e.target.closest('[data-cat]');if(c)wkFilter=c.dataset.cat;sel=b.dataset.k;confirmId=null;timeKey=null;wkAdd=null;render()});
+      $('grid').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const f=b.dataset.f||null;wkFilter=wkFilter===f?null:f;wkAdd=null;render()});
+      $('wkPrev').onclick=()=>{weekOff-=3;wkSlide='p';render()};
+      $('wkNext').onclick=()=>{weekOff+=3;wkSlide='n';render()};
+      if($('wkToday')) $('wkToday').onclick=()=>{weekOff=0;sel=today;render()};
+    }
+
+    const log=dayLog(sel); const items=itemsFor(sel);
+    renderHero(isToday,items,log);
+
+    if(!items.length){
+      DAYEL().innerHTML=meds.length
+        ?'<div class="empty"><h2>V tento deň nič</h2><p>Na tento deň nemáš naplánovaný žiadny liek.</p></div>'
+        :'<div class="empty"><h2>Pridaj svoj prvý liek</h2><p>Napíš názov, vyber kedy ho berieš a ako dlho. Potom ho tu už len odklikneš.</p><button class="btn pri" type="button" id="firstAdd">Pridať liek</button></div>';
+      if(tab==='week') $('dayW').insertAdjacentHTML('afterbegin','<h2 class="daytitle">'+esc($('dayW').dataset.title)+'</h2>');
+      if($('firstAdd')) $('firstAdd').onclick=openAdd;
+      if(tab==='week'&&sel<=today&&meds.length) renderWeekExtra();
+      renderList(); return;
+    }
+    const cur=nowSlot(); const fut=sel>today;
+    let review='';
+    if(tab==='week'&&sel<today){
+      const pend=items.filter(i=>!taken(log,i.m,i.k)&&!skipped(log,i.m,i.k));
+      const plan=i=>i.t||SLOT_TIME[i.s]||'08:00';
+      const rvo=isOpen('rv',false);
+      if(pend.length) review='<section class="review'+(rvo?'':' closed')+'"><button type="button" class="rv-h" data-tog="rv" data-def="false" aria-expanded="'+rvo+'"><span>Spätná kontrola</span><span class="bh-r"><span class="rv-n">'+pend.length+' nezaznamenané</span>'+CHEV+'</span></button><div class="rv-body"'+(rvo?'':' hidden')+'>'+
+        pend.map(i=>{const key=i.m.id+'@'+i.k;return '<div class="rv-row"><span class="pillbox">'+picM(i.m,30)+'</span><div class="rv-t" data-winfo="'+i.m.id+'" style="cursor:pointer"><div class="med-n"><span class="nm">'+esc(i.m.name)+'</span></div><div class="med-s">'+esc(slotLabel(i.s)+(i.t?' · '+i.t:''))+'</div></div><div class="rv-act"><button type="button" class="btn pri sm" data-rvok="'+key+'" data-t="'+plan(i)+'">Užil</button><button type="button" class="btn ghost sm" data-rvskip="'+key+'">Vynechal</button></div></div>'}).join('')+
+        (pend.length>1?'<button type="button" class="btn pri rv-all" id="rvAll">Užil som všetko v ten deň</button>':'')+'</div></section>';
+      else if(items.length) review='<section class="review ok"><div class="rv-h"><span>Spätná kontrola</span><span class="rv-n">všetko skontrolované ✓</span></div></section>';
+    }
+    DAYEL().innerHTML=review+'<div class="blocks">'+SLOTS.map(s=>{
+      const list=items.filter(i=>i.s===s.k); if(!list.length) return '';
+      const done=list.filter(i=>taken(log,i.m,i.k)).length; const all=done===list.length;
+      const isNow=isToday&&s.k===cur&&!all;
+      let cd=null; if(isToday&&!all){const nm=toMin(nowHM());const mins=list.filter(i=>!taken(log,i.m,i.k)).map(i=>(i.t?toMin(i.t):toMin(SLOT_TIME[i.s]||'08:00'))-nm);const mn=Math.min(...mins);cd=mn>0?cdFmt(mn):(isNow?'teraz':null)}
+      const tag=cd?'<span class="tag"><span>'+cd+'</span></span>':all?'<span>hotovo ✓</span>':'<span>'+done+' z '+list.length+'</span>';
+      const ck='d:'+sel+':'+s.k; const forced=list.some(i=>{const kk=i.m.id+'@'+i.k;return kk===timeKey||kk===confirmId}); const ck2=(tab==='week'?'w':'')+ck; const op=forced||isOpen(ck2,false);
+      return '<section class="block '+s.k+(isNow?' now':'')+(op?'':' closed')+playCls(ck2)+'"><button type="button" class="block-h" data-tog="'+ck2+'" data-def="false" aria-expanded="'+op+'"><span class="ico"><span class="hico">'+BADGE_ICO[s.k]+'</span>'+s.l+'<span class="cnt">· '+list.length+'</span></span><span class="bh-r">'+tag+CHEV+'</span></button><div class="rows"'+(op?'':' hidden')+'>'+
+        list.map(i=>{
+          const m=i.m; const key=m.id+'@'+i.k; const t=taken(log,m,i.k);
+          if(timeKey===key) return '<div class="confirm timeedit" id="te"><label for="tIn">Kedy si užil '+esc(dname(m.name))+'?</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" id="tIn" class="tm" value="'+defTime(key)+'"><button class="btn pri sm" type="button" id="tSave">Uložiť</button><button class="btn ghost sm" type="button" id="tCancel">Zrušiť</button><p class="err" id="tErr" hidden></p></div>';
+          if(confirmId===key) return '<div class="confirm"><p>'+esc(dname(m.name))+' užitý o '+esc(t)+'.</p><button class="btn ghost sm" type="button" data-chtime="'+key+'">Zmeniť čas</button><button class="btn ghost sm" type="button" data-fx="'+m.id+'">Vedľajší účinok</button><button class="btn danger sm" type="button" data-undo="'+key+'">Zrušiť záznam</button><button class="btn ghost sm" type="button" data-keep="1">Nechať</button></div>';
+          const sub=[i.t?'o '+i.t:'',m.per>1?m.per+' '+ks(m.per):'',m.dose,m.days?durText(m):''].filter(Boolean).join(' · ');
+          const sst=stockShort(m);
+          const ord=needsOrder(m);
+          const btn='<button type="button" class="med'+(t?' taken':'')+(fut?' future':'')+'" data-key="'+key+'" '+(fut?'aria-disabled="true"':'aria-pressed="'+(!!t)+'"')+'><span class="pillbox">'+picM(m,32)+'</span><span class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span>'+(ord?' <span class="ordtag">objednať</span>':'')+'</div>'+(sub?'<div class="med-s">'+esc(sub)+'</div>':'')+(sst?'<div class="med-stock'+(ord?' warn':'')+'">'+esc(sst)+'</div>':'')+'</span>'+(t?'<span class="med-time">'+esc(t)+'</span>':skipped(log,m,i.k)?'<span class="med-skip">vynechané</span>':'')+'<span class="chk">'+CHECK+'</span></button>';
+          return '<div class="rowx">'+btn+(fut||t?'':'<button type="button" class="tbtn" data-tk="'+key+'" aria-label="Zadať čas užitia pre '+esc(m.name)+'" title="Užil som skôr">'+CLOCK+'</button>')+'</div>';
+        }).join('')+'</div></section>';
+    }).join('')+'</div>';
+    if(tab==='week') $('dayW').insertAdjacentHTML('afterbegin','<h2 class="daytitle">'+esc($('dayW').dataset.title)+(isToday?'':' <button type="button" class="linkbtn" id="backToday">späť na dnes</button>')+'</h2>');
+    if($('backToday')) $('backToday').onclick=()=>{sel=today;confirmId=null;timeKey=null;render()};
+    DAYEL().querySelectorAll('.med').forEach(b=>b.onclick=e=>{if(e.target.closest('.med-t')){showInfo(b.dataset.key.split('@')[0]);return}tap(b.dataset.key)});
+    DAYEL().querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>unmark(b.dataset.undo));
+    DAYEL().querySelectorAll('[data-keep]').forEach(b=>b.onclick=()=>{confirmId=null;render()});
+    DAYEL().querySelectorAll('[data-tk]').forEach(b=>b.onclick=()=>openTime(b.dataset.tk));
+    DAYEL().querySelectorAll('[data-chtime]').forEach(b=>b.onclick=()=>openTime(b.dataset.chtime));
+    DAYEL().querySelectorAll('[data-fx]').forEach(b=>b.onclick=()=>{confirmId=null;render();openFx(b.dataset.fx)});
+    if($('te')){
+      $('tSave').onclick=saveTime; $('tCancel').onclick=()=>{timeKey=null;render()};
+      $('tIn').oninput=()=>{$('tErr').hidden=true};
+      $('tIn').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveTime()}};
+    }
+    if(tab==='week'&&sel<=today) renderWeekExtra();
+    if(tab==='week'&&wkFilter&&wkFilter!=='meds') DAYEL().querySelectorAll('.review,.blocks').forEach(e=>e.remove());
+    DAYEL().querySelectorAll('[data-rvok]').forEach(b=>b.onclick=()=>{setTaken(b.dataset.rvok,b.dataset.t);render();toast('Zaznamenané ako užité o '+b.dataset.t,()=>{setTaken(b.dataset.rvok,null);render()})});
+    DAYEL().querySelectorAll('[data-rvskip]').forEach(b=>b.onclick=()=>{setSkip(b.dataset.rvskip,true);render();toast('Zaznamenané ako vynechané',()=>{setSkip(b.dataset.rvskip,false);render()})});
+    if($('rvAll')) $('rvAll').onclick=()=>{const bs=[...DAYEL().querySelectorAll('[data-rvok]')].map(b=>[b.dataset.rvok,b.dataset.t]);bs.forEach(([k,t])=>setTaken(k,t));render();toast('Všetko zaznamenané ako užité',()=>{bs.forEach(([k])=>setTaken(k,null));render()})};
+    renderList();
+  }
+  function renderWeekExtra(){
+    if(wkFilter==='meds') return;
+    const shapeCat=m=>m.shape==='drop'?'drop':m.shape==='bottle'?'bottle':'other';
+    const needAll=meds.filter(m=>m.mode==='need'&&m.kind!=='swap');
+    const swAll=meds.filter(m=>m.kind==='swap'||(m.openDays&&m.mode!=='need'));
+    const needRow=m=>{
+      const ent=extra.prn.filter(p=>p.m===m.id&&p.t.slice(0,10)===sel).sort((a,b)=>a.t<b.t?-1:1);
+      let r='<div class="ord wk-row"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div class="wk-times">'+(ent.length?ent.map(p=>'<span class="wk-chip">'+p.t.slice(11)+'<button type="button" class="wk-x" data-wkdel="'+p.id+'" aria-label="Zmazať záznam o '+p.t.slice(11)+'">×</button></span>').join(''):'<span class="note">v tento deň nič</span>')+'</div></div>';
+      if(wkAdd===m.id) r+='<div class="wk-add"><label class="sr" for="wkT">Čas</label><input id="wkT" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" value="'+(sel===today?nowHM():'12:00')+'"><button type="button" class="btn pri sm" id="wkSave" data-m="'+m.id+'">Uložiť</button><button type="button" class="btn ghost sm" id="wkCancel">Zrušiť</button></div>';
+      else r+='<button type="button" class="btn ghost sm" data-wkadd="'+m.id+'">+ '+actLabel(m)+'</button>';
+      return r+'</div>';
+    };
+    const swRow=m=>{
+      const swap=m.kind==='swap';
+      const was=extra.sw.some(e=>e.m===m.id&&e.d===sel);
+      return '<div class="ord wk-row"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div>'+(was?(swap?'vymenené v tento deň ✓':'otvorené v tento deň ✓'):(m.opened?(swap?'naposledy vymenené ':'otvorené ')+nice(m.opened):'zatiaľ bez dátumu'))+'</div></div>'+
+        (was?'<button type="button" class="btn ghost sm" data-wkun="'+m.id+'">Zrušiť</button>':'<button type="button" class="btn ghost sm" data-wksw="'+m.id+'">'+(swap?'Vymenil som v tento deň':'Otvoril som v tento deň')+'</button>')+'</div>';
+    };
+    const groups=[
+      {k:'other',l:'Podľa potreby',ico:pillSvg('cap','#7C74EA',22),list:needAll.filter(m=>shapeCat(m)==='other'),row:needRow},
+      {k:'drop',l:'Kvapkanie',ico:NEEDICO,list:needAll.filter(m=>shapeCat(m)==='drop'),row:needRow},
+      {k:'bottle',l:'Ošetrenie',ico:pillSvg('bottle','#A0522D',22),list:needAll.filter(m=>shapeCat(m)==='bottle'),row:needRow},
+      {k:'swap',l:'Výmena',ico:SWAPICO,list:swAll,row:swRow}
+    ];
+    const vis=groups.filter(g=>g.list.length&&(!wkFilter||wkFilter===g.k));
+    if(!vis.length) return;
+    let total=0, inner='';
+    vis.forEach(g=>{
+      const cnt=g.k==='swap'?extra.sw.filter(e=>e.d===sel&&g.list.some(m=>m.id===e.m)).length:extra.prn.filter(p=>p.t.slice(0,10)===sel&&g.list.some(m=>m.id===p.m)).length;
+      total+=cnt;
+      inner+='<div class="wsub"><span class="wsub-h"><span class="hico sm">'+g.ico+'</span>'+g.l+'<span class="cnt">· '+cnt+'</span></span>'+g.list.map(g.row).join('')+'</div>';
+    });
+    const def=!!wkFilter&&wkFilter!=='meds', o=isOpen('wx-ost',def)||vis.some(g=>g.list.some(m=>m.id===wkAdd));
+    DAYEL().insertAdjacentHTML('beforeend','<section class="opened wkx'+(o?'':' closed')+playCls('wx-ost')+'"><button type="button" class="opened-h" data-tog="wx-ost" data-def="'+def+'" aria-expanded="'+o+'"><span class="hico">'+OSTICO+'</span><span>Ostatné<span class="cnt">· '+total+'</span></span><span class="wsub-icons">'+vis.map(g=>'<span class="hico xs">'+g.ico+'</span>').join('')+'</span><span class="bh-r">'+CHEV+'</span></button><div class="olist"'+(o?'':' hidden')+'>'+inner+'</div></section>');
+    const root=DAYEL();
+    root.querySelectorAll('[data-wkadd]').forEach(b=>b.onclick=()=>{wkAdd=b.dataset.wkadd;render();const t=$('wkT');if(t)t.focus()});
+    if($('wkCancel')) $('wkCancel').onclick=()=>{wkAdd=null;render()};
+    if($('wkSave')) $('wkSave').onclick=()=>{
+      $('wkT').value=normTime($('wkT').value); const v=$('wkT').value; const m=meds.find(x=>x.id===$('wkSave').dataset.m); if(!m) return;
+      if(!/^\d{2}:\d{2}$/.test(v)){toast('Zadaj čas');return}
+      if(sel===today&&v>nowHM()){toast('Tento čas ešte nebol');return}
+      const e={id:rid(),m:m.id,t:sel+'T'+v}; extra.prn.push(e); const st=adjustStock(m,-m.per);
+      wkAdd=null; saveExtra(); if(st) saveMeds(); render();
+      toast(nm(m)+' · '+v+' ✓',()=>{extra.prn=extra.prn.filter(p=>p.id!==e.id);if(st){adjustStock(meds.find(x=>x.id===m.id)||m,m.per);saveMeds()}saveExtra();render()});
+    };
+    root.querySelectorAll('[data-wkdel]').forEach(b=>b.onclick=()=>{
+      const e=extra.prn.find(p=>p.id===b.dataset.wkdel); if(!e) return; const m=meds.find(x=>x.id===e.m);
+      extra.prn=extra.prn.filter(p=>p.id!==e.id); const st=m?adjustStock(m,m.per):false; saveExtra(); if(st) saveMeds(); render();
+      toast('Záznam o '+e.t.slice(11)+' zmazaný',()=>{extra.prn.push(e);if(st){adjustStock(meds.find(x=>x.id===e.m),-m.per);saveMeds()}saveExtra();render()});
+    });
+    root.querySelectorAll('[data-winfo]').forEach(t=>t.onclick=()=>showInfo(t.dataset.winfo));
+    root.querySelectorAll('[data-wkun]').forEach(b=>b.onclick=()=>{
+      const m=meds.find(x=>x.id===b.dataset.wkun); if(!m) return;
+      const gone=extra.sw.filter(e=>e.m===m.id&&e.d===sel); if(!gone.length) return;
+      const before={opened:m.opened,left:m.left};
+      extra.sw=extra.sw.filter(e=>!(e.m===m.id&&e.d===sel));
+      const back=gone.reduce((a,e)=>a+(e.dl||0),0); const prev=gone.map(e=>e.prev).find(v=>v!==undefined);
+      meds=meds.map(x=>x.id===m.id?{...x,opened:lastSw(m.id)||(prev!==undefined?prev:(x.opened===sel?null:x.opened)),left:x.left!=null?x.left+back:x.left}:x);
+      saveMeds(); saveExtra(); render();
+      toast(nm(m)+' · výmena '+nice(sel)+' zrušená',()=>{extra.sw=extra.sw.concat(gone);meds=meds.map(x=>x.id===m.id?{...x,...before}:x);saveMeds();saveExtra();render()});
+    });
+    root.querySelectorAll('[data-wksw]').forEach(b=>b.onclick=()=>{
+      const m=meds.find(x=>x.id===b.dataset.wksw); if(!m) return; const before={opened:m.opened,left:m.left};
+      const dec=m.kind==='swap'&&m.left!=null&&m.left>0?1:0;
+      const ev={id:rid(),m:m.id,d:sel,prev:m.opened||null,dl:dec}; extra.sw.push(ev);
+      meds=meds.map(x=>x.id===m.id?{...x,opened:lastSw(m.id)||sel,left:dec?x.left-1:x.left}:x); saveMeds(); saveExtra(); render();
+      toast(nm(m)+(m.kind==='swap'?' · vymenené ':' · otvorené ')+nice(sel),()=>{meds=meds.map(x=>x.id===m.id?{...x,...before}:x);extra.sw=extra.sw.filter(e=>e.id!==ev.id);saveMeds();saveExtra();render()});
+    });
+  }
+  function setSkip(key,on){
+    const m=mk(sel); months[m]=months[m]||{}; months[m][sel]=Object.assign({},months[m][sel]);
+    if(on) months[m][sel][key]='x'; else delete months[m][sel][key];
+    saveMonth(m);
+  }
+
+  function renderOrders(){
+    const list=meds.filter(m=>m.kind!=='swap'&&needsOrder(m));
+    if(!list.length){$('orders').innerHTML='';return}
+    $('orders').innerHTML='<section class="orders" aria-label="Lieky na objednanie"><div class="orders-h">'+BOX+'<span>Treba objednať</span></div>'+
+      list.map(m=>{
+        const i=stockInfo(m)||{};
+        const why=m.kind==='swap'?'nemáš náhradné, kúp nové':i.course?'chýba '+i.short+' '+ks(i.short)+' do konca liečby':(i.out||i.left===0)?'zásoba došla':'vydrží do '+nice(i.last)+' ('+i.left+' '+ks(i.left)+')';
+        return '<div class="ord"><span class="pillbox">'+picM(m,28)+'</span><div class="t"><div>'+esc(nm(m))+'</div><div>'+why+'</div></div><button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button></div>';
+      }).join('')+'</section>';
+    $('orders').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
+  }
+
+  const HOMEICO='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-6.5 8 6.5v8.5a1.5 1.5 0 0 1-1.5 1.5h-3.5v-5h-6v5H5.5A1.5 1.5 0 0 1 4 19.5z" fill="#2D6BE4"/></svg>';
+  const KEYICO='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="4.2" fill="none" stroke="#7C74EA" stroke-width="2.4"/><path d="M12 12h9M18 12v3.5M21 12v2.5" stroke="#7C74EA" stroke-width="2.4" stroke-linecap="round"/></svg>';
+  const PLACE_LBL={doma:'doma',prech:'prechodný byt'};
+  const nm=m=>m.name+(m.place?' · '+PLACE_LBL[m.place]:'');
+  function picM(m,size){
+    const svg=pillSvg(m.shape,m.color,size);
+    if(!m.place) return svg;
+    return '<span class="plw">'+svg+'<span class="plb plb-'+m.place+'" title="'+PLACE_LBL[m.place]+'">'+(m.place==='doma'?HOMEICO:KEYICO)+'</span></span>';
+  }
+  const lastSw=id=>extra.sw.filter(e=>e.m===id&&/^\d{4}-\d{2}-\d{2}$/.test(e.d||'')).reduce((a,e)=>!a||e.d>a?e.d:a,null);
+  function grouped(list){
+    const by=k=>list.filter(m=>(m.place||null)===k);
+    const none=by(null),d=by('doma'),pr=by('prech');
+    if(!d.length&&!pr.length) return list;
+    return none.concat(d.length?[{__h:'doma'}].concat(d):[]).concat(pr.length?[{__h:'prech'}].concat(pr):[]);
+  }
+  function renderOpened(){
+    const list=meds.filter(m=>m.kind==='swap'||(m.openDays&&m.opened&&m.mode!=='need')).filter(m=>!m.days||endKey(m)>=today);
+    if(!list.length){$('opened').innerHTML='';return}
+    const oop=isOpen('opened',false);
+    const urgent=list.filter(m=>{const o=openInfo(m);return (o&&o.state!=='ok')||needsOrder(m)}).length;
+    $('opened').innerHTML='<section class="opened'+(oop?'':' closed')+playCls('opened')+'" aria-label="Výmeny a otvorené balenia"><button type="button" class="opened-h" data-tog="opened" data-def="false" aria-expanded="'+oop+'"><span class="hico">'+SWAPICO+'</span><span>Výmeny a otvorené balenia<span class="cnt">· '+list.length+'</span></span>'+(urgent&&!oop?'<span class="ordtag">'+urgent+' čoskoro</span>':'')+'<span class="bh-r">'+CHEV+'</span></button><div class="olist"'+(oop?'':' hidden')+'>'+
+      grouped(list).map(m=>m.__h?'<div class="plh">'+(m.__h==='doma'?HOMEICO+'Doma':KEYICO+'Prechodný byt')+'</div>':(()=>{
+        const o=openInfo(m); const st=o?o.state:'ok';
+        const swap=m.kind==='swap';
+        const lines=[o?openText(m):(m.openDays?'zatiaľ neotvorené':''),m.mode==='need'&&!swap?'podľa potreby':'',stockShort(m)].filter(Boolean).join(' · ');
+        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div></div>'+
+          (m.openDays?'<button class="btn ghost sm" type="button" data-open="'+m.id+'">'+(swap?'Vymenil som':'Otvoril som nové')+'</button>':'')+'</div>';
+      })()).join('')+'</div></section>';
+    $('opened').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openedNew(b.dataset.open));
+    $('opened').querySelectorAll('[data-info]').forEach(t=>t.onclick=()=>showInfo(t.dataset.info));
+  }
+  function openedNew(id){
+    animKey='opened'; setTimeout(()=>{animKey=null},50);
+    const med=meds.find(x=>x.id===id); if(!med) return;
+    const before={opened:med.opened,left:med.left};
+    const ev={id:rid(),m:id,d:today,prev:med.opened||null,dl:med.left!=null&&med.mode==='need'&&med.left>0?1:0}; extra.sw.push(ev);
+    meds=meds.map(x=>x.id===id?{...x,opened:today,left:x.left!=null&&x.mode==='need'?Math.max(0,x.left-1):x.left}:x); saveMeds(); saveExtra(); render();
+    toast(nm(med)+(med.kind==='swap'?' · vymenené dnes':' · otvorené dnes'),()=>{meds=meds.map(x=>x.id===id?{...x,...before}:x);extra.sw=extra.sw.filter(e=>e.id!==ev.id);saveMeds();saveExtra();render()});
+  }
+
+  function renderHero(isToday,items,log){
+    if(!isToday||!items.length){$('hero').innerHTML='';return}
+    const nowM=toMin(nowHM()); const cur=nowSlot();
+    const pending=items.filter(i=>!taken(log,i.m,i.k));
+    if(!pending.length){
+      $('hero').innerHTML='<section class="hero mini done"><span class="hero-pill" style="color:var(--ok)">'+CHECK.replace('aria-hidden','width="24" height="24" aria-hidden')+'</span><div class="hero-t"><div class="hero-top">Dnes '+items.length+' z '+items.length+'</div><div class="hero-name">Všetko hotové</div></div></section>';
+      return;
+    }
+    const due=pending.filter(i=>dueMin(i)<=nowM).sort((a,b)=>dueMin(a)-dueMin(b));
+    const h=due[0]||pending.slice().sort((a,b)=>dueMin(a)-dueMin(b))[0];
+    const group=pending.filter(i=>h.t?i.t===h.t:(!i.t&&i.s===h.s));
+    let label;
+    if(dueMin(h)>nowM) label=cdFmt(dueMin(h)-nowM)+' · '+(h.t?h.t:slotLabel(h.s).toLowerCase());
+    else if(h.t) label=(nowM-dueMin(h)<=60?'Teraz · ':'Zabudnuté? · ')+h.t;
+    else label=(h.s===cur?'Teraz · ':'Zabudnuté? · ')+slotLabel(h.s).toLowerCase();
+    $('hero').innerHTML='<section class="hero thero s-'+h.s+'" aria-live="polite"><div class="thead"><span class="hero-top">'+esc(label)+'</span></div><div class="htiles">'+
+      group.map(i=>'<span class="htile s-'+i.s+'" aria-hidden="true">'+picM(i.m,34)+'<span class="sbadge">'+BADGE_ICO[i.s]+'</span></span>').join('')+
+      '<button type="button" class="hall" id="heroAll" aria-label="Odfajknúť všetko na užitie">'+CHECK+'</button></div></section>';
+    $('heroAll').onclick=e=>{const b=e.currentTarget;if(b.classList.contains('ok'))return;b.classList.add('ok');try{navigator.vibrate&&navigator.vibrate(20)}catch(_){}
+      $('hero').querySelectorAll('.htile').forEach((t,i)=>setTimeout(()=>t.classList.add('play','hop'),i*350));
+      const keys=group.map(i=>i.m.id+'@'+i.k); const t=nowHM();
+      setTimeout(()=>{keys.forEach(k=>setTaken(k,t));render();toast('Užité ✓',()=>{keys.forEach(k=>setTaken(k,null));render()})},2400)};
+  }
+
+  function renderList(){
+    const sorted=[...meds].sort((a,b)=>{const ea=a.days&&endKey(a)<today, eb=b.days&&endKey(b)<today;return ea-eb||a.name.localeCompare(b.name,'sk')});
+    $('mlist').innerHTML=sorted.length?sorted.map(m=>{
+      if(deleteId===m.id) return '<li><div class="t"><div>Zmazať '+esc(nm(m))+'?</div><div>Záznamy z minulých dní zostanú.</div></div><button class="btn danger sm" type="button" data-del="'+m.id+'">Zmazať</button><button class="btn ghost sm" type="button" data-nodel="1">Nie</button></li>';
+      const stx=stockText(m);
+      return '<li><span class="pillbox">'+picM(m,30)+'</span><div class="t"><div>'+esc(m.name)+'</div><div>'+esc(freqText(m))+(m.kind==='swap'?'':' · '+durText(m))+(m.place?' · '+(m.place==='doma'?'doma':'prechodný byt'):'')+(m.dose?' · '+esc(m.dose):'')+'</div>'+(stx?'<div class="'+(needsOrder(m)?'stk warn':'stk')+'">'+esc(stx)+(m.left!=null&&!/^doma/.test(stx)?' · doma '+m.left+' '+ks(m.left):'')+'</div>':'')+(openText(m)?'<div class="stk">'+esc(openText(m))+'</div>':'')+'</div>'+
+        '<div class="macts">'+(m.left!=null?'<button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplniť')+'</button>':'')+
+        '<button class="btn ghost sm" type="button" data-edit="'+m.id+'">Upraviť</button><button class="btn ghost sm" type="button" data-askdel="'+m.id+'" aria-label="Zmazať '+esc(m.name)+'">Zmazať</button></div></li>';
+    }).join(''):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať liek.</div></div></li>';
+    $('mlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(b.dataset.edit));
+    $('mlist').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
+    $('mlist').querySelectorAll('[data-askdel]').forEach(b=>b.onclick=()=>{deleteId=b.dataset.askdel;renderList()});
+    $('mlist').querySelectorAll('[data-nodel]').forEach(b=>b.onclick=()=>{deleteId=null;renderList()});
+    $('mlist').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{meds=meds.filter(m=>m.id!==b.dataset.del);deleteId=null;if(editId)resetForm();saveMeds();render()});
+  }
+
+  /* ---------- actions ---------- */
+  function adjustStock(med,delta){
+    if(med.left==null) return false;
+    meds=meds.map(x=>x.id===med.id?{...x,left:Math.max(0,x.left+delta)}:x);
+    return true;
+  }
+  function setTaken(key,val){
+    const [id,k]=key.split('@'); const med=meds.find(x=>x.id===id); if(!med) return;
+    const m=mk(sel); months[m]=months[m]||{}; months[m][sel]=Object.assign({},months[m][sel]);
+    const had=!!taken(months[m][sel],med,k);
+    if(med.legacy===k) delete months[m][sel][id];
+    if(val) months[m][sel][key]=val; else delete months[m][sel][key];
+    saveMonth(m);
+    if(!had&&val&&adjustStock(med,-med.per)) saveMeds();
+    if(had&&!val&&adjustStock(med,med.per)) saveMeds();
+  }
+  function defTime(key){
+    const [id,k]=key.split('@'); const med=meds.find(x=>x.id===id);
+    const t=med?taken(dayLog(sel),med,k):''; if(/^\d{2}:\d{2}$/.test(t)) return t;
+    const dz=med?dosesOf(med,sel).find(x=>x.k===k):null;
+    const st=dz&&dz.t?dz.t:(SLOT_TIME[k]||'08:00'); if(sel!==today) return st;
+    const n=nowHM(); return st<n?st:n;
+  }
+  function openTime(key){
+    if(sel>today){toast('Tento deň ešte neprišiel');return}
+    timeKey=key; confirmId=null; render();
+    const el=$('te'); if(el){el.scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'}); $('tIn').focus()}
+  }
+  function saveTime(){
+    $('tIn').value=normTime($('tIn').value); const v=$('tIn').value; const key=timeKey;
+    if(!/^\d{2}:\d{2}$/.test(v)){$('tErr').textContent='Zadaj čas, napríklad 07:30.';$('tErr').hidden=false;return}
+    if(sel===today&&v>nowHM()){$('tErr').textContent='Tento čas ešte nebol. Zadaj skorší čas.';$('tErr').hidden=false;return}
+    const med=meds.find(x=>x.id===key.split('@')[0]); if(!med) return;
+    timeKey=null; setTaken(key,v); render();
+    toast(nm(med)+' · užitý o '+v+' ✓');
+  }
+  function tap(key){
+    const [id,k]=key.split('@'); const med=meds.find(x=>x.id===id); if(!med) return;
+    if(sel>today){toast('Tento deň ešte neprišiel');return}
+    if(taken(dayLog(sel),med,k)){confirmId=key;timeKey=null;render();return}
+    if(sel<today){openTime(key);return}
+    setTaken(key,nowHM()); render();
+    const i=dosesOf(med,sel).find(x=>x.k===k)||{t:null,s:k};
+    toast(nm(med)+' · '+doseLabel(i)+' ✓',()=>unmark(key,true));
+  }
+  function unmark(key,quiet){
+    confirmId=null; setTaken(key,null); render(); if(!quiet) toast('Záznam zrušený');
+  }
+  function refill(id){
+    const med=meds.find(x=>x.id===id); if(!med) return;
+    if(med.kind==='swap'){const b=med.left||0;meds=meds.map(x=>x.id===id?{...x,left:b+1}:x);saveMeds();render();toast(nm(med)+' · +1 náhradný',()=>{meds=meds.map(x=>x.id===id?{...x,left:b}:x);saveMeds();render()});return}
+    if(!med.pack){startEdit(id);openPanel(true);$('fPack').focus();toast('Zadaj, koľko kusov je v balení');return}
+    const before=med.left||0;
+    meds=meds.map(x=>x.id===id?{...x,left:before+med.pack}:x); saveMeds(); render();
+    toast(nm(med)+' · +'+med.pack+' '+ks(med.pack),()=>{meds=meds.map(x=>x.id===id?{...x,left:before}:x);saveMeds();render()});
+  }
+  let tt=null;
+  function toast(msg,undo){
+    msg=hideNames(msg);
+    clearTimeout(tt);
+    $('toastHost').innerHTML='<div class="toast" role="status"><span>'+esc(msg)+'</span>'+(undo?'<button type="button" id="tUndo">Späť</button>':'')+'</div>';
+    if(undo) $('tUndo').onclick=()=>{$('toastHost').innerHTML='';undo()};
+    tt=setTimeout(()=>{$('toastHost').innerHTML=''},4000);
+  }
+
+  /* ---------- form ---------- */
+  $('fShapes').innerHTML=SHAPES.map((s,i)=>'<label class="chip shape"><input type="radio" name="fShape" id="fsh-'+s.k+'" value="'+s.k+'"'+(i===0?' checked':'')+'><span><span class="shp" data-shape="'+s.k+'"></span>'+s.l+'</span></label>').join('');
+  $('fColors').innerHTML=COLORS.map((c,i)=>'<label class="sw" title="'+COLOR_NAMES[i]+'"><input type="radio" name="fColor" id="fc-'+i+'" value="'+c+'"'+(i===2?' checked':'')+' aria-label="'+COLOR_NAMES[i]+'"><span style="background:'+c+'"></span></label>').join('');
+  $('fEvery').innerHTML=EVERY.map(h=>'<label class="chip"><input type="radio" name="fEvery" id="fe-'+h+'" value="'+h+'"'+(h===8?' checked':'')+'><span>každých '+h+' h</span></label>').join('');
+  const radio=n=>(document.querySelector('input[name='+n+']:checked')||{}).value;
+  const curShape=()=>radio('fShape')||'tab';
+  const curColor=()=>radio('fColor')||COLORS[2];
+  function setRadio(name,val){const el=document.querySelector('input[name='+name+'][value="'+val+'"]');if(el)el.checked=true}
+  const numVal=id=>{const v=$(id).value.trim();if(v==='')return null;const n=parseInt(v,10);return Number.isFinite(n)?n:NaN};
+  const slotBoxes=()=>SLOTS.map(s=>$('fs-'+s.k));
+
+  function formDraft(){
+    const mode=radio('fMode'); const every=+radio('fEvery')||8; const first=$('fFirst').value||'07:00';
+    const slots=slotBoxes().filter(b=>b.checked).map(b=>b.value);
+    const days=$('fDurDays').checked?numVal('fDays'):null;
+    const start=editId?((meds.find(m=>m.id===editId)||{}).start||today):today;
+    return {rolling:$('fRoll').checked,mode,every,first,slots,days,start,gapH:numVal('fGap'),maxDay:numVal('fMax'),openDays:numVal('fOpenDays'),opened:$('fOpened').value||null,per:1,pack:numVal('fPack'),packs:numVal('fLeft')};
+  }
+  function updPreview(){
+    const c=curColor();
+    document.querySelectorAll('.shp').forEach(el=>{el.innerHTML=pillSvg(el.dataset.shape,c,24)});
+    $('pvPill').innerHTML=pillSvg(curShape(),c,36);
+    $('pvText').textContent=$('fName').value.trim()||'Takto ho uvidíš v zozname';
+    const nm=$('fName').value.trim();
+    $('kindHint').hidden=!((radio('fKind')||'med')==='med'&&(curShape()==='brush'||curShape()==='tuft'||curShape()==='ebrush'||/kef|hlavic|filter|šošov|sosov/i.test(nm)));
+  }
+  const kindVal=()=>radio('fKind')||'med';
+  const swapDays=()=>{const n=numVal('fSwapN');if(!(n>=1&&n<=24))return null;return radio('fSwapU')==='w'?n*7:n*30};
+  function updKind(){
+    const sw=kindVal()==='swap';
+    $('medOnly').hidden=sw; $('swapOnly').hidden=!sw; $('swapPresets').hidden=!sw||!!editId;
+    $('fName').placeholder=sw?'Hlavica na kefku':'Euthyrox';
+    if(sw&&!$('fSwapLast').value) $('fSwapLast').value=today;
+    const dd=swapDays(); const last=$('fSwapLast').value;
+    $('swapPreview').textContent=sw&&dd&&last?'Ďalšia výmena '+nice(addDays(last,dd))+'. Upozorním týždeň vopred.':'';
+    if(!editId){ $('formTitle').textContent=sw?'Pridať vec na výmenu':'Pridať liek'; $('fSubmit').textContent=sw?'Pridať':'Pridať liek'; }
+  }
+  document.querySelectorAll('input[name=fKind],input[name=fSwapU]').forEach(i=>i.addEventListener('change',()=>{$('fErr').hidden=true;if(kindVal()==='swap'&&!editId&&curShape()==='tab'){setRadio('fShape','brush');updPreview()}updKind()}));
+  ['fSwapN','fSwapLast','fSpare'].forEach(id=>$(id).addEventListener('input',()=>{$('fErr').hidden=true;updKind()}));
+  document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{
+    const [n,num,u,sh]=b.dataset.preset.split('|'); $('fName').value=n; $('fSwapN').value=num; setRadio('fSwapU',u); setRadio('fShape',sh); updPreview(); updKind(); $('fSpare').focus();
+  });
+  function updForm(){
+    updKind();
+    const d=formDraft();
+    $('slotsRow').hidden=d.mode!=='slots'; $('hoursRow').hidden=d.mode!=='hours'; $('needRow').hidden=d.mode!=='need';
+    if(d.openDays>0&&!d.opened){$('fOpened').value=today;d.opened=today}
+    $('openPreview').textContent=d.openDays>0&&d.opened?'Použiteľné do '+nice(addDays(d.opened,d.openDays-1))+'. Upozorním 3 dni vopred.':'';
+    $('daysRow').hidden=!$('fDurDays').checked;
+    $('hoursPreview').textContent=d.mode!=='hours'?'':d.rolling?(()=>{const f=d.first;const nx=fromMin((toMin(f)+d.every*60)%1440);return d.every>=24?'Prvá dávka o '+f+'. Keď ju užiješ inokedy, ďalšia sa posunie o '+d.every+' h od toho času.':'Napríklad užitie o '+f+' znamená ďalšiu dávku o '+nx+'. Keď užiješ neskôr, ďalšia sa posunie.'})():'Pevné časy dávok: '+hourTimes({first:d.first,every:d.every}).join(', ');
+    const n=numVal('fDays');
+    $('daysEnd').textContent=n>=1&&n<=365?'posledný deň '+nice(addDays(d.start,n-1)):'';
+    const cur=editId?(meds.find(m=>m.id===editId)||{}).left:null;
+    let leftIn=null;
+    if(d.pack>0&&d.packs!=null&&d.packs>=0) leftIn=d.pack*d.packs;
+    else if(editId&&cur!=null) leftIn=cur;
+    else if(!editId&&d.pack>0) leftIn=d.pack;
+    const doses=d.mode==='hours'?Math.round(24/d.every):d.slots.length;
+    let txt='';
+    if(d.pack>0&&d.packs>0) txt=d.packs+' × '+d.pack+' = '+leftIn+' '+ks(leftIn)+'. ';
+    else if(editId&&cur!=null&&!(d.packs>0)) txt='Teraz doma '+cur+' '+ks(cur)+' (ubúda podľa užitia). Vyplň balenia, ak chceš stav prepočítať. ';
+    else if(!editId&&d.pack>0) txt='Rátam s 1 balením, '+d.pack+' '+ks(d.pack)+'. ';
+    if(leftIn>0&&doses>0&&d.per>0){
+      const perDay=doses*d.per; txt+='Denne berieš '+perDay+' '+ks(perDay)+'. ';
+      if(d.days>0){const need=perDay*d.days;txt+=leftIn>=need?'Na celú liečbu treba '+need+' '+ks(need)+', zásoba vystačí.':'Na celú liečbu treba '+need+' '+ks(need)+', chýba '+(need-leftIn)+' '+ks(need-leftIn)+'.'}
+      else{const dd=Math.floor(leftIn/perDay);txt+='Vydrží asi '+dd+' '+dni(dd)+', do '+nice(addDays(today,Math.max(0,dd-1)))+'. Upozorním 14 dní vopred.'}
+    }
+    $('stockPreview').textContent=txt;
+  }
+  document.querySelectorAll('input[name=fShape],input[name=fColor]').forEach(i=>i.addEventListener('change',updPreview));
+  document.querySelectorAll('input[name=fMode],input[name=fEvery],input[name=fDur]').forEach(i=>i.addEventListener('change',()=>{$('fErr').hidden=true;updForm()}));
+  ['fFirst','fDays','fPack','fLeft','fOpenDays','fOpened','fRoll'].forEach(id=>$(id).addEventListener('input',()=>{$('fErr').hidden=true;updForm()}));
+  slotBoxes().forEach(b=>b.addEventListener('change',()=>{$('fErr').hidden=true;updForm()}));
+  $('dMinus').onclick=()=>{$('fDays').value=Math.max(1,(numVal('fDays')||1)-1);updForm()};
+  $('dPlus').onclick=()=>{$('fDays').value=Math.min(365,(numVal('fDays')||0)+1);updForm()};
+
+  function openPanel(){ if(tab!=='meds') setTab('meds'); }
+  function openAdd(){resetForm();$('form').hidden=false;setTab('meds');$('form').scrollIntoView({block:'start'});$('fName').focus()}
+  $('addBtn').onclick=openAdd;
+  $('kindSwitch').onclick=()=>{setRadio('fKind','swap');if(curShape()!=='brush'&&curShape()!=='tuft'&&curShape()!=='ebrush'&&/kef|hlavic/i.test($('fName').value))setRadio('fShape',/jednozl/i.test($('fName').value)?'tuft':/hlavic|elektr/i.test($('fName').value)?'ebrush':'brush');updPreview();updForm();$('fSwapN').focus()};
+  function setTab(t){
+    tab=t; ['today','week','meds','more'].forEach(v=>{$('v-'+v).hidden=v!==t});
+    document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+    if(t==='today'){sel=today} confirmId=null; timeKey=null; prnWarn=null;
+    $('day').innerHTML=''; $('dayW').innerHTML='';
+    render(); window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+  function renderChips(){
+    const c=[];
+    meds.filter(m=>m.kind!=='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Objednať: '+m.name,'meds']));
+    visitsSorted().forEach(v=>{const d=diffDays(today,v.date);if(v.type==='rx'?d<=7:d<=2)c.push([d<0?'bad':'',(v.type==='rx'?'Recept: ':'')+v.title+' · '+(d===0?'dnes':d===1?'zajtra':d<0?'prešlo':nice(v.date)),'more'])});
+    meds.forEach(m=>{const o=openInfo(m);if(!o||o.state==='ok')return;c.push([o.state==='exp'?'bad':'warn',(m.kind==='swap'?'Vymeniť: ':'Spotrebovať čoskoro: ')+nm(m),m.kind==='swap'||m.mode!=='need'?'opened':'prn'])});
+    meds.filter(m=>m.kind==='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Kúpiť: '+m.name,'opened']));
+    $('chips').innerHTML=c.map(x=>'<button type="button" class="achip '+x[0]+'" data-go="'+x[2]+'">'+esc(hideNames(x[1]))+'</button>').join('');
+    $('chips').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==='opened'||g==='prn'){const el=$(g);if(el)el.scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'})}else setTab(g)});
+    $('medsBadge').hidden=!c.some(x=>x[2]==='meds');
+    $('moreBadge').hidden=!c.some(x=>x[2]==='more');
+  }
+
+
+  function startEdit(id){
+    const m=meds.find(x=>x.id===id); if(!m) return;
+    editId=id; $('fName').value=m.name; $('fDose').value=m.dose||'';
+    setRadio('fMode',m.mode); setRadio('fEvery',m.every); $('fFirst').value=m.first; $('fRoll').checked=m.mode==='hours'?!!m.rolling:true;
+    slotBoxes().forEach(b=>b.checked=m.slots.includes(b.value));
+    $('fDurDays').checked=!!m.days; $('fDurAlways').checked=!m.days; $('fDays').value=m.days||7;
+    $('fPack').value=m.pack||''; $('fLeft').value=''; $('fOpenDays').value=m.openDays||''; $('fOpened').value=m.opened||''; $('fGap').value=m.gapH||''; $('fMax').value=m.maxDay||'';
+    setRadio('fShape',m.shape); setRadio('fColor',m.color); updPreview(); updForm();
+    setRadio('fKind',m.kind);
+    if(m.kind==='swap'){const d=m.openDays||90;if(d%30===0){$('fSwapN').value=d/30;setRadio('fSwapU','m')}else{$('fSwapN').value=Math.max(1,Math.round(d/7));setRadio('fSwapU','w')} $('fSwapLast').value=m.opened||today; $('fSpare').value=m.left!=null?m.left:''; setRadio('fPlace',m.place||'');$('placeBoth').hidden=true}
+    updForm();
+    $('formTitle').textContent=m.kind==='swap'?'Upraviť vec na výmenu':'Upraviť liek'; $('fSubmit').textContent='Uložiť zmeny'; $('form').hidden=false;
+    $('form').scrollIntoView({block:'start'}); $('fName').focus();
+  }
+  function resetForm(){
+    try{$('placeBoth').hidden=false}catch(e){}
+    editId=null; $('form').reset(); $('fSwapLast').value=''; $('fSwapN').value=3; $('fErr').hidden=true; $('fDays').value=7; $('fFirst').value='07:00';
+    setRadio('fColor',COLORS[meds.length%COLORS.length]); updPreview(); updForm();
+    $('formTitle').textContent='Pridať liek'; $('fSubmit').textContent='Pridať liek'; $('form').hidden=true;
+  }
+  $('fCancel').onclick=()=>{resetForm();window.scrollTo({top:0,behavior:reduce()?'auto':'smooth'})};
+  $('fName').addEventListener('input',()=>{$('fErr').hidden=true;updPreview()});
+  function err(msg,el){$('fErr').textContent=msg;$('fErr').hidden=false;el.focus()}
+  $('form').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('fName').value.trim(); const dose=$('fDose').value.trim(); const d=formDraft();
+    if(kindVal()==='swap'){
+      if(!name) return err('Napíš, čo vymieňaš.',$('fName'));
+      const sd=swapDays(); if(!sd) return err('Zadaj, ako často vymieňaš (1 až 24).',$('fSwapN'));
+      const last=$('fSwapLast').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(last)) return err('Zadaj dátum poslednej výmeny.',$('fSwapLast'));
+      if(last>today) return err('Dátum výmeny nemôže byť v budúcnosti.',$('fSwapLast'));
+      const sp=numVal('fSpare'); if(sp!=null&&!(sp>=0&&sp<=50)) return err('Náhradných kusov môže byť 0 až 50.',$('fSpare'));
+      const sb={kind:'swap',name,dose,mode:'need',slots:['rano'],days:null,openDays:sd,opened:last,left:sp==null?null:sp,pack:null,per:1,shape:curShape(),color:curColor(),place:radio('fPlace')||null}; const both=sb.place==='both'; if(both) sb.place=editId?null:'doma';
+      if(editId){meds=meds.map(m=>m.id===editId?normMed({...m,...sb}):m);toast('Zmeny uložené')}
+      else{const nid=()=>'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);meds=meds.concat(both?[normMed({id:nid(),start:today,...sb,place:'doma'}),normMed({id:nid(),start:today,...sb,place:'prech'})]:[normMed({id:nid(),start:today,...sb})]);toast(name+(both?' pridané do oboch bytov':' pridané'))}
+      resetForm(); saveMeds(); sel=today; render(); window.scrollTo({top:0,behavior:reduce()?'auto':'smooth'}); return;
+    }
+    if(!name) return err('Napíš názov lieku.',$('fName'));
+    if(d.mode==='slots'&&!d.slots.length) return err('Vyber aspoň jednu časť dňa, kedy liek berieš.',$('fs-rano'));
+    if(d.mode==='hours'&&!/^\d{2}:\d{2}$/.test(d.first)) return err('Zadaj čas prvej dávky.',$('fFirst'));
+    if(d.mode==='need'&&d.gapH!=null&&!(d.gapH>=1&&d.gapH<=48)) return err('Odstup musí byť od 1 do 48 hodín.',$('fGap'));
+    if(d.mode==='need'&&d.maxDay!=null&&!(d.maxDay>=1&&d.maxDay<=24)) return err('Najviac za deň môže byť 1 až 24.',$('fMax'));
+    if(d.openDays!=null&&!(d.openDays>=1&&d.openDays<=365)) return err('Použiteľnosť po otvorení musí byť od 1 do 365 dní.',$('fOpenDays'));
+    if(d.opened&&d.opened>today) return err('Dátum otvorenia nemôže byť v budúcnosti.',$('fOpened'));
+    if($('fDurDays').checked&&!(d.days>=1&&d.days<=365)) return err('Počet dní musí byť od 1 do 365.',$('fDays'));
+    if(d.pack!=null&&!(d.pack>=1&&d.pack<=1000)) return err('Počet kusov v balení musí byť od 1 do 1000.',$('fPack'));
+    if(d.packs!=null&&!(d.packs>=0&&d.packs<=50)) return err('Počet balení musí byť od 0 do 50.',$('fLeft'));
+    if(d.packs!=null&&!d.pack) return err('Zadaj, koľko kusov je v jednom balení.',$('fPack'));
+    const prev=editId?(meds.find(m=>m.id===editId)||{}).left:null;
+    let left=prev==null?null:prev;
+    if(d.pack&&d.packs!=null) left=d.pack*d.packs;
+    else if(d.pack&&!editId) left=d.pack;
+    else if(d.pack&&editId&&prev==null) left=d.pack;
+    if(!d.pack&&d.packs==null&&editId&&$('fPack').value.trim()==='') left=null;
+    const base={kind:'med',name,dose,mode:d.mode,rolling:d.mode==='hours'&&d.rolling,gapH:d.mode==='need'?d.gapH:null,maxDay:d.mode==='need'?d.maxDay:null,slots:d.mode==='slots'?d.slots:['rano'],every:d.every,first:d.first,days:d.days||null,openDays:d.openDays||null,opened:d.openDays?d.opened:null,per:d.per,pack:d.pack,left:left==null?null:left,shape:curShape(),color:curColor()};
+    if(editId){ meds=meds.map(m=>m.id===editId?normMed({...m,...base}):m); toast('Zmeny uložené'); }
+    else { meds=meds.concat([normMed({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),start:today,...base})]); toast(name+' pridaný'); }
+    resetForm(); saveMeds(); sel=today; render();
+    window.scrollTo({top:0,behavior:reduce()?'auto':'smooth'});
+  });
+
+  /* ---------- saving files (backup, report) ---------- */
+  async function saveFile(filename,data,mime){
+    let dl=null; try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){}
+    if(dl){await dl.save({filename,data});return}
+    const url=URL.createObjectURL(new Blob([data],{type:mime||'application/octet-stream'}));
+    const a=document.createElement('a'); a.href=url; a.download=filename; a.rel='noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+  }
+  /* ---------- backup ---------- */
+  $('bSave').onclick=async()=>{
+    const body=JSON.stringify({app:'moje-lieky',v:4,saved:new Date().toISOString(),meds:cleanForSave(),months,extra},null,1);
+    try{await saveFile('moje-lieky-zaloha-'+today+'.json',body,'application/json');toast('Záloha uložená do Stiahnutých súborov')}
+    catch(e){if(e&&e.code==='declined')return; toast(e&&e.code==='rate_limited'?'Chvíľu počkaj a skús znova.':'Zálohu sa nepodarilo uložiť.')}
+  };
+  let pending=null;
+  $('bFile').addEventListener('change',e=>{
+    const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      let o=null; try{o=JSON.parse(r.result)}catch(_){}
+      if(!o||o.app!=='moje-lieky'||!Array.isArray(o.meds)||!o.months||typeof o.months!=='object'){$('bConfirm').innerHTML='<p class="err">Tento súbor nie je záloha z appky Moje lieky.</p>';return}
+      pending=o;
+      $('bConfirm').innerHTML='<div class="confirm"><p>Obnoviť zálohu ('+o.meds.length+' liekov)? Súčasné údaje sa nahradia.</p><button class="btn danger sm" type="button" id="bYes">Obnoviť</button><button class="btn ghost sm" type="button" id="bNo">Zrušiť</button></div>';
+      $('bNo').onclick=()=>{pending=null;$('bConfirm').innerHTML=''};
+      $('bYes').onclick=()=>{
+        const o2=pending; pending=null; $('bConfirm').innerHTML='';
+        meds=normList(o2.meds); if(o2.extra){extra=normExtra(o2.extra);saveExtra()}
+        Object.keys(o2.months).forEach(m=>{if(/^\d{4}-\d{2}$/.test(m)&&o2.months[m]&&typeof o2.months[m]==='object'){months[m]=o2.months[m]; saveMonth(m); watchMonth(m)}});
+        saveMeds(); render(); toast('Záloha obnovená');
+      };
+    };
+    r.readAsText(f);
+  });
+
+  function dayCheck(){const t=dk(new Date());if(t!==today){const w=sel===today;today=t;if(w)sel=t;neededMonths().forEach(watchMonth)}if(!timeKey&&!visitForm&&!wkAdd)render()}
+  setInterval(dayCheck,60000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)dayCheck()});
+
+
+  /* ---------- extra: as-needed log, side effects, visits ---------- */
+  let extra={prn:[],fx:[],visits:[],sw:[]};
+  let prnWarn=null, visitForm=false, fxDel=null;
+  function normExtra(o){
+    o=o&&typeof o==='object'?o:{};
+    const arr=a=>Array.isArray(a)?a.filter(x=>x&&typeof x==='object'&&x.id):[];
+    return {prn:arr(o.prn).slice(-400),fx:arr(o.fx).slice(-300),visits:arr(o.visits).slice(-100),sw:arr(o.sw).slice(-200)};
+  }
+  function saveExtra(){ extra=normExtra(extra); if(db) queue('data/users/'+uid+'/extra',JSON.parse(JSON.stringify(extra))); lsSave(); }
+  const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const nowISO=()=>today+'T'+nowHM();
+  const isoDate=s=>{const [d,t]=s.split('T');const [y,m,dd]=d.split('-').map(Number);const [h,mi]=(t||'00:00').split(':').map(Number);return new Date(y,m-1,dd,h,mi)};
+  const minsBetween=(a,b)=>Math.round((isoDate(b)-isoDate(a))/60000);
+  function whenLabel(iso){
+    const [d,t]=iso.split('T');
+    const dd=diffDays(d,today);
+    return (dd===0?'dnes':dd===1?'včera':nice(d))+' '+t;
+  }
+  const medName=id=>{const m=meds.find(x=>x.id===id);return m?m.name:'iný liek'};
+
+  /* as-needed */
+  const prnMeds=()=>meds.filter(m=>m.mode==='need'&&m.kind!=='swap'&&(!m.days||endKey(m)>=today));
+  const prnOf=id=>extra.prn.filter(p=>p.m===id).sort((a,b)=>a.t<b.t?1:-1);
+  function prnState(m){
+    const log=prnOf(m.id); const last=log[0]||null; const now=nowISO();
+    const todayN=log.filter(p=>p.t.slice(0,10)===today).length;
+    let waitTo=null;
+    if(last&&m.gapH){const passed=minsBetween(last.t,now);if(passed<m.gapH*60){const d=isoDate(last.t);d.setMinutes(d.getMinutes()+m.gapH*60);waitTo=dk(d)===today?pad(d.getHours())+':'+pad(d.getMinutes()):nice(dk(d))+' '+pad(d.getHours())+':'+pad(d.getMinutes())}}
+    return {last,todayN,waitTo,overMax:!!(m.maxDay&&todayN>=m.maxDay)};
+  }
+  function renderPrn(){
+    const list=prnMeds();
+    if(!list.length||sel!==today){$('prn').innerHTML='';return}
+    const pop=!!prnWarn||isOpen('prn',false);
+    $('prn').innerHTML='<section class="block prn'+(pop?'':' closed')+playCls('prn')+'"><button type="button" class="block-h" data-tog="prn" data-def="false" aria-expanded="'+pop+'"><span class="ico"><span class="hico">'+NEEDICO+'</span>Podľa potreby<span class="cnt">· '+list.length+'</span></span><span class="bh-r">'+CHEV+'</span></button><div class="rows"'+(pop?'':' hidden')+'>'+
+      list.map(m=>{
+        const s=prnState(m);
+        if(prnWarn===m.id){
+          const why=s.overMax?'Dnes si už mal '+s.todayN+'× (najviac '+m.maxDay+'× denne).':'Od poslednej dávky ešte neuplynulo '+m.gapH+' h. Ďalšia najskôr o '+s.waitTo+'.';
+          return '<div class="confirm"><p>'+esc(why)+' Zaznamenať aj tak?</p><button class="btn danger sm" type="button" data-prnforce="'+m.id+'">Zaznamenať</button><button class="btn ghost sm" type="button" data-prnno="1">Nie</button></div>';
+        }
+        const info=[s.last?'naposledy '+whenLabel(s.last.t):'zatiaľ neužité',s.todayN?'dnes '+s.todayN+'×'+(m.maxDay?' z '+m.maxDay:''):'',m.dose].filter(Boolean).join(' · ');
+        const extraLine=[s.waitTo?'ďalšia najskôr o '+s.waitTo:'',openText(m),stockShort(m)].filter(Boolean).join(' · ');
+        return '<div class="prn-row"><span class="pillbox">'+picM(m,32)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">'+esc(info)+'</div>'+(extraLine?'<div class="med-stock'+(s.waitTo?' warn':'')+'">'+esc(extraLine)+'</div>':'')+'</div>'+
+          '<div class="prn-act"><button class="btn pri sm" type="button" data-prn="'+m.id+'">'+(m.shape==='drop'?'Kvapkanie':m.shape==='bottle'?'Ošetrenie':'Užil som')+'</button>'+(s.todayN?'<button class="linkbtn" type="button" data-prnrm="'+m.id+'">'+(m.shape==='drop'?'odstrániť kvapkanie':m.shape==='bottle'?'odstrániť ošetrenie':'odstrániť záznam')+'</button>':'')+(m.openDays?'<button class="linkbtn" type="button" data-open="'+m.id+'">nové balenie</button>':'')+'</div></div>';
+      }).join('')+'</div></section>';
+    $('prn').querySelectorAll('[data-prn]').forEach(b=>b.onclick=()=>takePrn(b.dataset.prn,false));
+    $('prn').querySelectorAll('[data-prnrm]').forEach(b=>b.onclick=()=>{
+      const id=b.dataset.prnrm; const m=meds.find(x=>x.id===id); const e=prnOf(id).find(p=>p.t.slice(0,10)===today); if(!m||!e) return;
+      extra.prn=extra.prn.filter(p=>p.id!==e.id); const st=adjustStock(m,m.per); saveExtra(); if(st) saveMeds(); render();
+      toast((m.shape==='drop'?'Kvapkanie o ':m.shape==='bottle'?'Ošetrenie o ':'Záznam o ')+e.t.slice(11)+' odstránené',()=>{extra.prn.push(e);if(st){adjustStock(meds.find(x=>x.id===id)||m,-m.per);saveMeds()}saveExtra();render()});
+    });
+    $('prn').querySelectorAll('.prn-row').forEach(r=>{const t=r.querySelector('.med-t');const id=(r.querySelector('[data-prn]')||{}).dataset;if(t&&id)t.onclick=()=>showInfo(id.prn)});
+    $('prn').querySelectorAll('[data-prnforce]').forEach(b=>b.onclick=()=>takePrn(b.dataset.prnforce,true));
+    $('prn').querySelectorAll('[data-prnno]').forEach(b=>b.onclick=()=>{prnWarn=null;render()});
+    $('prn').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openedNew(b.dataset.open));
+  }
+  function takePrn(id,force){
+    const m=meds.find(x=>x.id===id); if(!m) return;
+    const s=prnState(m);
+    if(!force&&(s.waitTo||s.overMax)){prnWarn=id;render();return}
+    prnWarn=null;
+    const e={id:rid(),m:id,t:nowISO()};
+    extra.prn.push(e); const st=adjustStock(m,-m.per);
+    saveExtra(); if(st) saveMeds(); render();
+    toast(nm(m)+(m.shape==='drop'?' · kvapkanie ':m.shape==='bottle'?' · ošetrenie ':' · ')+nowHM()+' ✓',()=>{extra.prn=extra.prn.filter(p=>p.id!==e.id);if(st){adjustStock(m,m.per);saveMeds()}saveExtra();render()});
+  }
+
+  /* visits and prescriptions */
+  const VTYPES={visit:'Kontrola',rx:'Recept',other:'Iné'};
+  function visitWhen(v){const d=diffDays(today,v.date);return nice(v.date)+(v.time?' o '+v.time:'')+(d===0?' (dnes)':d===1?' (zajtra)':d>1?' (o '+d+' '+dni(d)+')':' (prešlo)')}
+  const visitsSorted=()=>extra.visits.slice().sort((a,b)=>(a.date+(a.time||''))<(b.date+(b.time||''))?-1:1);
+  function renderSoon(){
+    const soon=visitsSorted().filter(v=>{const d=diffDays(today,v.date);return v.type==='rx'?d<=7:d<=2});
+    if(!soon.length){$('soon').innerHTML='';return}
+    $('soon').innerHTML='<section class="soon">'+soon.map(v=>'<div><b>'+esc(v.type==='rx'?'Recept · ':VTYPES[v.type]+' · ')+esc(v.title)+'</b><span>'+esc(v.type==='rx'?'platí do '+visitWhen(v):visitWhen(v))+'</span></div>').join('')+'</section>';
+  }
+  function renderVisits(){
+    const list=visitsSorted();
+    let h='<section class="opened visits"><div class="opened-h">'+CAL+'<span>Kontroly a recepty</span></div>';
+    h+=list.map(v=>'<div class="ord'+(diffDays(today,v.date)<0?' op-exp':diffDays(today,v.date)<=(v.type==='rx'?7:2)?' op-soon':'')+'"><span class="vt">'+esc(VTYPES[v.type]||'Iné')+'</span><div class="t"><div>'+esc(v.title)+'</div><div>'+esc((v.type==='rx'?'platí do ':'')+visitWhen(v))+'</div></div><button class="btn ghost sm" type="button" data-vdone="'+v.id+'">Hotovo</button></div>').join('');
+    if(visitForm){
+      h+='<div class="vform"><div class="chips"><label class="chip"><input type="radio" name="vType" id="vt-visit" value="visit" checked><span>Kontrola</span></label><label class="chip"><input type="radio" name="vType" id="vt-rx" value="rx"><span>Recept platí do</span></label><label class="chip"><input type="radio" name="vType" id="vt-other" value="other"><span>Iné</span></label></div>'+
+        '<label class="fld" for="vTitle">Čo<input id="vTitle" class="txt" autocomplete="off" placeholder="Kontrola u kardiológa"></label>'+
+        '<div class="stock-grid"><label class="fld" for="vDate">Dátum<input id="vDate" type="date" class="tinput" style="font-size:16px;width:100%"></label><label class="fld" for="vTime">Čas <span class="note">(nepovinné)</span><input id="vTime" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" style="width:100%"></label></div>'+
+        '<p class="err" id="vErr" hidden></p><div class="actions"><button class="btn pri sm" type="button" id="vSave">Uložiť termín</button><button class="btn ghost sm" type="button" id="vCancel">Zrušiť</button></div></div>';
+    } else h+=(list.length?'':'<p class="note" style="margin:2px 4px">Pridaj si kontrolu u lekára alebo dokedy platí recept. Upozorním ťa vopred.</p>')+'<div><button class="btn ghost sm" type="button" id="vAdd">Pridať termín</button></div>';
+    $('visits').innerHTML=h+'</section>';
+    $('visits').querySelectorAll('[data-vdone]').forEach(b=>b.onclick=()=>{
+      const v=extra.visits.find(x=>x.id===b.dataset.vdone); extra.visits=extra.visits.filter(x=>x.id!==b.dataset.vdone); saveExtra(); render();
+      toast('Termín odstránený',()=>{extra.visits.push(v);saveExtra();render()});
+    });
+    if($('vAdd')) $('vAdd').onclick=()=>{visitForm=true;render();$('vTitle').focus()};
+    if($('vSave')){
+      $('vCancel').onclick=()=>{visitForm=false;render()};
+      document.querySelectorAll('input[name=vType]').forEach(r=>r.onchange=()=>{$('vTitle').placeholder=r.value==='rx'?'Recept na Euthyrox':r.value==='visit'?'Kontrola u kardiológa':'Odber krvi'});
+      $('vSave').onclick=()=>{
+        const type=(document.querySelector('input[name=vType]:checked')||{}).value||'visit';
+        const title=$('vTitle').value.trim(), date=$('vDate').value, time=$('vTime').value;
+        const e=(m,el)=>{$('vErr').textContent=m;$('vErr').hidden=false;el.focus()};
+        if(!title) return e('Napíš, o aký termín ide.',$('vTitle'));
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) return e('Vyber dátum.',$('vDate'));
+        extra.visits.push({id:rid(),type,title,date,time:/^\d{2}:\d{2}$/.test(time)?time:''});
+        visitForm=false; saveExtra(); render(); toast('Termín uložený');
+      };
+    }
+  }
+
+  /* side effects */
+  const SYMS=['Kašeľ','Závrat','Bolesť hlavy','Nevoľnosť','Vyrážka','Svrbenie','Opuch','Únava','Búšenie srdca','Hnačka','Sucho v ústach'];
+  const LVL={1:'mierne',2:'stredne',3:'silno'};
+  $('fxSyms').innerHTML=SYMS.map((s,i)=>'<label class="chip"><input type="checkbox" id="fxs-'+i+'" value="'+s+'"><span>'+s+'</span></label>').join('');
+  function openFx(medId){
+    const opts=meds.filter(m=>m.kind!=='swap');
+    $('fxMed').innerHTML=opts.map(m=>'<option value="'+m.id+'">'+esc(nm(m))+'</option>').join('')+'<option value="">Neviem / iný liek</option>';
+    $('fxMed').value=medId&&opts.some(m=>m.id===medId)?medId:(opts[0]?opts[0].id:'');
+    document.querySelectorAll('#fxSyms input').forEach(i=>i.checked=false);
+    $('fxOther').value=''; $('fxNote').value=''; $('fxDate').value=today; $('fxTime').value=nowHM();
+    document.getElementById('fxL2').checked=true; $('fxErr').hidden=true; updFxSafety();
+    $('repSheet').hidden=true; $('fxSheet').hidden=false;
+    $('fxSheet').scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'});
+  }
+  function updFxSafety(){
+    const opuch=document.getElementById('fxs-'+SYMS.indexOf('Opuch')).checked;
+    const strong=(document.querySelector('input[name=fxLvl]:checked')||{}).value==='3';
+    const cough=document.getElementById('fxs-0').checked;
+    $('fxSafety').hidden=!(opuch||(strong&&cough));
+  }
+  document.querySelectorAll('#fxSyms input,input[name=fxLvl]').forEach(i=>i.addEventListener('change',()=>{$('fxErr').hidden=true;updFxSafety()}));
+  $('fxOther').addEventListener('input',()=>{$('fxErr').hidden=true});
+  const closeFx=()=>{$('fxSheet').hidden=true};
+  $('fxClose').onclick=closeFx; $('fxCancel').onclick=closeFx;
+  $('fxSave').onclick=()=>{
+    const sym=[...document.querySelectorAll('#fxSyms input:checked')].map(i=>i.value);
+    const other=$('fxOther').value.trim();
+    if(!sym.length&&!other){$('fxErr').textContent='Vyber aspoň jeden príznak alebo ho napíš.';$('fxErr').hidden=false;return}
+    const d=$('fxDate').value||today, t=$('fxTime').value||nowHM();
+    if(d>today||(d===today&&t>nowHM())){$('fxErr').textContent='Čas nemôže byť v budúcnosti.';$('fxErr').hidden=false;return}
+    extra.fx.push({id:rid(),m:$('fxMed').value,t:d+'T'+t,sym,other,lvl:+((document.querySelector('input[name=fxLvl]:checked')||{}).value||2),note:$('fxNote').value.trim()});
+    saveExtra(); closeFx(); render(); toast('Záznam uložený');
+    $('effects').scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'});
+  };
+  const fxText=f=>[...(f.sym||[]),f.other].filter(Boolean).join(', ').toLowerCase();
+  function renderEffects(){
+    const list=extra.fx.slice().sort((a,b)=>a.t<b.t?1:-1);
+    if(!list.length){$('effects').innerHTML='';return}
+    $('effects').innerHTML='<section class="opened"><div class="opened-h">'+ALERT+'<span>Vedľajšie účinky</span></div>'+
+      list.slice(0,6).map(f=>{
+        if(fxDel===f.id) return '<div class="confirm"><p>Zmazať tento záznam?</p><button class="btn danger sm" type="button" data-fxdel="'+f.id+'">Zmazať</button><button class="btn ghost sm" type="button" data-fxno="1">Nie</button></div>';
+        return '<div class="ord'+(f.lvl===3?' op-exp':f.lvl===2?' op-soon':'')+'"><div class="t"><div>'+esc(fxText(f))+' · '+LVL[f.lvl]+'</div><div>'+esc(whenLabel(f.t)+' · po: '+(f.m?medName(f.m):'neznámy liek')+(f.note?' · '+f.note:''))+'</div></div><button class="linkbtn" type="button" data-fxask="'+f.id+'" aria-label="Zmazať záznam">zmazať</button></div>';
+      }).join('')+(list.length>6?'<p class="note" style="margin:2px 4px">Všetky záznamy nájdeš v prehľade pre lekára.</p>':'')+'</section>';
+    $('effects').querySelectorAll('[data-fxask]').forEach(b=>b.onclick=()=>{fxDel=b.dataset.fxask;renderEffects()});
+    $('effects').querySelectorAll('[data-fxno]').forEach(b=>b.onclick=()=>{fxDel=null;renderEffects()});
+    $('effects').querySelectorAll('[data-fxdel]').forEach(b=>b.onclick=()=>{extra.fx=extra.fx.filter(x=>x.id!==b.dataset.fxdel);fxDel=null;saveExtra();render()});
+  }
+
+  /* report for the doctor */
+  function buildReport(n){
+    const from=addDays(today,-(n-1)); const nowM=toMin(nowHM());
+    const L=[]; const d0=parse(from), d1=parse(today);
+    L.push('Prehľad užívania liekov');
+    L.push('Obdobie: '+d0.getDate()+'. '+(d0.getMonth()+1)+'. – '+d1.getDate()+'. '+(d1.getMonth()+1)+'. '+d1.getFullYear()+' ('+n+' dní)');
+    L.push('');
+    const sched=meds.filter(m=>m.kind!=='swap'&&m.mode!=='need');
+    if(sched.length){
+      L.push('PRAVIDELNÉ LIEKY');
+      sched.forEach(m=>{
+        let due=0, done=0; const missed=[];
+        for(let k=from;k<=today;k=addDays(k,1)){
+          if(!activeOn(m,k)) continue; const lg=dayLog(k);
+          dosesOf(m,k).forEach(dz=>{
+            if(k===today&&dueMin(dz)>nowM) return;
+            due++; if(taken(lg,m,dz.k)) done++; else missed.push(nice(k)+' '+(dz.t||slotLabel(dz.s).toLowerCase()));
+          });
+        }
+        L.push('• '+m.name+(m.dose?' ('+m.dose+')':'')+' – '+freqText(m)+(m.days?', liečba '+m.days+' dní od '+nice(m.start):''));
+        if(due) L.push('  užité '+done+' z '+due+' dávok ('+Math.round(done*100/due)+' %)');
+        else L.push('  v tomto období bez dávok');
+        if(missed.length) L.push('  vynechané: '+missed.slice(0,20).join(', ')+(missed.length>20?' a ďalšie ('+missed.length+')':''));
+      });
+      L.push('');
+    }
+    const prn=meds.filter(m=>m.mode==='need'&&m.kind!=='swap');
+    if(prn.length){
+      L.push('LIEKY PODĽA POTREBY');
+      prn.forEach(m=>{
+        const log=prnOf(m.id).filter(p=>p.t.slice(0,10)>=from);
+        L.push('• '+m.name+': '+(log.length?log.length+'×, naposledy '+whenLabel(log[0].t):'neužité'));
+        if(log.length) L.push('  časy: '+log.slice(0,15).map(p=>nice(p.t.slice(0,10))+' '+p.t.slice(11)).join(', '));
+      });
+      L.push('');
+    }
+    const fx=extra.fx.filter(f=>f.t.slice(0,10)>=from).sort((a,b)=>a.t<b.t?-1:1);
+    L.push('VEDĽAJŠIE ÚČINKY');
+    if(fx.length) fx.forEach(f=>L.push('• '+nice(f.t.slice(0,10))+' '+f.t.slice(11)+' – po: '+(f.m?medName(f.m):'neznámy liek')+' – '+fxText(f)+' ('+LVL[f.lvl]+')'+(f.note?' – '+f.note:'')));
+    else L.push('• žiadne záznamy');
+    const up=visitsSorted().filter(v=>v.date>=today);
+    if(up.length){ L.push(''); L.push('NAJBLIŽŠIE TERMÍNY'); up.forEach(v=>L.push('• '+nice(v.date)+(v.time?' '+v.time:'')+' – '+(v.type==='rx'?'recept platí do: ':'')+v.title)); }
+    return L.join('\n');
+  }
+  const repN=()=>+((document.querySelector('input[name=repN]:checked')||{}).value||30);
+  function openRep(){ $('repText').textContent=buildReport(repN()); $('fxSheet').hidden=true; $('repSheet').hidden=false; $('repSheet').scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'}); }
+  document.querySelectorAll('input[name=repN]').forEach(r=>r.onchange=()=>{$('repText').textContent=buildReport(repN())});
+  $('repClose').onclick=()=>{$('repSheet').hidden=true};
+  $('repCopy').onclick=()=>{
+    const txt=$('repText').textContent;
+    const fallback=()=>{const r=document.createRange();r.selectNodeContents($('repText'));const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Text je označený, skopíruj ho podržaním prsta')};
+    try{navigator.clipboard.writeText(txt).then(()=>toast('Skopírované'),fallback)}catch(e){fallback()}
+  };
+  $('repSave').onclick=async()=>{
+    try{await saveFile('prehlad-liekov-'+today+'.txt',$('repText').textContent,'text/plain;charset=utf-8');toast('Prehľad uložený do Stiahnutých súborov')}
+    catch(e){if(e&&e.code==='declined')return; toast('Prehľad sa nepodarilo uložiť.')}
+  };
+  $('fxBtn').onclick=()=>openFx('');
+  $('repBtn').onclick=openRep;
+
+  /* ---------- medicine info sheet ---------- */
+  function showInfo(id){
+    const m=meds.find(x=>x.id===id); if(!m) return;
+    const rows=[];
+    const add=(k,v)=>{if(v)rows.push('<div class="ir"><span>'+esc(k)+'</span><b>'+esc(v)+'</b></div>')};
+    if(m.kind==='swap'){
+      add('Výmena',freqText(m).replace('výmena ',''));
+      add('Naposledy vymenené',m.opened?nice(m.opened):'');
+      add('Ďalšia výmena',openText(m));
+      add('Náhradných doma',m.left!=null?m.left+' '+ks(m.left):'');
+    } else {
+      add('Kedy',freqText(m));
+      if(m.mode!=='need'){const ds=dosesOf(m,today);if(ds.some(d=>d.t))add('Dnešné časy',ds.map(d=>d.t).join(', '))}
+      add('Dávka',m.dose);
+      add('Ako dlho',m.days?'liečba '+m.days+' dní od '+nice(m.start)+' · '+durText(m):'stále');
+      if(m.mode==='need'){add('Odstup',m.gapH?'aspoň '+m.gapH+' h':'');add('Najviac za deň',m.maxDay?m.maxDay+'×':'')}
+      add('Doma',m.left!=null?m.left+' '+ks(m.left):'');
+      add('V balení',m.pack?m.pack+' '+ks(m.pack):'');
+      const stx=stockText(m); if(stx&&!/^doma/.test(stx)) add('Zásoba',stx);
+      add('Po otvorení',openText(m));
+    }
+    let hist='';
+    if(m.kind!=='swap'&&m.mode!=='need'){
+      hist='<div class="ih">Posledných 7 dní</div><div class="idays">'+[6,5,4,3,2,1,0].map(n=>{
+        const k=addDays(today,-n); if(!activeOn(m,k)) return '<div class="id"><span>'+DSH[parse(k).getDay()]+'</span><i class="e">–</i></div>';
+        const lg=dayLog(k); const ds=dosesOf(m,k); const tk=ds.filter(d=>taken(lg,m,d.k)).length;
+        const st=k===today&&tk<ds.length?'t':tk===ds.length?'f':tk?'p':'n';
+        return '<div class="id"><span>'+(n===0?'dnes':DSH[parse(k).getDay()])+'</span><i class="'+st+'">'+tk+'/'+ds.length+'</i></div>';
+      }).join('')+'</div>';
+    } else if(m.mode==='need'&&m.kind!=='swap'){
+      const log=prnOf(m.id).slice(0,6);
+      hist='<div class="ih">'+(m.shape==='drop'?'Posledné kvapkanie':m.shape==='bottle'?'Posledné ošetrenie':'Naposledy užité')+'</div>'+(log.length?'<div class="irows">'+log.map(p=>'<div class="ir"><span>'+esc(whenLabel(p.t))+'</span><button type="button" class="linkbtn" data-delprn="'+p.id+'">zmazať</button></div>').join('')+'</div>':'<p class="note" style="margin:0">zatiaľ nič</p>');
+    }
+    const day=tab==='week'&&sel<=today?sel:null; let dsec='';
+    if(day){
+      const dl=day===today?'Dnes':DAYS[parse(day).getDay()]+' '+nice(day);
+      const ti=(attr,val)=>'<input type="text" inputmode="numeric" maxlength="5" class="tinput dti" '+attr+' value="'+esc(val||'')+'" placeholder="08:30" aria-label="Čas">';
+      let opsec='';
+      if(m.kind==='swap'||m.openDays){
+        const was=extra.sw.some(e=>e.m===m.id&&e.d===day); const sw=m.kind==='swap';
+        dsec='<div class="drow"><span class="dl">'+(was?(sw?'Vymenené v tento deň ✓':'Otvorené v tento deň ✓'):(sw?'V tento deň nevymenené':'V tento deň neotvorené'))+'</span>'+
+          (was?'<button class="btn ghost sm" type="button" data-iswun="1">Zrušiť</button>':'<button class="btn pri sm" type="button" data-isw="1">'+(sw?'Vymenil som v tento deň':'Otvoril som v tento deň')+'</button>')+'</div>'+
+          '<div class="drow"><label class="dl" for="iswDate">'+(sw?'Naposledy vymenené':'Otvorené')+'</label><input type="date" id="iswDate" class="tinput" style="font-size:16px" max="'+today+'" value="'+(m.opened||'')+'"><button class="btn ghost sm" type="button" data-iswset="1">Uložiť dátum</button></div>';
+        opsec=dsec; dsec='';
+      }
+      if(m.kind==='swap'){}
+      else if(m.mode==='need'){
+        const uses=extra.prn.filter(p=>p.m===m.id&&p.t.slice(0,10)===day).sort((a,b)=>a.t<b.t?-1:1);
+        dsec=(uses.length?uses.map(p=>'<div class="drow"><span class="dl">'+esc(p.t.slice(11))+' ✓</span><button class="btn ghost sm" type="button" data-iprndel="'+p.id+'">Zmazať</button></div>').join(''):'<p class="note" style="margin:0">V tento deň nič</p>')+
+          '<div class="drow">'+ti('id="iprnT"',day===today?nowHM():'')+'<button class="btn pri sm" type="button" data-iprnadd="1">+ '+esc(actLabel(m))+'</button></div>';
+      } else if(activeOn(m,day)){
+        const lg=dayLog(day);
+        dsec=dosesOf(m,day).map(d=>{const t=taken(lg,m,d.k), sk=skipped(lg,m,d.k), key=m.id+'@'+d.k; const lab=d.t?'o '+d.t:slotLabel(d.s).toLowerCase();
+          return '<div class="drow"><span class="dl">'+esc(lab)+(t?' · užité '+esc(t)+' ✓':sk?' · vynechané':'')+'</span>'+ti('data-dt="'+key+'"',t||d.t||'')+
+            '<button class="btn '+(t?'ghost':'pri')+' sm" type="button" data-dok="'+key+'">'+(t?'Zmeniť čas':'Užil')+'</button>'+
+            (t||sk?'<button class="btn ghost sm" type="button" data-dclr="'+key+'">Zrušiť</button>':'<button class="btn ghost sm" type="button" data-dskip="'+key+'">Vynechal</button>')+'</div>';}).join('');
+      } else dsec='<div class="drow"><span class="dl">Liek je v appke až od '+nice(m.start)+'.</span><button class="btn pri sm" type="button" data-istart="1">Užíval som ho už vtedy</button></div>';
+      dsec=(dsec?'<div class="ih">'+esc(dl)+'</div><div class="dsec">'+dsec+'</div>':'')+(opsec?'<div class="ih">'+(m.kind==='swap'?esc(dl):'Balenie · '+esc(dl))+'</div><div class="dsec">'+opsec+'</div>':'');
+    }
+    const fx=extra.fx.filter(f=>f.m===m.id).sort((a,b)=>a.t<b.t?1:-1).slice(0,3);
+    const fxh=fx.length?'<div class="ih">Vedľajšie účinky</div>'+fx.map(f=>'<p class="note" style="margin:0">'+esc(whenLabel(f.t)+' · '+fxText(f)+' ('+LVL[f.lvl]+')')+'</p>').join(''):'';
+    $('infoBody').innerHTML='<div class="ihead"><span class="ipill">'+picM(m,46)+'</span><h2 id="infoTitle">'+esc(nm(m))+'</h2></div>'+
+      dsec+'<div class="irows">'+rows.join('')+'</div>'+hist+fxh+
+      '<div class="actions">'+'<button class="btn pri sm" type="button" id="infoEdit">Upraviť</button>'+'<button class="btn danger sm" type="button" id="infoDel">Zmazať</button>'+
+      (m.kind!=='swap'?'<button class="btn ghost sm" type="button" id="infoFx">Vedľajší účinok</button>':'')+
+      (m.left!=null||m.pack?'<button class="btn ghost sm" type="button" id="infoRefill">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button>':'')+'</div>'+
+      (m.kind!=='swap'?'<a class="linkbtn" style="display:inline-block;margin-top:4px" href="https://www.google.com/search?q='+encodeURIComponent(m.name+' príbalový leták')+'" target="_blank" rel="noopener">Hľadať príbalový leták</a>':'');
+    $('fxSheet').hidden=true; $('repSheet').hidden=true; $('infoSheet').hidden=false;
+    $('infoEdit').onclick=()=>{$('infoSheet').hidden=true;setTab('meds');startEdit(id)};
+    $('infoDel').onclick=()=>{$('infoSheet').hidden=true;deleteId=id;setTab('meds');const el=$('mlist');if(el)el.scrollIntoView({block:'start'})};
+    if($('infoFx')) $('infoFx').onclick=()=>{$('infoSheet').hidden=true;openFx(id)};
+    if($('infoRefill')) $('infoRefill').onclick=()=>{refill(id);showInfo(id)};
+    $('infoBody').querySelectorAll('[data-delprn]').forEach(b=>b.onclick=()=>{
+      const e=extra.prn.find(p=>p.id===b.dataset.delprn); if(!e) return;
+      extra.prn=extra.prn.filter(p=>p.id!==e.id); const st=adjustStock(m,m.per);
+      saveExtra(); if(st) saveMeds(); render(); showInfo(id);
+      toast('Záznam zmazaný',()=>{extra.prn.push(e);if(st){adjustStock(meds.find(x=>x.id===id)||m,-m.per);saveMeds()}saveExtra();render();showInfo(id)});
+    });
+    const B=$('infoBody'), again=()=>{render();showInfo(id)};
+    const okT=(v,d)=>{v=normTime(v||'');if(!/^\d{2}:\d{2}$/.test(v)){toast('Zadaj čas, napr. 830');return null}if(d===today&&v>nowHM()){toast('Tento čas ešte nebol');return null}return v};
+    B.querySelectorAll('[data-dok]').forEach(b=>b.onclick=()=>{const k=b.dataset.dok;const v=okT(B.querySelector('[data-dt="'+k+'"]').value,sel);if(!v)return;
+      const lg=dayLog(sel),dk=k.split('@')[1],prev=taken(lg,m,dk)||(skipped(lg,m,dk)?'x':null);if(prev==='x')setSkip(k,false);setTaken(k,v);again();toast(nm(m)+' · užité o '+v,()=>{setTaken(k,null);if(prev==='x')setSkip(k,true);else if(prev)setTaken(k,prev);again()})});
+    B.querySelectorAll('[data-dskip]').forEach(b=>b.onclick=()=>{const k=b.dataset.dskip;setSkip(k,true);again();toast('Zaznamenané ako vynechané',()=>{setSkip(k,false);again()})});
+    B.querySelectorAll('[data-dclr]').forEach(b=>b.onclick=()=>{const k=b.dataset.dclr,dk=k.split('@')[1],lg=dayLog(sel),prev=taken(lg,m,dk);
+      if(prev){setTaken(k,null);if(adjustStock(m,m.per))saveMeds()}else setSkip(k,false);again();toast('Záznam zrušený',()=>{if(prev)setTaken(k,prev);else setSkip(k,true);again()})});
+    B.querySelectorAll('[data-iprnadd]').forEach(b=>b.onclick=()=>{const v=okT($('iprnT').value,sel);if(!v)return;const e={id:rid(),m:m.id,t:sel+'T'+v};extra.prn.push(e);const st=adjustStock(m,-m.per);saveExtra();if(st)saveMeds();again();
+      toast(nm(m)+' · '+v+' ✓',()=>{extra.prn=extra.prn.filter(p=>p.id!==e.id);if(st){adjustStock(meds.find(x=>x.id===m.id)||m,m.per);saveMeds()}saveExtra();again()})});
+    B.querySelectorAll('[data-iprndel]').forEach(b=>b.onclick=()=>{const e=extra.prn.find(p=>p.id===b.dataset.iprndel);if(!e)return;extra.prn=extra.prn.filter(p=>p.id!==e.id);const st=adjustStock(m,m.per);saveExtra();if(st)saveMeds();again();
+      toast('Záznam zmazaný',()=>{extra.prn.push(e);if(st){adjustStock(meds.find(x=>x.id===m.id)||m,-m.per);saveMeds()}saveExtra();again()})});
+    const swMark=d=>{const cur=meds.find(x=>x.id===id);const dec=cur.kind==='swap'&&cur.left!=null&&cur.left>0?1:0;const ev={id:rid(),m:id,d,prev:cur.opened||null,dl:dec};extra.sw.push(ev);
+      meds=meds.map(x=>x.id===id?{...x,opened:lastSw(id)||d,left:dec?x.left-1:x.left}:x);saveMeds();saveExtra();again();
+      toast(nm(cur)+(cur.kind==='swap'?' · vymenené ':' · otvorené ')+nice(d),()=>{extra.sw=extra.sw.filter(e=>e.id!==ev.id);meds=meds.map(x=>x.id===id?{...x,opened:ev.prev,left:x.left!=null?x.left+dec:x.left}:x);saveMeds();saveExtra();again()})};
+    B.querySelectorAll('[data-istart]').forEach(b=>b.onclick=()=>{const old=m.start;meds=meds.map(x=>x.id===id?{...x,start:sel}:x);saveMeds();again();toast(nm(m)+' · v appke od '+nice(sel),()=>{meds=meds.map(x=>x.id===id?{...x,start:old}:x);saveMeds();again()})});
+    B.querySelectorAll('[data-isw]').forEach(b=>b.onclick=()=>swMark(sel));
+    B.querySelectorAll('[data-iswset]').forEach(b=>b.onclick=()=>{const d=$('iswDate').value;if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){toast('Vyber dátum');return}if(d>today){toast('Dátum nemôže byť v budúcnosti');return}
+      if(extra.sw.some(e=>e.m===id&&e.d===d)){toast('Tento dátum už je zapísaný');return}
+      const later=extra.sw.filter(e=>e.m===id&&e.d>d);if(later.length){const cur=meds.find(x=>x.id===id);extra.sw=extra.sw.filter(e=>!(e.m===id&&e.d>d));meds=meds.map(x=>x.id===id?{...x,opened:lastSw(id)||cur.opened}:x)}
+      swMark(d)});
+    B.querySelectorAll('[data-iswun]').forEach(b=>b.onclick=()=>{const cur=meds.find(x=>x.id===id);const gone=extra.sw.filter(e=>e.m===id&&e.d===sel);if(!gone.length)return;const before={opened:cur.opened,left:cur.left};
+      extra.sw=extra.sw.filter(e=>!(e.m===id&&e.d===sel));const back=gone.reduce((a,e)=>a+(e.dl||0),0);const prev=gone.map(e=>e.prev).find(v=>v!==undefined);
+      meds=meds.map(x=>x.id===id?{...x,opened:lastSw(id)||(prev!==undefined?prev:(x.opened===sel?null:x.opened)),left:x.left!=null?x.left+back:x.left}:x);saveMeds();saveExtra();again();
+      toast(nm(cur)+' · výmena '+nice(sel)+' zrušená',()=>{extra.sw=extra.sw.concat(gone);meds=meds.map(x=>x.id===id?{...x,...before}:x);saveMeds();saveExtra();again()})});
+    B.querySelectorAll('.dti').forEach(i=>i.addEventListener('blur',()=>{const v=normTime(i.value);if(v)i.value=v}));
+    window.scrollTo({top:0,behavior:reduce()?'auto':'smooth'});
+  }
+  $('infoClose').onclick=()=>{$('infoSheet').hidden=true};
+
+  resetForm();
+  applyDiscreet();
+  init();
+  function idlePulse(){
+    if(!document.hidden&&tab==='today'&&!reduce()){
+      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')];
+      if(els.length){
+        const n=Math.random()<.35&&els.length>1?2:1;
+        for(let i=0;i<n;i++){const el=els[Math.floor(Math.random()*els.length)];el.classList.remove('play','long');void el.offsetWidth;el.classList.add('play');setTimeout(()=>el.classList.remove('play'),3200)}
+      }
+    }
+    setTimeout(idlePulse,7000+Math.random()*13000);
+  }
+  setTimeout(idlePulse,2500+Math.random()*2000);
+})();
+</script>
+
+<script>
+if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+}
+try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+</script>
+</body></html>
