@@ -311,6 +311,35 @@ button,input,select{font:inherit;color:inherit}
 @keyframes i-sw{from{transform:translateX(30px);opacity:0}}
 @keyframes i-bob{50%{transform:translateY(-6px)}}
 @media (prefers-reduced-motion: reduce){.intro,.icard,.iart.sw,.ia-row span{animation:none}}
+#v-meds #orders{display:none}
+.msum{display:flex;align-items:center;gap:14px;background:var(--card2);border-radius:20px;padding:12px 14px;margin:0 0 10px}
+.msring{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none}
+.msring span{width:46px;height:46px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.msring b{font-size:17px;color:var(--ink);font-weight:800}
+.mstx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.mstx b{font-size:16px;font-weight:800}
+.mstx span{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:14px;color:var(--muted)}
+.mstx .linkbtn{padding:2px 0;font-size:14px}.mstx .linkbtn.w{color:var(--warn-ink)}.mstx .linkbtn.b{color:var(--miss-ink)}
+.mfsep{flex:none;width:1px;background:var(--line);margin:4px 2px}
+.mlist li.mgh2{padding:10px 0 2px;border-bottom:0}
+.mgb{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;padding:6px 0;font:inherit;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;text-align:left}
+.mgb .cnt{margin-left:auto;background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:1px 9px;font-size:12px;letter-spacing:0}
+.mgb .hot{background:var(--warn);color:#2A1B00;border-radius:999px;padding:1px 7px;font-size:11px;letter-spacing:0}
+.mgb .chev{display:grid;place-items:center;width:22px;height:22px;transition:transform .25s}
+.mgb .chev svg{width:18px;height:18px}
+.mgb .chev:not(.up){transform:rotate(-90deg)}
+.mlist li.mr2{display:flex;align-items:center;gap:10px;padding:8px 2px;min-height:52px;border-bottom:1px solid var(--line);flex-wrap:nowrap;cursor:pointer}
+.mr2:active{background:var(--card2)}
+.mr2 .pillbox{flex:none}
+.mn2{flex:1;min-width:0;font-weight:800;font-size:15px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.mn2 small{font-weight:600;font-size:12px;color:var(--muted);margin-left:6px}
+.mc2{flex:none;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:999px;padding:3px 9px;font-size:12.5px;font-weight:800;background:var(--card2);color:var(--muted)}
+.mc2.ok{background:var(--ok-soft);color:var(--ok)}.mc2.warn{background:var(--warn-soft);color:var(--warn-ink)}.mc2.bad{background:var(--miss-soft);color:var(--miss-ink)}
+.qa{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--acc-soft);color:var(--acc-deep);display:grid;place-items:center;cursor:pointer;transition:transform .2s}
+.qa:active{transform:scale(.85)}.qa.hot{background:var(--acc);color:#fff}
+.qa-sp{flex:none;width:34px}
+.mr2.st-warn .sdot{display:block;background:var(--warn)}.mr2.st-bad .sdot{display:block;background:#E5484D}
+.mr2.ended{opacity:.55}
 .mfilt{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin:0 -2px;scrollbar-width:none}
 .mfilt::-webkit-scrollbar{display:none}
 .mfc{flex:none;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;min-height:38px;font:inherit;font-weight:800;font-size:14px;cursor:pointer}
@@ -778,6 +807,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     <div class="vhead"><h1 class="hello">Zásoby</h1><button class="btn pri sm" id="addBtn" type="button">Pridať</button></div>
     <div id="orders"></div>
     <section class="panel" id="panel">
+      <div class="msum" id="mSum" hidden></div>
       <div class="mfilt" id="mFilt" hidden></div>
       <label class="msearch" id="mSearchW" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="mSearch" type="search" placeholder="Hľadať v zásobách" autocomplete="off" aria-label="Hľadať v zásobách"></label>
       <ul class="mlist" id="mlist"></ul>
@@ -1673,18 +1703,18 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   function renderList(){
     const sorted=[...meds].sort((a,b)=>{const ea=a.days&&endKey(a)<today, eb=b.days&&endKey(b)<today;return ea-eb||a.name.localeCompare(b.name,'sk')});
     const row=m=>{
-      if(deleteId===m.id) return '<li><div class="t"><div>Zmazať '+esc(nm(m))+'?</div><div>Záznamy z minulých dní zostanú.</div></div><button class="btn danger sm" type="button" data-del="'+m.id+'">Zmazať</button><button class="btn ghost sm" type="button" data-nodel="1">Nie</button></li>';
       const st=itemState(m), o=openInfo(m), sup=supplyInfo(m), ended=m.days&&endKey(m)<today;
-      const sub=[freqText(m),m.kind==='swap'?'':durText(m),m.place?(m.place==='doma'?'doma':'prechodný byt'):'',m.dose].filter(Boolean).join(' · ');
-      let stat='';
-      if(m.kind==='swap') stat=[o?openText(m):'',sup&&m.left>0?'zásoba do '+nice(sup.end):''].filter(Boolean).join(' · ');
-      else{const t=stockText(m);stat=[t&&!/^doma/.test(t)?t:'',o?openText(m):''].filter(Boolean).join(' · ')}
+      let chip='';
+      if(m.kind==='swap'){const n=m.left;
+        chip=n==null?(o?(isCos(m)?'do ':'vymeniť ')+niceS(o.last):''):n<=0?(isCos(m)?'žiadne v zásobe':'žiadna v zásobe'):n+' v zásobe';
+        if(st!=='ok'&&o&&o.state!=='ok') chip=(o.state==='exp'?'po termíne':(isCos(m)?'spotrebovať ':'vymeniť ')+niceS(o.last))+(n!=null?' · '+(n>0?n+' v zás.':'0 v zás.'):'');}
+      else{const i=stockInfo(m);
+        if(m.left!=null) chip=(byBottle(m)?m.left+' '+pkW(m,m.left):m.left+' ks')+(i&&!i.need&&st!=='ok'?(i.course?' · chýba '+i.short:i.out||i.left===0?' · došlo':' · do '+niceS(i.last)):'');
+        else if(o) chip='do '+niceS(o.last);}
       const al=m.kind==='swap'?'Kúpil som':'Doplniť';
-      const act=m.left!=null||(m.kind!=='swap'&&m.pack)?'<button class="rf'+(st==='warn'||st==='bad'?' hot':'')+'" type="button" data-refill="'+m.id+'" aria-label="'+al+': '+esc(m.name)+'" title="'+al+'"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>'+al+'</span></button>':'';
-      return '<li class="mr st-'+st+(ended?' ended':'')+'"><span class="pillbox" data-minfo="'+m.id+'">'+picM(m,30)+'<i class="sdot" aria-hidden="true"></i></span>'+
-        '<div class="t" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="Detail: '+esc(m.name)+'"><div class="mn">'+esc(m.name)+'</div><div>'+esc(sub)+'</div>'+
-        (m.left!=null||stat?'<div class="mchips">'+stockChip(m)+(stat?'<span class="sp-note">'+esc(stat)+'</span>':'')+'</div>':'')+(ended?'<div>liečba skončila</div>':'')+'</div>'+
-        (act?'<div class="macts">'+act+'</div>':'')+'</li>';
+      const plus=m.left!=null||(m.kind!=='swap'&&m.pack)?'<button class="qa'+(st==='warn'||st==='bad'?' hot':'')+'" type="button" data-refill="'+m.id+'" aria-label="'+al+': '+esc(m.name)+'" title="'+al+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>':'<span class="qa-sp"></span>';
+      return '<li class="mr2 st-'+st+(ended?' ended':'')+'" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="'+esc(m.name+(chip?', '+chip:''))+'"><span class="pillbox">'+picM(m,26)+'<i class="sdot" aria-hidden="true"></i></span>'+
+        '<span class="mn2">'+esc(m.name)+'</span>'+(chip?'<span class="mc2 '+st+'">'+esc(chip)+'</span>':'')+plus+'</li>';
     };
     const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const sw=$('mSearchW'); sw.hidden=meds.length<6; if(sw.hidden) mq='';
@@ -1697,13 +1727,25 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('mFilt').hidden=meds.length<3;
     $('mFilt').innerHTML=fc('','Všetko',meds.length)+(todo.length?fc('todo','Treba riešiť',todo.length,'todo'):'')+[['med','Lieky'],['care','Kvapky'],['cosm','Kozmetika'],['swap','Výmena']].filter(x=>have(x[0])).map(x=>fc(x[0],x[1],meds.filter(m=>grpOf(m)===x[0]).length)).join('');
     $('mFilt').querySelectorAll('[data-mf]').forEach(b=>b.onclick=()=>{mf=b.dataset.mf;buzz(6);renderList()});
-    const qq=fold(mq), list=sorted.filter(m=>(!qq||fold(m.name).includes(qq)||fold(m.dose).includes(qq))&&(!mf||(mf==='todo'?todo.includes(m):grpOf(m)===mf)));
+    const places=meds.some(m=>m.place);
+    if((mf==='doma'||mf==='prech')&&!places) mf='';
+    if(places) $('mFilt').insertAdjacentHTML('beforeend','<span class="mfsep"></span>'+fc('doma','Doma',meds.filter(m=>m.place==='doma').length)+fc('prech','Prechodný byt',meds.filter(m=>m.place==='prech').length));
+    $('mFilt').querySelectorAll('[data-mf]').forEach(b=>b.onclick=()=>{mf=mf===b.dataset.mf&&b.dataset.mf?'':b.dataset.mf;buzz(6);renderList()});
+    {const nb=meds.filter(m=>itemState(m)==='bad').length, nw=meds.filter(m=>itemState(m)==='warn').length, n=meds.length, ok=n-nb-nw;
+      const pb=n?nb*100/n:0, pw=n?nw*100/n:0;
+      $('mSum').hidden=meds.length<3;
+      $('mSum').innerHTML='<div class="msring" style="background:conic-gradient(#E5484D 0 '+pb+'%,var(--warn) '+pb+'% '+(pb+pw)+'%,var(--ok) '+(pb+pw)+'% 100%)"><span><b>'+ok+'</b>/'+n+'</span></div>'+
+        '<div class="mstx"><b>'+(ok===n?'Všetko v poriadku':ok+' v poriadku')+'</b>'+(nw||nb?'<span>'+(nw?'<button type="button" class="linkbtn w" data-mf="todo">'+nw+' čoskoro</button>':'')+(nb?'<button type="button" class="linkbtn b" data-mf="todo">'+nb+' '+(nb===1?'došla alebo prešla':'došli alebo prešli')+'</button>':'')+'</span>':'<span>nič netreba riešiť</span>')+'</div>';
+      $('mSum').querySelectorAll('[data-mf]').forEach(b=>b.onclick=()=>{mf='todo';buzz(6);renderList()});}
+    const qq=fold(mq), list=sorted.filter(m=>(!qq||fold(m.name).includes(qq)||fold(m.dose).includes(qq))&&(!mf||(mf==='todo'?todo.includes(m):mf==='doma'||mf==='prech'?m.place===mf:grpOf(m)===mf)));
     const GL={med:['Lieky','tab','#2D6BE4'],care:['Kvapky a ošetrenie','drop','#1FA3B8'],cosm:['Kozmetika','pump','#D9658C'],swap:['Výmena','brush','#6E66E0']};
-    const html=['med','care','cosm','swap'].map(g=>{const l=list.filter(m=>grpOf(m)===g);return l.length?'<li class="mgh"><span class="pillbox">'+pillSvg(GL[g][1],GL[g][2],22)+'</span><span>'+GL[g][0]+'</span><span class="cnt">'+l.length+'</span></li>'+l.map(row).join(''):''}).join('');
+    const forceOpen=!!qq||!!mf;
+    const html=['med','care','cosm','swap'].map(g=>{const l=list.filter(m=>grpOf(m)===g);if(!l.length)return '';const op=forceOpen||isOpen('mg-'+g,true), hot=l.filter(m=>{const x=itemState(m);return x==='bad'||x==='warn'}).length;
+      return '<li class="mgh2"><button type="button" class="mgb" data-tog="mg-'+g+'" data-def="true" aria-expanded="'+op+'"><span class="pillbox">'+pillSvg(GL[g][1],GL[g][2],22)+'</span><span>'+GL[g][0]+'</span>'+(hot?'<span class="hot">'+hot+'</span>':'')+'<span class="cnt">'+l.length+'</span><span class="chev'+(op?' up':'')+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button></li>'+(op?l.map(row).join(''):'')}).join('');
     $('mlist').innerHTML=sorted.length?(html||'<li><div class="t"><div>Nič sa nenašlo</div><div>Skús iný názov.</div></div></li>'):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať.</div></div></li>';
-    $('mlist').querySelectorAll('[data-minfo]').forEach(t=>{t.onclick=()=>showInfo(t.dataset.minfo);t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showInfo(t.dataset.minfo)}}});
+    $('mlist').querySelectorAll('[data-minfo]').forEach(t=>{t.onclick=e=>{if(e.target.closest('[data-refill]'))return;showInfo(t.dataset.minfo)};t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showInfo(t.dataset.minfo)}}});
     $('mlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(b.dataset.edit));
-    $('mlist').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
+    $('mlist').querySelectorAll('[data-refill]').forEach(b=>b.onclick=e=>{e.stopPropagation();buzz(12);refill(b.dataset.refill)});
     $('mlist').querySelectorAll('[data-askdel]').forEach(b=>b.onclick=()=>{deleteId=b.dataset.askdel;renderList()});
     $('mlist').querySelectorAll('[data-nodel]').forEach(b=>b.onclick=()=>{deleteId=null;renderList()});
     $('mlist').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{meds=meds.filter(m=>m.id!==b.dataset.del);deleteId=null;if(editId)resetForm();saveMeds();render()});
