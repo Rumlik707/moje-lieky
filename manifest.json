@@ -28,5 +28,55 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dnes",
+      "short_name": "Dnes",
+      "description": "Dnešné dávky",
+      "url": "./?tab=today",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Pridať",
+      "short_name": "Pridať",
+      "description": "Pridať liek, kozmetiku alebo výmenu",
+      "url": "./?add=1",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Zásoby",
+      "short_name": "Zásoby",
+      "description": "Čo treba dokúpiť",
+      "url": "./?tab=meds",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Balím sa",
+      "short_name": "Balím sa",
+      "description": "Čo si zbaliť na cestu",
+      "url": "./?pack=1",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }

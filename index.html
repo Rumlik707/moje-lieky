@@ -1,6 +1,7 @@
 <!doctype html><html lang="sk"><head><meta charset="utf-8">
 <title>Moje lieky</title>
-<meta name="theme-color" content="#EAF2FC">
+<meta name="theme-color" content="#EAF2FC" id="themeMeta">
+<script>try{var th=localStorage.getItem("lieky-theme");if(th==="dark"||th==="light")document.documentElement.setAttribute("data-theme",th)}catch(e){}</script>
 <meta name="description" content="Jednoduchá appka na odškrtávanie denných liekov.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -15,12 +16,50 @@
   --acc:#2D6BE4; --acc-ink:#FFFFFF; --acc-soft:#DCE8FC; --acc-deep:#1B4FB8;
   --sun:#1C86C6; --sun-soft:#E0F1FC; --mint:#2D6BE4; --mint-soft:#E2EBFD; --lav:#4B4FC9; --lav-soft:#E8E8FA; --sky:#1D3A7A; --sky-soft:#E1E6F2;
   --ok:#1E9E73; --ok-ink:#FFFFFF; --ok-soft:#DDF3EA; --warn:#E9A21F; --warn-soft:#FDF1D9; --miss:#E06666; --miss-soft:#FCE4E4; --future:#F3F7FD;
-  --focus:#1B4FB8;
+  --focus:#1B4FB8; --warn-ink:#7A5205; --miss-ink:#A33A3A;
   --f-display:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-body:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
+:root[data-theme=dark]{--bg:#0C1524;--card:#152238;--card2:#1B2B46;--ink:#E7EEFB;--muted:#9DAECB;--line:#2A3C5E;--ring:#3A5078;
+--acc:#4F8BF0;--acc-ink:#FFFFFF;--acc-soft:#1F3863;--acc-deep:#A7C6FF;
+--sun:#6FC0F0;--sun-soft:#14324A;--mint:#4F8BF0;--mint-soft:#1F3863;--lav:#A5A8FF;--lav-soft:#26264F;--sky:#B4C6F0;--sky-soft:#1C2842;
+--ok:#2FBF8C;--ok-soft:#163A30;--warn:#F0B03A;--warn-soft:#3A2E14;--miss:#F07A7A;--miss-soft:#3E1D24;--future:#17253D;--focus:#A7C6FF;--warn-ink:#F2C46A;--miss-ink:#F5A3A3;color-scheme:dark;}
+:root[data-theme=dark] .hero-pill,:root[data-theme=dark] .htile,:root[data-theme=dark] .sbadge,:root[data-theme=dark] .hico,:root[data-theme=dark] .plb,:root[data-theme=dark] .hring,:root[data-theme=dark] .mp.st-miss,:root[data-theme=dark] .mp.st-wait,:root[data-theme=dark] .mp.st-due,:root[data-theme=dark] .mp.more,:root[data-theme=dark] .wi,:root[data-theme=dark] .wd2.hit,:root[data-theme=dark] .wf.on svg,:root[data-theme=dark] .g.today .bd,:root[data-theme=dark] .hall.ok,:root[data-theme=dark] .toast button,:root[data-theme=dark] .htile.s-obed{background:var(--card2)}
+:root[data-theme=dark] .hero-btn{background:#EAF2FC;color:#1B4FB8}
+:root[data-theme=dark] .htile.s-rano{background:#3A3216}
+:root[data-theme=dark] .htile.s-vecer{background:#2A2852}
+:root[data-theme=dark] .htile.s-noc{background:#1E2A45}
+:root[data-theme=dark] .wd2.hit.f-other,:root[data-theme=dark] .wd2.hit.f-swap{background:#26264F}
+:root[data-theme=dark] .wd2.hit.f-care,:root[data-theme=dark] .wd2.hit.f-drop{background:#123640}
+:root[data-theme=dark] .wd2.hit.f-bottle{background:#3A2A20}
+:root[data-theme=dark] .wd2.hit.f-cosm{background:#3E1F2C}
+:root[data-theme=dark] .wd2.hit.f-meds{background:#1F3863}
+:root[data-theme=dark] .id i.p{color:#F0C770}
+:root[data-theme=dark] .id i.n{color:#F5A3A3}
+:root[data-theme=dark] .nb.warn{color:#2A1B00}
+:root[data-theme=dark] .tab.home:not([aria-current]) .hb{background:var(--card2)}
+:root[data-theme=dark] img,:root[data-theme=dark] .pillbox svg{color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--bg:#0C1524;--card:#152238;--card2:#1B2B46;--ink:#E7EEFB;--muted:#9DAECB;--line:#2A3C5E;--ring:#3A5078;
+--acc:#4F8BF0;--acc-ink:#FFFFFF;--acc-soft:#1F3863;--acc-deep:#A7C6FF;
+--sun:#6FC0F0;--sun-soft:#14324A;--mint:#4F8BF0;--mint-soft:#1F3863;--lav:#A5A8FF;--lav-soft:#26264F;--sky:#B4C6F0;--sky-soft:#1C2842;
+--ok:#2FBF8C;--ok-soft:#163A30;--warn:#F0B03A;--warn-soft:#3A2E14;--miss:#F07A7A;--miss-soft:#3E1D24;--future:#17253D;--focus:#A7C6FF;--warn-ink:#F2C46A;--miss-ink:#F5A3A3;color-scheme:dark;}
+:root:not([data-theme=light]) .hero-pill,:root:not([data-theme=light]) .htile,:root:not([data-theme=light]) .sbadge,:root:not([data-theme=light]) .hico,:root:not([data-theme=light]) .plb,:root:not([data-theme=light]) .hring,:root:not([data-theme=light]) .mp.st-miss,:root:not([data-theme=light]) .mp.st-wait,:root:not([data-theme=light]) .mp.st-due,:root:not([data-theme=light]) .mp.more,:root:not([data-theme=light]) .wi,:root:not([data-theme=light]) .wd2.hit,:root:not([data-theme=light]) .wf.on svg,:root:not([data-theme=light]) .g.today .bd,:root:not([data-theme=light]) .hall.ok,:root:not([data-theme=light]) .toast button,:root:not([data-theme=light]) .htile.s-obed{background:var(--card2)}
+:root:not([data-theme=light]) .hero-btn{background:#EAF2FC;color:#1B4FB8}
+:root:not([data-theme=light]) .htile.s-rano{background:#3A3216}
+:root:not([data-theme=light]) .htile.s-vecer{background:#2A2852}
+:root:not([data-theme=light]) .htile.s-noc{background:#1E2A45}
+:root:not([data-theme=light]) .wd2.hit.f-other,:root:not([data-theme=light]) .wd2.hit.f-swap{background:#26264F}
+:root:not([data-theme=light]) .wd2.hit.f-care,:root:not([data-theme=light]) .wd2.hit.f-drop{background:#123640}
+:root:not([data-theme=light]) .wd2.hit.f-bottle{background:#3A2A20}
+:root:not([data-theme=light]) .wd2.hit.f-cosm{background:#3E1F2C}
+:root:not([data-theme=light]) .wd2.hit.f-meds{background:#1F3863}
+:root:not([data-theme=light]) .id i.p{color:#F0C770}
+:root:not([data-theme=light]) .id i.n{color:#F5A3A3}
+:root:not([data-theme=light]) .nb.warn{color:#2A1B00}
+:root:not([data-theme=light]) .tab.home:not([aria-current]) .hb{background:var(--card2)}
+:root:not([data-theme=light]) img,:root:not([data-theme=light]) .pillbox svg{color-scheme:light}}
 html,body{min-height:100%}
 body{background:var(--bg);color:var(--ink);font:500 16px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
@@ -80,8 +119,8 @@ button,input,select{font:inherit;color:inherit}
 .achips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .achips:empty{display:none}
 .achip{border:0;border-radius:999px;padding:8px 13px;font-weight:800;font-size:13px;cursor:pointer;background:var(--acc-soft);color:var(--acc-deep);min-height:36px}
-.achip.warn{background:var(--warn-soft);color:#7A5205}
-.achip.bad{background:var(--miss-soft);color:#A33A3A}
+.achip.warn{background:var(--warn-soft);color:var(--warn-ink)}
+.achip.bad{background:var(--miss-soft);color:var(--miss-ink)}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .tile{text-align:left;background:var(--card);border:0;border-radius:20px;padding:14px;cursor:pointer;display:grid;gap:4px;box-shadow:0 1px 2px rgba(15,37,71,.06);min-width:0}
 .tile b{font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--acc-deep);line-height:1.2}
@@ -129,8 +168,8 @@ button,input,select{font:inherit;color:inherit}
 .g .bd{margin-top:3px;font-size:11px;font-weight:800;line-height:1;border-radius:999px;padding:3px 6px;min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
 .g .bd svg{width:12px;height:12px;vertical-align:-2px}
 .g.full .bd{background:var(--ok);color:#fff}
-.g.part .bd{background:var(--warn-soft);color:#7A5205}
-.g.none .bd{background:var(--miss-soft);color:#A33A3A}
+.g.part .bd{background:var(--warn-soft);color:var(--warn-ink)}
+.g.none .bd{background:var(--miss-soft);color:var(--miss-ink)}
 .g.fut .bd{background:var(--acc-soft);color:var(--acc-deep)}
 .g.empty .bd{color:var(--muted)}
 .g.today{background:var(--acc);color:#fff}
@@ -199,12 +238,12 @@ button,input,select{font:inherit;color:inherit}
 .form input[type=number]{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:10px 8px;width:100%}
 .tinput{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:8px 12px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
 .orders{margin-top:16px;background:var(--warn-soft);border-radius:24px;padding:12px 14px;display:grid;gap:6px}
-.orders-h{display:flex;align-items:center;gap:8px;font-weight:800;color:#7A5205;font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+.orders-h{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--warn-ink);font-size:14px;letter-spacing:.04em;text-transform:uppercase}
 .ord{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border-radius:16px;padding:8px 10px}
 .ord .t{flex:1;min-width:120px}
 .ord .t div:first-child{font-weight:800;overflow-wrap:anywhere}
 .ord .t div:last-child{font-size:13px;color:var(--muted)}
-.ordtag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:var(--warn-soft);color:#7A5205;border-radius:999px;padding:1px 8px;vertical-align:2px;text-decoration:none}
+.ordtag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:var(--warn-soft);color:var(--warn-ink);border-radius:999px;padding:1px 8px;vertical-align:2px;text-decoration:none}
 .stk{font-size:13px;color:var(--ok);font-weight:700}
 .opened{margin-top:22px;background:var(--card);border-radius:24px;padding:12px 14px;display:grid;gap:6px;box-shadow:0 1px 2px rgba(15,37,71,.06)}
 .opened-h{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--acc-deep);font-size:14px;letter-spacing:.04em;text-transform:uppercase}
@@ -214,9 +253,9 @@ button,input,select{font:inherit;color:inherit}
 .ordtag.exp{background:var(--miss);color:#fff}
 .med-stock{font-size:13px;font-weight:700;color:var(--acc-deep);display:flex;align-items:center;gap:5px}
 .med-stock::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
-.med-stock.warn{color:#9A6A08}
+.med-stock.warn{color:var(--warn-ink)}
 .med.taken .med-stock{color:var(--muted)}
-.stk.warn{color:#9A6A08}
+.stk.warn{color:var(--warn-ink)}
 .rowx{display:flex;align-items:center;gap:4px}
 .rowx .med{flex:1;min-width:0}
 .tbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:transparent;color:var(--acc);display:grid;place-items:center;cursor:pointer}
@@ -248,11 +287,40 @@ button,input,select{font:inherit;color:inherit}
 .panel{background:var(--card);border-radius:26px;padding:20px;margin:12px 0 0;box-shadow:0 1px 2px rgba(15,37,71,.06)}
 .panel h2{margin:0 0 12px;font-family:var(--f-display);font-weight:600;font-size:21px}
 .panel h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:18px}
+.pk{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.pk:last-child{border-bottom:0}
+.pk input{width:22px;height:22px;accent-color:var(--ok);flex:none}
+.pk .t{flex:1;min-width:0}.pk .t b{display:block;font-weight:800}.pk .t span{font-size:13px;color:var(--muted)}
+.pk .q{font-weight:800;color:var(--acc-deep);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pk.done .t b,.pk.done .q{text-decoration:line-through;opacity:.55}
+.pkh{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 4px 2px}
+.intro{position:fixed;inset:0;z-index:40;background:rgba(10,20,40,.55);display:grid;place-items:end center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));animation:q-fade .25s ease-out}
+.icard{width:min(420px,100%);background:var(--card);border-radius:28px;padding:22px 20px 18px;box-shadow:0 20px 50px -20px rgba(0,0,0,.5);animation:i-up .45s cubic-bezier(.22,1,.36,1)}
+.icard h2{margin:6px 0 6px;font-family:var(--f-display);font-size:24px;line-height:1.2}
+.icard p{margin:0;color:var(--muted);font-size:16px;line-height:1.5;min-height:72px}
+.iart{height:150px;border-radius:22px;background:var(--acc-soft);display:grid;place-items:center;position:relative;overflow:hidden}
+.iart.sw{animation:i-sw .4s cubic-bezier(.22,1,.36,1)}
+.idots{display:flex;gap:6px;justify-content:center;margin:14px 0 12px}
+.idots i{width:8px;height:8px;border-radius:999px;background:var(--line);transition:width .3s,background .3s}
+.idots i.on{width:22px;background:var(--acc)}
+.iacts{display:flex;justify-content:space-between;gap:10px}
+.ia-row{display:flex;gap:10px}
+.ia-row span{width:58px;height:58px;border-radius:18px;background:var(--card);display:grid;place-items:center;box-shadow:0 6px 14px -8px rgba(15,37,71,.4);animation:i-bob 2.4s ease-in-out infinite}
+.ia-row span:nth-child(2){animation-delay:.2s}.ia-row span:nth-child(3){animation-delay:.4s}.ia-row span:nth-child(4){animation-delay:.6s}
+@keyframes i-up{from{transform:translateY(40px);opacity:0}}
+@keyframes i-sw{from{transform:translateX(30px);opacity:0}}
+@keyframes i-bob{50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion: reduce){.intro,.icard,.iart.sw,.ia-row span{animation:none}}
+.msearch{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:0 12px;margin:0 0 6px;color:var(--muted)}
+.msearch input{flex:1;border:0;background:transparent;min-height:46px;font:inherit;font-size:16px;color:var(--ink);outline:none}
+.msearch:focus-within{border-color:var(--acc)}
+.mlist li.mgh{padding:16px 0 6px;border-bottom:0;gap:8px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);flex-wrap:nowrap}
+.mlist li.mgh .cnt{margin-left:auto;background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:1px 9px;font-size:12px;letter-spacing:0}
 .mlist{display:flex;flex-direction:column;margin:0 0 22px;padding:0;list-style:none}
 .mlist li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .mlist li:last-child{border-bottom:0}
 .mlist .t div:not(:first-child){font-size:13px;line-height:1.35;color:var(--muted);font-weight:500}
-.mlist .t .stk{font-weight:700;color:var(--ok)}.mlist .t .stk.warn{color:#9A6A08}
+.mlist .t .stk{font-weight:700;color:var(--ok)}.mlist .t .stk.warn{color:var(--warn-ink)}
 .mlist .t div:first-child{font-size:16px}
 .macts{flex-basis:100%;display:flex;gap:8px;flex-wrap:wrap;padding-left:42px}
 .mlist li{padding:12px 0}
@@ -314,8 +382,8 @@ button,input,select{font:inherit;color:inherit}
 .chk{width:34px;height:34px}
 .streak span{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #opened .opened{margin-top:14px;border:1.5px solid var(--ring);box-shadow:none;background:var(--card)}
-.kindhint{margin:0;background:var(--warn-soft);color:#7A5205;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
-.kindhint .linkbtn{color:#7A5205;font-weight:800}
+.kindhint{margin:0;background:var(--warn-soft);color:var(--warn-ink);border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+.kindhint .linkbtn{color:var(--warn-ink);font-weight:800}
 #hello{font-size:20px;line-height:1.2}
 .head{align-items:center}
 body{font-weight:400}
@@ -400,7 +468,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 .idays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .id{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);font-weight:700}
 .id i{font-style:normal;font-weight:800;font-size:11px;border-radius:999px;padding:3px 0;width:100%;text-align:center;background:var(--card2);color:var(--ink)}
-.id i.f{background:var(--ok);color:#fff}.id i.p{background:var(--warn-soft);color:#7A5205}.id i.n{background:var(--miss-soft);color:#A33A3A}.id i.t{background:var(--acc-soft);color:var(--acc-deep)}
+.id i.f{background:var(--ok);color:#fff}.id i.p{background:var(--warn-soft);color:var(--warn-ink)}.id i.n{background:var(--miss-soft);color:var(--miss-ink)}.id i.t{background:var(--acc-soft);color:var(--acc-deep)}
 .hico{width:30px;height:30px;border-radius:50%;background:#fff;display:inline-grid;place-items:center;flex:none;box-shadow:0 1px 3px rgba(15,37,71,.18)}
 .hico svg{width:22px!important;height:22px!important}
 .block-h .ico{gap:10px}
@@ -448,7 +516,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 .wkstat.good b{color:var(--ok)}.wkstat.mid b{color:#B57A06}.wkstat.low b{color:var(--miss)}
 .review{margin-top:14px;background:var(--card);border:2px solid var(--warn);border-radius:22px;padding:10px 12px;display:grid;gap:6px}
 .review.ok{border-color:var(--ok-soft)}
-.rv-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#7A5205}
+.rv-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--warn-ink)}
 .review.ok .rv-h{color:var(--ok)}
 .rv-n{text-transform:none;letter-spacing:0;font-size:13px}
 .rv-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--line)}
@@ -517,7 +585,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 .wi svg{width:22px;height:22px}
 .wi b{font-size:11px;font-weight:800;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums}
 .wi.st-full{box-shadow:inset 0 0 0 2px var(--ok)}.wi.st-full b{color:var(--ok)}
-.wi.st-part{box-shadow:inset 0 0 0 2px var(--warn)}.wi.st-part b{color:#9A6A08}
+.wi.st-part{box-shadow:inset 0 0 0 2px var(--warn)}.wi.st-part b{color:var(--warn-ink)}
 .wi.st-none{box-shadow:inset 0 0 0 2px var(--miss)}.wi.st-none b{color:var(--miss)}
 .wi.st-todo{box-shadow:inset 0 0 0 2px var(--acc)}.wi.st-fut{opacity:.6}
 .wi.empty{background:none;color:var(--muted);font-weight:800}
@@ -628,6 +696,18 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </div>
   </section>
 
+  <section class="sheet" id="packSheet" hidden aria-labelledby="packTitle">
+    <div class="sheet-h"><h2 id="packTitle">Balím sa na cestu</h2><button type="button" class="x" id="packClose" aria-label="Zavrieť">×</button></div>
+    <div class="chips" id="packDays" role="radiogroup" aria-label="Na koľko dní"></div>
+    <div class="stock-grid">
+      <label class="fld" for="packN">Počet dní<input id="packN" type="number" inputmode="numeric" min="1" max="60" value="3" class="tinput" style="text-align:center;width:100%"></label>
+      <label class="fld" for="packFrom">Od<input id="packFrom" type="date" class="tinput" style="font-size:16px;width:100%;min-width:0;max-width:100%"></label>
+    </div>
+    <div id="packList"></div>
+    <p class="note" style="margin:0">Počty sú to, čo spotrebuješ ty. Zo zásob doma nič neodpočítavam.</p>
+    <div class="actions"><button class="btn pri" type="button" id="packShare">Poslať zoznam</button></div>
+  </section>
+
   <div class="view" id="v-today">
   <header class="head">
     <div>
@@ -658,6 +738,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     <div class="vhead"><h1 class="hello">Zásoby</h1><button class="btn pri sm" id="addBtn" type="button">Pridať</button></div>
     <div id="orders"></div>
     <section class="panel" id="panel">
+      <label class="msearch" id="mSearchW" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="mSearch" type="search" placeholder="Hľadať v zásobách" autocomplete="off" aria-label="Hľadať v zásobách"></label>
       <ul class="mlist" id="mlist"></ul>
     <form class="form" id="form" novalidate hidden>
       <h3 id="formTitle">Pridať liek</h3>
@@ -821,10 +902,13 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     <div class="tiles">
       <button class="tile" id="fxBtn" type="button"><b>Vedľajší účinok</b><span>Zapíš, čo sa po lieku dialo</span></button>
       <button class="tile" id="repBtn" type="button"><b>Prehľad pre lekára</b><span>Užívanie, účinky a termíny</span></button>
+      <button class="tile" id="packBtn" type="button"><b>Balím sa na cestu</b><span>Čo a koľko si zbaliť</span></button>
+      <button class="tile" id="shareBtn" type="button"><b>Zdieľať týždeň</b><span>Pošli prehľad blízkemu</span></button>
     </div>
     <div id="soon"></div>
     <div id="visits"></div>
     <div id="effects"></div>
+    <section class="opened backup-panel" id="themePanel"></section>
     <section class="opened backup-panel" id="notifPanel"></section>
     <section class="opened backup-panel">
       <div class="opened-h"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11M7.5 9.5L12 14l4.5-4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span>Záloha</span></div>
@@ -837,6 +921,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       <div id="bConfirm"></div>
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
+    <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -848,6 +933,14 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   <button type="button" class="tab" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Viac</span><i class="nb" id="nbMore" hidden></i></button>
 </nav>
 <div id="toastHost"></div>
+<div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="introT">
+  <div class="icard">
+    <div class="iart" id="introArt" aria-hidden="true"></div>
+    <h2 id="introT"></h2><p id="introP"></p>
+    <div class="idots" id="introDots"></div>
+    <div class="iacts"><button type="button" class="btn ghost" id="introSkip">Preskočiť</button><button type="button" class="btn pri" id="introNext">Ďalej</button></div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -1058,7 +1151,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const dueMin=d=>d.t?toMin(d.t):SLOTS[slotIdx(d.s)].from*60;
   function taken(log,m,k){const v=log[m.id+'@'+k]||(m.legacy===k?log[m.id]:'')||'';return v==='x'?'':v}
   const skipped=(log,m,k)=>log[m.id+'@'+k]==='x';
-  let wkAdd=null, wkFilter=null;
+  let wkAdd=null, wkFilter=null, mq='';
   const actLabel=m=>m.shape==='drop'?'Kvapkanie':isTop(m)?'Ošetrenie':'Užil som';
   function itemsFor(key){
     const out=[]; meds.forEach(m=>{if(activeOn(m,key)) dosesOf(m,key).forEach(d=>out.push({m,...d}))});
@@ -1168,6 +1261,13 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     if(local.months) Object.assign(months,local.months);
     extra=normExtra(local.extra);
     render();
+    try{const q=new URLSearchParams(location.search);
+      if(q.get('add')) setTimeout(()=>{setTab('meds');quickOpen(true)},60);
+      else if(q.get('tab')&&['today','week','meds','more'].includes(q.get('tab'))) setTab(q.get('tab'));
+      if(q.get('pack')) setTimeout(()=>{setTab('more');openPack()},60);
+      if(location.search) history.replaceState(null,'',location.pathname);
+    }catch(e){}
+    try{if(!meds.length&&localStorage.getItem('lieky-intro')!=='1') setTimeout(introOpen,400)}catch(e){}
     try{
       if(window.claude&&window.claude.use){
         const [d,u]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
@@ -1514,15 +1614,22 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       setTimeout(()=>{keys.forEach(k=>setTaken(k,t));render();toast('Užité ✓',()=>{keys.forEach(k=>setTaken(k,null));render()})},2400)};
   }
 
+  $('mSearch').addEventListener('input',e=>{mq=e.target.value;renderList()});
   function renderList(){
     const sorted=[...meds].sort((a,b)=>{const ea=a.days&&endKey(a)<today, eb=b.days&&endKey(b)<today;return ea-eb||a.name.localeCompare(b.name,'sk')});
-    $('mlist').innerHTML=sorted.length?sorted.map(m=>{
+    const row=m=>{
       if(deleteId===m.id) return '<li><div class="t"><div>Zmazať '+esc(nm(m))+'?</div><div>Záznamy z minulých dní zostanú.</div></div><button class="btn danger sm" type="button" data-del="'+m.id+'">Zmazať</button><button class="btn ghost sm" type="button" data-nodel="1">Nie</button></li>';
       const stx=stockText(m);
       return '<li><span class="pillbox" data-minfo="'+m.id+'">'+picM(m,30)+'</span><div class="t" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="Detail: '+esc(m.name)+'"><div class="mn">'+esc(m.name)+'</div><div>'+esc(freqText(m))+(m.kind==='swap'?'':' · '+durText(m))+(m.place?' · '+(m.place==='doma'?'doma':'prechodný byt'):'')+(m.dose?' · '+esc(m.dose):'')+'</div>'+(stx?'<div class="'+(needsOrder(m)?'stk warn':'stk')+'">'+esc(stx)+(m.left!=null&&m.kind!=='swap'&&!/^doma/.test(stx)?' · doma '+m.left+' '+un(m,m.left):'')+'</div>':'')+(openText(m)?'<div class="stk">'+esc(openText(m))+'</div>':'')+'</div>'+
         '<div class="macts">'+(m.left!=null?'<button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplniť')+'</button>':'')+
         '<button class="btn ghost sm" type="button" data-edit="'+m.id+'">Upraviť</button><button class="btn ghost sm" type="button" data-askdel="'+m.id+'" aria-label="Zmazať '+esc(m.name)+'">Zmazať</button></div></li>';
-    }).join(''):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať.</div></div></li>';
+    };
+    const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const sw=$('mSearchW'); sw.hidden=meds.length<6; if(sw.hidden) mq='';
+    const qq=fold(mq), list=sorted.filter(m=>!qq||fold(m.name).includes(qq)||fold(m.dose).includes(qq));
+    const GL={med:['Lieky','tab','#2D6BE4'],care:['Kvapky a ošetrenie','drop','#1FA3B8'],cosm:['Kozmetika','pump','#D9658C'],swap:['Výmena','brush','#6E66E0']};
+    const html=['med','care','cosm','swap'].map(g=>{const l=list.filter(m=>grpOf(m)===g);return l.length?'<li class="mgh"><span class="pillbox">'+pillSvg(GL[g][1],GL[g][2],22)+'</span><span>'+GL[g][0]+'</span><span class="cnt">'+l.length+'</span></li>'+l.map(row).join(''):''}).join('');
+    $('mlist').innerHTML=sorted.length?(html||'<li><div class="t"><div>Nič sa nenašlo</div><div>Skús iný názov.</div></div></li>'):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať.</div></div></li>';
     $('mlist').querySelectorAll('[data-minfo]').forEach(t=>{t.onclick=()=>showInfo(t.dataset.minfo);t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showInfo(t.dataset.minfo)}}});
     $('mlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(b.dataset.edit));
     $('mlist').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
@@ -1745,7 +1852,28 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   const NK='lieky-notify';
   const notifOn=()=>{try{return localStorage.getItem(NK)==='1'&&'Notification' in window&&Notification.permission==='granted'}catch(e){return false}};
+  function takeKeys(date,keys,t){
+    const keep=sel; sel=date; let n=0;
+    keys.forEach(k=>{const [id,dk]=k.split('@');const m=meds.find(x=>x.id===id);if(m&&!taken(dayLog(date),m,dk)){setTaken(k,t||nowHM());n++}});
+    sel=keep; return n;
+  }
+  async function swInbox(){
+    if(!('caches' in window)) return;
+    try{
+      const c=await caches.open('lieky-inbox'); const r=await c.match('inbox'); if(!r) return;
+      const box=await r.json(); let changed=0;
+      (box.take||[]).forEach(x=>{changed+=takeKeys(x.date,x.keys,x.t)});
+      const nowMs=Date.now(), keepSn=[];
+      (box.snooze||[]).forEach(x=>{if(x.until<=nowMs&&x.date===today){let sent={};try{sent=JSON.parse(localStorage.getItem(NK+'-sent')||'{}')}catch(e){}
+        if(sent.d===today){sent.k=(sent.k||[]).filter(k=>!x.keys.includes(k));try{localStorage.setItem(NK+'-sent',JSON.stringify(sent))}catch(e){}}}
+        else if(x.date===today) keepSn.push(x)});
+      await c.put('inbox',new Response(JSON.stringify({take:[],snooze:keepSn}),{headers:{'Content-Type':'application/json'}}));
+      if(changed){render();toast(changed===1?'Dávka z oznámenia zapísaná ✓':'Dávky z oznámenia zapísané ✓')}
+    }catch(e){}
+  }
+  if(navigator.serviceWorker) navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='inbox')swInbox()});
   function notifyDue(){
+    swInbox();
     if(!notifOn()) return;
     const lg=dayLog(today), nowM=toMin(nowHM());
     let sent={}; try{sent=JSON.parse(localStorage.getItem(NK+'-sent')||'{}')}catch(e){}
@@ -1755,10 +1883,25 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     sent.k=sent.k.concat(due.map(i=>i.m.id+'@'+i.k)); try{localStorage.setItem(NK+'-sent',JSON.stringify(sent))}catch(e){}
     const names=due.map(i=>discreet?'1 liek':i.m.name+(i.m.dose?' ('+i.m.dose+')':''));
     const body=discreet?(due.length===1?'Máš 1 dávku na odkliknutie':'Máš '+due.length+' dávky na odkliknutie'):names.join(', ');
-    const opts={body,tag:'lieky-'+today+'-'+nowHM(),icon:'icon-192.png',badge:'icon-192.png',vibrate:[90,60,90],renotify:true,data:{url:'./'}};
+    const keys=due.map(i=>i.m.id+'@'+i.k);
+    const opts={body,tag:'lieky-'+today+'-'+nowHM(),icon:'icon-192.png',badge:'icon-192.png',vibrate:[90,60,90],renotify:true,requireInteraction:true,
+      data:{url:'./',date:today,keys},actions:[{action:'take',title:'Užil som'},{action:'snooze',title:'O 15 min'}]};
     const title='Čas na lieky · '+doseLabel(due[0]);
     if(navigator.serviceWorker&&navigator.serviceWorker.ready) navigator.serviceWorker.ready.then(r=>r.showNotification(title,opts)).catch(()=>{try{new Notification(title,opts)}catch(e){}});
     else try{new Notification(title,opts)}catch(e){}
+  }
+  function themeNow(){let t='auto';try{t=localStorage.getItem('lieky-theme')||'auto'}catch(e){}return t}
+  function applyTheme(){
+    const t=themeNow(); if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
+    const dark=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);
+    $('themeMeta').setAttribute('content',dark?'#0C1524':'#EAF2FC'); moveInd();
+  }
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+  function renderTheme(){
+    const el=$('themePanel'); if(!el) return; const t=themeNow();
+    const b=(v,l)=>'<button type="button" class="btn '+(t===v?'pri':'ghost')+' sm" data-theme-set="'+v+'" aria-pressed="'+(t===v)+'">'+l+'</button>';
+    el.innerHTML='<div class="opened-h"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>Vzhľad</span></div><div class="actions">'+b('auto','Podľa telefónu')+b('light','Svetlý')+b('dark','Tmavý')+'</div>';
+    el.querySelectorAll('[data-theme-set]').forEach(x=>x.onclick=()=>{try{localStorage.setItem('lieky-theme',x.dataset.themeSet)}catch(e){}applyTheme();renderTheme();buzz(8)});
   }
   function renderNotif(){
     const el=$('notifPanel'); if(!el) return;
@@ -1805,7 +1948,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     meds.filter(m=>m.kind==='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Kúpiť: '+m.name,'opened']));
     $('chips').innerHTML=c.map(x=>'<button type="button" class="achip '+x[0]+'" data-go="'+x[2]+'">'+esc(hideNames(x[1]))+'</button>').join('');
     $('chips').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==='opened'||g==='prn'){const el=$(g);if(el)el.scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'})}else setTab(g)});
-    renderNav(); renderNotif();
+    renderNav(); renderNotif(); renderTheme();
   }
 
 
@@ -2129,6 +2272,85 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   $('fxBtn').onclick=()=>openFx('');
   $('repBtn').onclick=openRep;
 
+  /* ---------- packing list ---------- */
+  let packDone={};
+  function packItems(from,n){
+    const days=[];for(let i=0;i<n;i++)days.push(addDays(from,i));
+    const sched=[],extraL=[];
+    meds.forEach(m=>{
+      if(m.kind==='swap') return;
+      if(m.days&&endKey(m)<from) return;
+      if(m.mode==='need'||byBottle(m)){extraL.push({m,q:byBottle(m)?'1 '+pkW(m,1):'balenie',why:m.mode==='need'?'podľa potreby':''});return}
+      let c=0;const lg=dayLog(today);
+      days.forEach(d=>{if(!activeOn(m,d))return;dosesOf(m,d).forEach(x=>{if(d===today&&taken(lg,m,x.k))return;c+=m.per})});
+      if(c) sched.push({m,q:c+' '+ks(c),why:freqText(m)});
+    });
+    return {sched,extra:extraL};
+  }
+  function renderPack(){
+    let n=numVal('packN'); if(!(n>=1&&n<=60)) n=null;
+    $('packDays').innerHTML=[1,2,3,5,7,14].map(d=>'<button type="button" class="btn '+(n===d?'pri':'ghost')+' sm" data-pd="'+d+'">'+d+' '+dni(d)+'</button>').join('');
+    $('packDays').querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{$('packN').value=b.dataset.pd;renderPack()});
+    const from=$('packFrom').value||today;
+    if(!n){$('packList').innerHTML='<p class="note">Zadaj 1 až 60 dní.</p>';return}
+    const P=packItems(from,n);
+    const row=x=>{const k=x.m.id;return '<label class="pk'+(packDone[k]?' done':'')+'"><input type="checkbox" data-pk="'+k+'"'+(packDone[k]?' checked':'')+'><span class="pillbox">'+picM(x.m,28)+'</span><span class="t"><b>'+esc(x.m.name)+'</b><span>'+esc(x.why||'')+'</span></span><span class="q">'+esc(x.q)+'</span></label>'};
+    $('packList').innerHTML=(P.sched.length?'<div class="pkh">Na '+n+' '+dni(n)+' od '+nice(from)+'</div>'+P.sched.map(row).join(''):'<p class="note">Na tieto dni nemáš naplánované žiadne dávky.</p>')+
+      (P.extra.length?'<div class="pkh">Pribaľ aj</div>'+P.extra.map(row).join(''):'');
+    $('packList').querySelectorAll('[data-pk]').forEach(c=>c.onchange=()=>{packDone[c.dataset.pk]=c.checked;buzz(8);renderPack()});
+  }
+  function openPack(){packDone={};if(!$('packFrom').value)$('packFrom').value=today;$('fxSheet').hidden=true;$('repSheet').hidden=true;$('infoSheet').hidden=true;$('packSheet').hidden=false;renderPack();$('packSheet').scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'})}
+  ['packN','packFrom'].forEach(id=>$(id).addEventListener('input',renderPack));
+  $('packClose').onclick=()=>{$('packSheet').hidden=true};
+  $('packBtn').onclick=openPack;
+  async function shareText(title,text){
+    try{if(navigator.share){await navigator.share({title,text});return}}catch(e){if(e&&e.name==='AbortError')return}
+    try{await navigator.clipboard.writeText(text);toast('Skopírované, môžeš to vložiť do správy')}catch(e){toast('Zdieľanie sa nepodarilo')}
+  }
+  $('packShare').onclick=()=>{
+    let n=numVal('packN'); if(!(n>=1&&n<=60)) return toast('Zadaj počet dní');
+    const from=$('packFrom').value||today, P=packItems(from,n);
+    const L=['Zbaliť na '+n+' '+dni(n)+' (od '+nice(from)+'):'];
+    P.sched.forEach(x=>L.push('☐ '+x.m.name+' – '+x.q));
+    if(P.extra.length){L.push('Pribaliť aj:');P.extra.forEach(x=>L.push('☐ '+x.m.name+' – '+x.q))}
+    shareText('Balím sa',L.join('\n'));
+  };
+
+  /* ---------- share week ---------- */
+  function weekText(){
+    const ds=lastDays(7); let due=0,done=0; const per={};
+    ds.forEach(k=>{const lg=dayLog(k);itemsFor(k).forEach(i=>{if(k===today&&dueMin(i)>toMin(nowHM()))return;due++;const p=per[i.m.id]=per[i.m.id]||{m:i.m,d:0,t:0,x:0};p.d++;if(taken(lg,i.m,i.k)){done++;p.t++}else if(skipped(lg,i.m,i.k))p.x++})});
+    const L=['Moje lieky · '+nice(ds[0])+' – '+nice(ds[6])];
+    if(due) L.push('Užité '+done+' z '+due+' dávok ('+Math.round(done*100/due)+' %)');
+    Object.values(per).sort((a,b)=>a.m.name.localeCompare(b.m.name,'sk')).forEach(p=>L.push('• '+p.m.name+': '+p.t+'/'+p.d+(p.x?', vynechané '+p.x+'×':'')+(p.t===p.d?' ✓':'')));
+    const prn={}; extra.prn.filter(e=>e.t.slice(0,10)>=ds[0]).forEach(e=>{const m=meds.find(x=>x.id===e.m);if(m)prn[m.name]=(prn[m.name]||0)+1});
+    if(Object.keys(prn).length){L.push('Podľa potreby:');Object.entries(prn).forEach(([n,c])=>L.push('• '+n+' '+c+'×'))}
+    if(!due&&!Object.keys(prn).length) L.push('Za posledný týždeň nie sú žiadne záznamy.');
+    return L.join('\n');
+  }
+  $('shareBtn').onclick=()=>{buzz(10);shareText('Môj týždeň s liekmi',weekText())};
+
+  /* ---------- intro ---------- */
+  const INTRO=[
+    {t:'Všetko na jednom mieste',p:'Lieky, kvapky, kozmetika aj veci na výmenu. Pridáš ich tlačidlom Pridať v lište dole.',art:()=>'<div class="ia-row">'+[['tab','#2D6BE4'],['drop','#1FA3B8'],['pump','#D9658C'],['ebrush','#6E66E0']].map(x=>'<span>'+pillSvg(x[0],x[1],38)+'</span>').join('')+'</div>'},
+    {t:'Odklikni, keď užiješ',p:'Na obrazovke Dnes ťukni na liek, keď ho užiješ. Zelený krúžok okolo domčeka ukáže, koľko máš za sebou.',art:()=>'<svg width="120" height="120" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="32" fill="none" stroke="var(--card)" stroke-width="4"/><circle cx="35" cy="35" r="32" fill="none" stroke="var(--ok)" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="70 100" transform="rotate(-90 35 35)"><animate attributeName="stroke-dasharray" from="0 100" to="70 100" dur="1.4s" fill="freeze"/></circle><circle cx="35" cy="35" r="25" fill="#2D6BE4"/><g transform="translate(23 23)" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.6V19a1.5 1.5 0 0 0 1.5 1.5h3.5v-5.5h3v5.5H17a1.5 1.5 0 0 0 1.5-1.5V9.6"/></g></svg>'},
+    {t:'Appka stráži zásoby',p:'Upozorní ťa, keď treba dokúpiť, vymeniť alebo spotrebovať. Číslo na lište ukáže, kde treba niečo riešiť.',art:()=>'<div style="position:relative"><svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8L12 3.8 20.5 8v8.6L12 20.8 3.5 16.6z" fill="var(--card)"/><path d="M3.5 8L12 12.2 20.5 8M12 12.2v8.6M7.8 5.9l8.4 4.2"/></svg><i class="nb warn pop" style="top:2px;left:auto;right:-6px">2</i></div>'}
+  ];
+  let introI=0;
+  function introShow(i){
+    introI=i; const x=INTRO[i];
+    $('introArt').innerHTML=x.art(); $('introArt').classList.remove('sw'); void $('introArt').offsetWidth; $('introArt').classList.add('sw');
+    $('introT').textContent=x.t; $('introP').textContent=x.p;
+    $('introDots').innerHTML=INTRO.map((_,j)=>'<i class="'+(j===i?'on':'')+'"></i>').join('');
+    $('introNext').textContent=i===INTRO.length-1?'Začať':'Ďalej'; $('introSkip').style.visibility=i===INTRO.length-1?'hidden':'visible';
+  }
+  function introClose(){$('intro').hidden=true;try{localStorage.setItem('lieky-intro','1')}catch(e){}}
+  function introOpen(){$('intro').hidden=false;introShow(0);$('introNext').focus()}
+  $('introNext').onclick=()=>{buzz(8);if(introI<INTRO.length-1)introShow(introI+1);else{introClose();if(!meds.length)quickOpen(true)}};
+  $('introSkip').onclick=introClose;
+  $('introAgain').onclick=introOpen;
+  {let x0=null;$('intro').addEventListener('pointerdown',e=>{x0=e.clientX});$('intro').addEventListener('pointerup',e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(dx<-50&&introI<INTRO.length-1)introShow(introI+1);else if(dx>50&&introI>0)introShow(introI-1)})}
+
   /* ---------- medicine info sheet ---------- */
   function showInfo(id){
     const m=meds.find(x=>x.id===id); if(!m) return;
@@ -2268,7 +2490,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   $('infoClose').onclick=()=>{$('infoSheet').hidden=true};
 
   resetForm();
-  applyDiscreet();
+  applyDiscreet(); applyTheme();
   init();
   function idlePulse(){
     if(!document.hidden&&tab==='today'&&!reduce()){

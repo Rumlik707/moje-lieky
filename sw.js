@@ -2,7 +2,7 @@
 // Appka sa uloží do telefónu, takže funguje aj bez internetu.
 // Pri pripojení si vždy najprv skúsi stiahnuť najnovšiu verziu.
 // Ak zmeníš ikonky alebo tento súbor, zvýš číslo verzie nižšie.
-const VERSION = 'v11';
+const VERSION = 'v13';
 const APP = 'moje-lieky-app-' + VERSION;
 const FONTS = 'moje-lieky-fonts';
 const FILES = [
@@ -70,9 +70,34 @@ self.addEventListener('fetch', e => {
   if (url.origin === self.location.origin) { e.respondWith(asset(req)); }
 });
 
-// Ťuknutie na oznámenie otvorí appku.
+// Ťuknutie na oznámenie: Užil som / O 15 min / otvoriť appku.
+async function inbox(fn) {
+  const c = await caches.open('lieky-inbox');
+  const r = await c.match('inbox');
+  let box = { take: [], snooze: [] };
+  try { if (r) box = await r.json(); } catch (e) {}
+  fn(box);
+  await c.put('inbox', new Response(JSON.stringify(box), { headers: { 'Content-Type': 'application/json' } }));
+}
+async function tellClients() {
+  const list = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  list.forEach(c => c.postMessage({ type: 'inbox' }));
+  return list;
+}
 self.addEventListener('notificationclick', e => {
-  e.notification.close();
+  const n = e.notification, d = n.data || {};
+  n.close();
+  if (e.action === 'take' && d.keys) {
+    const now = new Date(), t = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    e.waitUntil(inbox(b => b.take.push({ date: d.date, keys: d.keys, t })).then(tellClients).then(() =>
+      self.registration.showNotification('Zapísané ✓', { body: 'Dávka o ' + t + ' je odkliknutá.', tag: 'lieky-ok', icon: 'icon-192.png', badge: 'icon-192.png', silent: true })
+        .then(() => new Promise(r => setTimeout(r, 2500))).then(() => self.registration.getNotifications({ tag: 'lieky-ok' })).then(l => l.forEach(x => x.close()))));
+    return;
+  }
+  if (e.action === 'snooze' && d.keys) {
+    e.waitUntil(inbox(b => b.snooze.push({ date: d.date, keys: d.keys, until: Date.now() + 15 * 60000 })).then(tellClients));
+    return;
+  }
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
     for (const c of list) { if ('focus' in c) return c.focus(); }
     return self.clients.openWindow ? self.clients.openWindow('./') : null;
