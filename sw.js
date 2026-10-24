@@ -2,7 +2,7 @@
 // Appka sa uloží do telefónu, takže funguje aj bez internetu.
 // Pri pripojení si vždy najprv skúsi stiahnuť najnovšiu verziu.
 // Ak zmeníš ikonky alebo tento súbor, zvýš číslo verzie nižšie.
-const VERSION = 'v8';
+const VERSION = 'v9';
 const APP = 'moje-lieky-app-' + VERSION;
 const FONTS = 'moje-lieky-fonts';
 const FILES = [
@@ -68,4 +68,13 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') { e.respondWith(page(req)); return; }
   if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') { e.respondWith(font(req)); return; }
   if (url.origin === self.location.origin) { e.respondWith(asset(req)); }
+});
+
+// Ťuknutie na oznámenie otvorí appku.
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    for (const c of list) { if ('focus' in c) return c.focus(); }
+    return self.clients.openWindow ? self.clients.openWindow('./') : null;
+  }));
 });
