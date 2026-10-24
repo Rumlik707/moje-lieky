@@ -311,6 +311,31 @@ button,input,select{font:inherit;color:inherit}
 @keyframes i-sw{from{transform:translateX(30px);opacity:0}}
 @keyframes i-bob{50%{transform:translateY(-6px)}}
 @media (prefers-reduced-motion: reduce){.intro,.icard,.iart.sw,.ia-row span{animation:none}}
+.mfilt{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin:0 -2px;scrollbar-width:none}
+.mfilt::-webkit-scrollbar{display:none}
+.mfc{flex:none;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;min-height:38px;font:inherit;font-weight:800;font-size:14px;cursor:pointer}
+.mfc span{background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:0 7px;font-size:12px;line-height:20px;font-variant-numeric:tabular-nums}
+.mfc.todo{border-color:var(--warn)}.mfc.todo span{background:var(--warn);color:#2A1B00}
+.mfc.on{background:var(--acc);border-color:var(--acc);color:#fff}.mfc.on span{background:rgba(255,255,255,.25);color:#fff}
+.mfc.todo.on{background:var(--warn);border-color:var(--warn);color:#2A1B00}
+.mchips{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:5px}
+.sp{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 10px 3px 8px;font-size:13px;line-height:1.2;background:var(--ok-soft);color:var(--ok)}
+.sp b{font-weight:800;color:inherit}
+.sp.warn{background:var(--warn-soft);color:var(--warn-ink)}
+.sp.bad{background:var(--miss-soft);color:var(--miss-ink)}
+.sp-note{font-size:13px;color:var(--muted);font-weight:600}
+.mr.st-warn .sp-note{color:var(--warn-ink)}.mr.st-bad .sp-note{color:var(--miss-ink)}
+.pillbox{position:relative}
+.sdot{position:absolute;right:-3px;top:-3px;width:11px;height:11px;border-radius:50%;box-shadow:0 0 0 2px var(--card);display:none}
+.mr.st-warn .sdot{display:block;background:var(--warn)}.mr.st-bad .sdot{display:block;background:#E5484D}
+.mr.ended{opacity:.6}
+.mlist li.mr{flex-wrap:nowrap;align-items:flex-start}
+.mlist li.mr .pillbox{margin-top:2px}
+.mlist li.mr .macts{flex:none;align-self:center}
+.rf{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;color:var(--acc-deep);font:inherit;font-size:11px;font-weight:800;cursor:pointer;padding:0;min-width:56px}
+.rf svg{width:40px;height:40px;padding:9px;box-sizing:border-box;border-radius:50%;background:var(--acc-soft);transition:transform .2s}
+.rf:active svg{transform:scale(.88)}
+.rf.hot svg{background:var(--acc);color:#fff}
 .msearch{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:0 12px;margin:0 0 6px;color:var(--muted)}
 .msearch input{flex:1;border:0;background:transparent;min-height:46px;font:inherit;font-size:16px;color:var(--ink);outline:none}
 .msearch:focus-within{border-color:var(--acc)}
@@ -738,6 +763,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     <div class="vhead"><h1 class="hello">Zásoby</h1><button class="btn pri sm" id="addBtn" type="button">Pridať</button></div>
     <div id="orders"></div>
     <section class="panel" id="panel">
+      <div class="mfilt" id="mFilt" hidden></div>
       <label class="msearch" id="mSearchW" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="mSearch" type="search" placeholder="Hľadať v zásobách" autocomplete="off" aria-label="Hľadať v zásobách"></label>
       <ul class="mlist" id="mlist"></ul>
     <form class="form" id="form" novalidate hidden>
@@ -1151,7 +1177,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const dueMin=d=>d.t?toMin(d.t):SLOTS[slotIdx(d.s)].from*60;
   function taken(log,m,k){const v=log[m.id+'@'+k]||(m.legacy===k?log[m.id]:'')||'';return v==='x'?'':v}
   const skipped=(log,m,k)=>log[m.id+'@'+k]==='x';
-  let wkAdd=null, wkFilter=null, mq='';
+  let wkAdd=null, wkFilter=null, mq='', mf='', prnLate=null;
   const actLabel=m=>m.shape==='drop'?'Kvapkanie':isTop(m)?'Ošetrenie':'Užil som';
   function itemsFor(key){
     const out=[]; meds.forEach(m=>{if(activeOn(m,key)) dosesOf(m,key).forEach(d=>out.push({m,...d}))});
@@ -1210,6 +1236,19 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     else info.last=addDays(today,Math.floor(rest/perDay));
     info.order=diffDays(today,info.last)<ORDER_DAYS;
     return info;
+  }
+  function itemState(m){
+    const o=openInfo(m), need=needsOrder(m)&&(!m.days||endKey(m)>=today);
+    if((o&&o.state==='exp')||(need&&(m.left===0||(stockInfo(m)||{}).out))) return 'bad';
+    if(need||(o&&o.state==='soon')) return 'warn';
+    return (m.left!=null||o)?'ok':'none';
+  }
+  const BOXI='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8L12 3.8 20.5 8v8.6L12 20.8 3.5 16.6z"/><path d="M3.5 8L12 12.2 20.5 8M12 12.2v8.6"/></svg>';
+  function stockChip(m){
+    if(m.left==null) return '';
+    const n=m.left, cls=n<=0?'bad':needsOrder(m)?'warn':'ok';
+    const txt=m.kind==='swap'?(n<=0?(isCos(m)?'žiadne v zásobe':'žiadna náhradná'):n+' v zásobe'):byBottle(m)?n+' '+pkW(m,n):n+' '+ks(n);
+    return '<span class="sp '+cls+'">'+BOXI+'<b>'+esc(txt)+'</b></span>';
   }
   function stockText(m){
     if(m.kind==='swap') return stockShort(m);
@@ -1574,8 +1613,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       grouped(list).map(m=>m.__h?'<div class="plh">'+(m.__h==='doma'?HOMEICO+'Doma':KEYICO+'Prechodný byt')+'</div>':(()=>{
         const o=openInfo(m); const st=o?o.state:'ok';
         const swap=m.kind==='swap'&&!isCos(m);
-        const lines=[o?openText(m):(m.openDays?'zatiaľ neotvorené':''),m.mode==='need'&&!swap?'podľa potreby':'',stockShort(m)].filter(Boolean).join(' · ');
-        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div></div>'+
+        const lines=[o?openText(m):(m.openDays?'zatiaľ neotvorené':''),m.mode==='need'&&m.kind!=='swap'?'podľa potreby':''].filter(Boolean).join(' · '); const sup=supplyInfo(m);
+        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,28)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div>'+(m.left!=null?'<div class="mchips">'+stockChip(m)+(sup&&m.left>0?'<span class="sp-note">vydrží do '+nice(sup.end)+'</span>':'')+'</div>':'')+'</div>'+
           (m.openDays?'<button class="btn ghost sm" type="button" data-open="'+m.id+'">'+(swap?'Vymenil som':'Otvoril som nové')+'</button>':'')+'</div>';
       })()).join('')+'</div></section>';
     $('opened').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openedNew(b.dataset.open));
@@ -1585,8 +1624,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     animKey='opened'; setTimeout(()=>{animKey=null},50);
     const med=meds.find(x=>x.id===id); if(!med) return;
     const before={opened:med.opened,left:med.left};
-    const ev={id:rid(),m:id,d:today,prev:med.opened||null,dl:med.left!=null&&byBottle(med)&&med.left>0?1:0}; extra.sw.push(ev);
-    meds=meds.map(x=>x.id===id?{...x,opened:today,left:x.left!=null&&byBottle(x)?Math.max(0,x.left-1):x.left}:x); saveMeds(); saveExtra(); render();
+    const ev={id:rid(),m:id,d:today,prev:med.opened||null,dl:med.left!=null&&(byBottle(med)||med.kind==='swap')&&med.left>0?1:0}; extra.sw.push(ev);
+    meds=meds.map(x=>x.id===id?{...x,opened:today,left:x.left!=null&&(byBottle(x)||x.kind==='swap')?Math.max(0,x.left-1):x.left}:x); saveMeds(); saveExtra(); render();
     toast(nm(med)+(med.kind==='swap'&&!isCos(med)?' · vymenené dnes':' · otvorené dnes'),()=>{meds=meds.map(x=>x.id===id?{...x,...before}:x);extra.sw=extra.sw.filter(e=>e.id!==ev.id);saveMeds();saveExtra();render()});
   }
 
@@ -1619,14 +1658,30 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const sorted=[...meds].sort((a,b)=>{const ea=a.days&&endKey(a)<today, eb=b.days&&endKey(b)<today;return ea-eb||a.name.localeCompare(b.name,'sk')});
     const row=m=>{
       if(deleteId===m.id) return '<li><div class="t"><div>Zmazať '+esc(nm(m))+'?</div><div>Záznamy z minulých dní zostanú.</div></div><button class="btn danger sm" type="button" data-del="'+m.id+'">Zmazať</button><button class="btn ghost sm" type="button" data-nodel="1">Nie</button></li>';
-      const stx=stockText(m);
-      return '<li><span class="pillbox" data-minfo="'+m.id+'">'+picM(m,30)+'</span><div class="t" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="Detail: '+esc(m.name)+'"><div class="mn">'+esc(m.name)+'</div><div>'+esc(freqText(m))+(m.kind==='swap'?'':' · '+durText(m))+(m.place?' · '+(m.place==='doma'?'doma':'prechodný byt'):'')+(m.dose?' · '+esc(m.dose):'')+'</div>'+(stx?'<div class="'+(needsOrder(m)?'stk warn':'stk')+'">'+esc(stx)+(m.left!=null&&m.kind!=='swap'&&!/^doma/.test(stx)?' · doma '+m.left+' '+un(m,m.left):'')+'</div>':'')+(openText(m)?'<div class="stk">'+esc(openText(m))+'</div>':'')+'</div>'+
-        '<div class="macts">'+(m.left!=null?'<button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplniť')+'</button>':'')+
-        '<button class="btn ghost sm" type="button" data-edit="'+m.id+'">Upraviť</button><button class="btn ghost sm" type="button" data-askdel="'+m.id+'" aria-label="Zmazať '+esc(m.name)+'">Zmazať</button></div></li>';
+      const st=itemState(m), o=openInfo(m), sup=supplyInfo(m), ended=m.days&&endKey(m)<today;
+      const sub=[freqText(m),m.kind==='swap'?'':durText(m),m.place?(m.place==='doma'?'doma':'prechodný byt'):'',m.dose].filter(Boolean).join(' · ');
+      let stat='';
+      if(m.kind==='swap') stat=[o?openText(m):'',sup&&m.left>0?'zásoba do '+nice(sup.end):''].filter(Boolean).join(' · ');
+      else{const t=stockText(m);stat=[t&&!/^doma/.test(t)?t:'',o?openText(m):''].filter(Boolean).join(' · ')}
+      const al=m.kind==='swap'?'Kúpil som':'Doplniť';
+      const act=m.left!=null||(m.kind!=='swap'&&m.pack)?'<button class="rf'+(st==='warn'||st==='bad'?' hot':'')+'" type="button" data-refill="'+m.id+'" aria-label="'+al+': '+esc(m.name)+'" title="'+al+'"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>'+al+'</span></button>':'';
+      return '<li class="mr st-'+st+(ended?' ended':'')+'"><span class="pillbox" data-minfo="'+m.id+'">'+picM(m,30)+'<i class="sdot" aria-hidden="true"></i></span>'+
+        '<div class="t" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="Detail: '+esc(m.name)+'"><div class="mn">'+esc(m.name)+'</div><div>'+esc(sub)+'</div>'+
+        (m.left!=null||stat?'<div class="mchips">'+stockChip(m)+(stat?'<span class="sp-note">'+esc(stat)+'</span>':'')+'</div>':'')+(ended?'<div>liečba skončila</div>':'')+'</div>'+
+        (act?'<div class="macts">'+act+'</div>':'')+'</li>';
     };
     const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const sw=$('mSearchW'); sw.hidden=meds.length<6; if(sw.hidden) mq='';
-    const qq=fold(mq), list=sorted.filter(m=>!qq||fold(m.name).includes(qq)||fold(m.dose).includes(qq));
+    const RK={bad:0,warn:1,ok:2,none:3};
+    sorted.sort((a,b)=>{const ea=a.days&&endKey(a)<today, eb=b.days&&endKey(b)<today;return ea-eb||RK[itemState(a)]-RK[itemState(b)]||a.name.localeCompare(b.name,'sk')});
+    const todo=meds.filter(m=>{const x=itemState(m);return x==='bad'||x==='warn'});
+    const have=g=>meds.some(m=>grpOf(m)===g);
+    if(mf==='todo'&&!todo.length) mf=''; if(mf&&mf!=='todo'&&!have(mf)) mf='';
+    const fc=(k,l,n,c)=>'<button type="button" class="mfc'+(mf===k?' on':'')+(c?' '+c:'')+'" data-mf="'+k+'" aria-pressed="'+(mf===k)+'">'+l+(n!=null?'<span>'+n+'</span>':'')+'</button>';
+    $('mFilt').hidden=meds.length<3;
+    $('mFilt').innerHTML=fc('','Všetko',meds.length)+(todo.length?fc('todo','Treba riešiť',todo.length,'todo'):'')+[['med','Lieky'],['care','Kvapky'],['cosm','Kozmetika'],['swap','Výmena']].filter(x=>have(x[0])).map(x=>fc(x[0],x[1],meds.filter(m=>grpOf(m)===x[0]).length)).join('');
+    $('mFilt').querySelectorAll('[data-mf]').forEach(b=>b.onclick=()=>{mf=b.dataset.mf;buzz(6);renderList()});
+    const qq=fold(mq), list=sorted.filter(m=>(!qq||fold(m.name).includes(qq)||fold(m.dose).includes(qq))&&(!mf||(mf==='todo'?todo.includes(m):grpOf(m)===mf)));
     const GL={med:['Lieky','tab','#2D6BE4'],care:['Kvapky a ošetrenie','drop','#1FA3B8'],cosm:['Kozmetika','pump','#D9658C'],swap:['Výmena','brush','#6E66E0']};
     const html=['med','care','cosm','swap'].map(g=>{const l=list.filter(m=>grpOf(m)===g);return l.length?'<li class="mgh"><span class="pillbox">'+pillSvg(GL[g][1],GL[g][2],22)+'</span><span>'+GL[g][0]+'</span><span class="cnt">'+l.length+'</span></li>'+l.map(row).join(''):''}).join('');
     $('mlist').innerHTML=sorted.length?(html||'<li><div class="t"><div>Nič sa nenašlo</div><div>Skús iný názov.</div></div></li>'):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať.</div></div></li>';
@@ -2097,12 +2152,26 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
           const why=s.overMax?'Dnes si už mal '+s.todayN+'× (najviac '+m.maxDay+'× denne).':'Od poslednej dávky ešte neuplynulo '+m.gapH+' h. Ďalšia najskôr o '+s.waitTo+'.';
           return '<div class="confirm"><p>'+esc(why)+' Zaznamenať aj tak?</p><button class="btn danger sm" type="button" data-prnforce="'+m.id+'">Zaznamenať</button><button class="btn ghost sm" type="button" data-prnno="1">Nie</button></div>';
         }
+        if(prnLate===m.id) return '<div class="prn-row"><span class="pillbox">'+picM(m,32)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">Kedy to bolo dnes?</div></div>'+
+          '<div class="wk-add" style="width:100%"><label class="sr" for="prnT">Čas</label><input id="prnT" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" value=""><button type="button" class="btn pri sm" id="prnTSave" data-m="'+m.id+'">Zapísať</button><button type="button" class="btn ghost sm" id="prnTNo">Zrušiť</button></div><p class="err" id="prnTErr" hidden style="width:100%;margin:0"></p></div>';
         const info=[s.last?'naposledy '+whenLabel(s.last.t):'zatiaľ neužité',s.todayN?'dnes '+s.todayN+'×'+(m.maxDay?' z '+m.maxDay:''):'',m.dose].filter(Boolean).join(' · ');
         const extraLine=[s.waitTo?'ďalšia najskôr o '+s.waitTo:'',openText(m),stockShort(m)].filter(Boolean).join(' · ');
         return '<div class="prn-row"><span class="pillbox">'+picM(m,32)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">'+esc(info)+'</div>'+(extraLine?'<div class="med-stock'+(s.waitTo?' warn':'')+'">'+esc(extraLine)+'</div>':'')+'</div>'+
-          '<div class="prn-act"><button class="btn pri sm" type="button" data-prn="'+m.id+'">'+(m.shape==='drop'?'Kvapkanie':isTop(m)?'Ošetrenie':'Užil som')+'</button>'+(s.todayN?'<button class="linkbtn" type="button" data-prnrm="'+m.id+'">'+(m.shape==='drop'?'odstrániť kvapkanie':isTop(m)?'odstrániť ošetrenie':'odstrániť záznam')+'</button>':'')+(m.openDays?'<button class="linkbtn" type="button" data-open="'+m.id+'">nové balenie</button>':'')+'</div></div>';
+          '<div class="prn-act"><button class="btn pri sm" type="button" data-prn="'+m.id+'">'+(m.shape==='drop'?'Kvapkanie':isTop(m)?'Ošetrenie':'Užil som')+'</button><button class="linkbtn" type="button" data-prnlate="'+m.id+'">bolo to skôr? zadaj čas</button>'+(s.todayN?'<button class="linkbtn" type="button" data-prnrm="'+m.id+'">'+(m.shape==='drop'?'odstrániť kvapkanie':isTop(m)?'odstrániť ošetrenie':'odstrániť záznam')+'</button>':'')+(m.openDays?'<button class="linkbtn" type="button" data-open="'+m.id+'">nové balenie</button>':'')+'</div></div>';
       }).join('')+'</div></section>';
     $('prn').querySelectorAll('[data-prn]').forEach(b=>b.onclick=()=>takePrn(b.dataset.prn,false));
+    $('prn').querySelectorAll('[data-prnlate]').forEach(b=>b.onclick=()=>{prnLate=b.dataset.prnlate;prnWarn=null;render();const t=$('prnT');if(t){t.focus();t.scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'})}});
+    if($('prnTNo')) $('prnTNo').onclick=()=>{prnLate=null;render()};
+    if($('prnTSave')) $('prnTSave').onclick=()=>{
+      const v=normTime($('prnT').value), er=$('prnTErr');
+      if(!/^\d{2}:\d{2}$/.test(v)){er.textContent='Zadaj čas, napríklad 1730.';er.hidden=false;return}
+      if(v>nowHM()){er.textContent='Tento čas ešte nebol.';er.hidden=false;return}
+      const m=meds.find(x=>x.id===$('prnTSave').dataset.m); if(!m) return;
+      const e={id:rid(),m:m.id,t:today+'T'+v}; extra.prn.push(e); const st=adjustStock(m,-m.per);
+      prnLate=null; saveExtra(); if(st) saveMeds(); buzz(15); render();
+      toast(nm(m)+(m.shape==='drop'?' · kvapkanie ':isTop(m)?' · ošetrenie ':' · ')+v+' ✓',()=>{extra.prn=extra.prn.filter(p=>p.id!==e.id);if(st){adjustStock(meds.find(x=>x.id===m.id)||m,m.per);saveMeds()}saveExtra();render()});
+    };
+    if($('prnT')) $('prnT').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('prnTSave').click()}});
     $('prn').querySelectorAll('[data-prnrm]').forEach(b=>b.onclick=()=>{
       const id=b.dataset.prnrm; const m=meds.find(x=>x.id===id); const e=prnOf(id).find(p=>p.t.slice(0,10)===today); if(!m||!e) return;
       extra.prn=extra.prn.filter(p=>p.id!==e.id); const st=adjustStock(m,m.per); saveExtra(); if(st) saveMeds(); render();
