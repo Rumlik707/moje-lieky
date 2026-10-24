@@ -481,6 +481,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 .isub{font-size:14px;color:var(--muted);font-weight:600;margin-top:2px}
 .ictx{display:inline-flex;align-items:center;gap:6px;margin-top:6px;background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:800}
 .ictx.past{background:var(--warn-soft);color:var(--warn-ink)}
+.confirm-pulse{animation:nb-pop .45s cubic-bezier(.34,1.56,.64,1)}
 .ifoot{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
 .ifoot .linkbtn.del{color:#D93F45}
 .vico{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--acc-soft);color:var(--acc-deep);margin-right:10px;vertical-align:-6px}
@@ -2575,6 +2576,11 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         toast(nm(cur)+' · doma '+v+' '+un(m,v),()=>{meds=meds.map(x=>x.id===id?{...x,left:before}:x);saveMeds();again()})};
     }
     B.querySelectorAll('.dti').forEach(i=>i.addEventListener('blur',()=>{const v=normTime(i.value);if(v)i.value=v}));
+    B.querySelectorAll('.dti').forEach(i=>{const orig=i.value;i.addEventListener('input',()=>{
+      const b=i.dataset.dt?B.querySelector('[data-dok="'+i.dataset.dt+'"]'):i.id==='iprnT'?B.querySelector('[data-iprnadd]'):null; if(!b) return;
+      if(!b.dataset.lab) b.dataset.lab=b.textContent;
+      const ch=i.value!==orig; b.textContent=ch?'Potvrdiť':b.dataset.lab; b.classList.toggle('pri',ch||!/Zmeniť/.test(b.dataset.lab)); b.classList.toggle('ghost',!ch&&/Zmeniť/.test(b.dataset.lab)); b.classList.toggle('confirm-pulse',ch);
+    });i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const b=i.dataset.dt?B.querySelector('[data-dok="'+i.dataset.dt+'"]'):B.querySelector('[data-iprnadd]');if(b)b.click()}})});
   }
   function stkHint(m){return isCos(m)?'Koľko neotvorených balení máš doma. Pri „nové balenie“ jedno ubudne samo.':byBottle(m)?(m.shape==='tube'?'Počíta sa v celých tubách, nie v natretiach.':'Počíta sa v celých fľaštičkách, nie v kvapkách.')+' Pri „nové balenie“ jedna ubudne sama.':m.kind==='swap'?'Pridal si omylom? Uprav počet a ulož.':'Chýbajú kusy v otvorenom balení alebo si omylom pridal balenie? Uprav počet a ulož.'}
   function stkEd(m){
