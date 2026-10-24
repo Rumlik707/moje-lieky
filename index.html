@@ -346,6 +346,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 .ir:last-child{border-bottom:0}
 .ir span{color:var(--muted)}
 .ir b{text-align:right;font-weight:800}
+[data-minfo]{cursor:pointer}
+.mn::after{content:' ›';color:var(--acc);font-weight:800}
 .stk-ed{display:flex;align-items:center;gap:10px}
 .stk-ed .sbtn{flex:none;width:48px;height:48px;border-radius:50%;border:0;background:var(--card);color:var(--acc-deep);font-size:26px;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 1px 2px rgba(15,37,71,.08);transition:transform .12s cubic-bezier(.16,1,.3,1)}
 .stk-ed .sbtn:active{transform:scale(.9)}
@@ -1393,10 +1395,11 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('mlist').innerHTML=sorted.length?sorted.map(m=>{
       if(deleteId===m.id) return '<li><div class="t"><div>Zmazať '+esc(nm(m))+'?</div><div>Záznamy z minulých dní zostanú.</div></div><button class="btn danger sm" type="button" data-del="'+m.id+'">Zmazať</button><button class="btn ghost sm" type="button" data-nodel="1">Nie</button></li>';
       const stx=stockText(m);
-      return '<li><span class="pillbox">'+picM(m,30)+'</span><div class="t"><div>'+esc(m.name)+'</div><div>'+esc(freqText(m))+(m.kind==='swap'?'':' · '+durText(m))+(m.place?' · '+(m.place==='doma'?'doma':'prechodný byt'):'')+(m.dose?' · '+esc(m.dose):'')+'</div>'+(stx?'<div class="'+(needsOrder(m)?'stk warn':'stk')+'">'+esc(stx)+(m.left!=null&&!/^doma/.test(stx)?' · doma '+m.left+' '+ks(m.left):'')+'</div>':'')+(openText(m)?'<div class="stk">'+esc(openText(m))+'</div>':'')+'</div>'+
+      return '<li><span class="pillbox" data-minfo="'+m.id+'">'+picM(m,30)+'</span><div class="t" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="Detail: '+esc(m.name)+'"><div class="mn">'+esc(m.name)+'</div><div>'+esc(freqText(m))+(m.kind==='swap'?'':' · '+durText(m))+(m.place?' · '+(m.place==='doma'?'doma':'prechodný byt'):'')+(m.dose?' · '+esc(m.dose):'')+'</div>'+(stx?'<div class="'+(needsOrder(m)?'stk warn':'stk')+'">'+esc(stx)+(m.left!=null&&!/^doma/.test(stx)?' · doma '+m.left+' '+ks(m.left):'')+'</div>':'')+(openText(m)?'<div class="stk">'+esc(openText(m))+'</div>':'')+'</div>'+
         '<div class="macts">'+(m.left!=null?'<button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplniť')+'</button>':'')+
         '<button class="btn ghost sm" type="button" data-edit="'+m.id+'">Upraviť</button><button class="btn ghost sm" type="button" data-askdel="'+m.id+'" aria-label="Zmazať '+esc(m.name)+'">Zmazať</button></div></li>';
     }).join(''):'<li><div class="t"><div>Zatiaľ žiadne lieky</div><div>Ťukni hore na Pridať liek.</div></div></li>';
+    $('mlist').querySelectorAll('[data-minfo]').forEach(t=>{t.onclick=()=>showInfo(t.dataset.minfo);t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showInfo(t.dataset.minfo)}}});
     $('mlist').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>startEdit(b.dataset.edit));
     $('mlist').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
     $('mlist').querySelectorAll('[data-askdel]').forEach(b=>b.onclick=()=>{deleteId=b.dataset.askdel;renderList()});
@@ -2024,13 +2027,13 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   init();
   function idlePulse(){
     if(!document.hidden&&tab==='today'&&!reduce()){
-      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')];
+      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')].filter(e=>!e.classList.contains('play'));
       if(els.length){
-        const n=Math.random()<.35&&els.length>1?2:1;
-        for(let i=0;i<n;i++){const el=els[Math.floor(Math.random()*els.length)];el.classList.remove('play','long');void el.offsetWidth;el.classList.add('play');setTimeout(()=>el.classList.remove('play'),3200)}
+        const n=Math.min(els.length,Math.random()<.45?2:1);
+        for(let i=0;i<n;i++){const el=els.splice(Math.floor(Math.random()*els.length),1)[0];void el.offsetWidth;el.classList.add('play','long');setTimeout(()=>el.classList.remove('play','long'),6000)}
       }
     }
-    setTimeout(idlePulse,7000+Math.random()*13000);
+    setTimeout(idlePulse,3500+Math.random()*3500);
   }
   setTimeout(idlePulse,2500+Math.random()*2000);
 })();
