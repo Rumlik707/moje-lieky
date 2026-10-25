@@ -352,7 +352,8 @@ button,input,select{font:inherit;color:inherit}
 .shpanel{position:fixed;left:0;right:0;bottom:0;top:max(28px,env(safe-area-inset-top,0px));margin:0 auto;max-width:560px;z-index:33;background:var(--bg);border-radius:28px 28px 0 0;display:flex;flex-direction:column;box-shadow:0 -18px 40px -18px rgba(10,20,40,.45);animation:sh-up .38s cubic-bezier(.22,1,.36,1);overflow:hidden}
 .shtop{display:flex;align-items:center;gap:8px;padding:16px 14px 8px}
 .shop-on .tabbar{z-index:34}
-.shop-on .shpanel{bottom:var(--tbh,72px)}
+.shop-on .shpanel{bottom:var(--tbh,72px);top:0;border-radius:0;box-shadow:none;padding-top:env(safe-area-inset-top,0px);animation:q-fade .2s ease-out}
+.shop-on .shback{display:none}
 .shop-on .shpriv{padding-bottom:12px}
 .shbtn{display:inline-flex;align-items:center;gap:5px;padding-left:12px;padding-right:13px;flex:none}
 .shring{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;flex:none;transition:background .4s}
@@ -1187,7 +1188,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v38</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v39</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
