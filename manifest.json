@@ -55,10 +55,10 @@
       ]
     },
     {
-      "name": "Zásoby",
-      "short_name": "Zásoby",
-      "description": "Čo treba dokúpiť",
-      "url": "./?tab=meds",
+      "name": "Balím sa",
+      "short_name": "Balím sa",
+      "description": "Čo si zbaliť na cestu",
+      "url": "./?pack=1",
       "icons": [
         {
           "src": "icon-192.png",
@@ -67,10 +67,10 @@
       ]
     },
     {
-      "name": "Balím sa",
-      "short_name": "Balím sa",
-      "description": "Čo si zbaliť na cestu",
-      "url": "./?pack=1",
+      "name": "Nákup",
+      "short_name": "Nákup",
+      "description": "Čo treba kúpiť",
+      "url": "./?shop=1",
       "icons": [
         {
           "src": "icon-192.png",
