@@ -292,7 +292,7 @@ button,input,select{font:inherit;color:inherit}
 @media (prefers-color-scheme: dark){:root:not([data-theme=light]) .qback{background:rgba(12,21,36,.55)!important}}
 .qmenu{display:block!important;width:min(400px,100%)!important;height:330px;bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
 .qb{position:absolute;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;font:inherit;color:var(--ink);cursor:pointer;width:96px;opacity:0;animation:qb-in .5s cubic-bezier(.34,1.56,.64,1) forwards}
-.qb .o{width:68px;height:68px;border-radius:50%;background:var(--card);display:grid;place-items:center;box-shadow:0 14px 26px -14px rgba(15,37,71,.6);margin-bottom:4px;transition:transform .2s}
+.qb .o{width:68px;height:68px;border-radius:50%;background:var(--card);display:grid;place-items:center;box-shadow:0 0 0 1.5px var(--line),0 14px 26px -14px rgba(15,37,71,.6);margin-bottom:4px;transition:transform .2s}
 .qb:active .o{transform:scale(.9)}
 .qb b{font-size:14px;font-weight:800}.qb small{font-size:11.5px;font-weight:700;color:var(--muted)}
 .qb.hot .o{background:radial-gradient(circle at 35% 30%,#FFF8EC,#FFE0B0);box-shadow:0 0 0 3px #FFB547,0 16px 30px -12px rgba(233,140,20,.6)}
@@ -335,10 +335,11 @@ button,input,select{font:inherit;color:inherit}
 .stile.old{flex:none;width:78px;min-height:78px;background:var(--card);color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line)}
 .stile.old .si{height:36px}
 .shempty{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:26px 30px;color:var(--muted)}.shempty b{color:var(--ink);font-size:17px}
-.sopt{display:flex;align-items:center;gap:12px;margin:0 14px;padding:8px 6px;border-bottom:1px solid var(--line);cursor:pointer}
+.sopt{display:flex;align-items:center;gap:12px;width:calc(100% - 28px);margin:0 14px;padding:8px 6px;border:0;border-bottom:1px solid var(--line);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.sopt:active{background:var(--card2)}
 .sopt .si{flex:none;display:grid;place-items:center;width:46px}
 .sopt b{flex:1;min-width:0;font-size:16px}.sopt b small{display:block;font-weight:600;font-size:12.5px;color:var(--muted)}
-.sopt .sadd{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:var(--acc-soft);color:var(--acc-deep);font-size:22px;font-weight:800;cursor:pointer}
+.sopt .sadd{flex:none;width:40px;height:40px;border-radius:50%;background:var(--acc-soft);color:var(--acc-deep);font-size:22px;font-weight:800;display:grid;place-items:center}
 .sopt.in .sadd{background:var(--ok);color:#fff;font-size:17px}
 .sopt.custom b{color:var(--acc-deep)}
 .plusc{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:2px dashed var(--acc);color:var(--acc);font-weight:900;font-size:20px}
@@ -1136,7 +1137,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v30</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v31</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2240,7 +2241,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const q=$('quick');
     if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
     const POS=[[13,64],[31,30],[50,3],[69,30],[87,64]];
-    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb'+(x.g==='shop'?' hot':'')+'" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
+    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
     $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
@@ -2938,21 +2939,18 @@ function food(k,size,col){
   function renderSearch(){
     const q=fold(shopQ).trim(); const words=q.split(/\s+/).filter(Boolean);
     let res=CAT.filter(c=>{const hay=fold(c[0]+' '+(c[6]||''));return words.every(w=>hay.includes(w))});
-    extra.shopRecent.forEach(r=>{if(!catBy(r.t)&&words.every(w=>fold(r.t).includes(w)))res.push([r.t,r.a,'','',0,0,'',true])});
+    extra.shopRecent.forEach(r=>{if(!catBy(r.t)&&words.every(w=>fold(r.t).includes(w)))res.push([r.t,r.a,'','',0,0,'']);});
+    res.sort((x,y)=>(fold(x[0]).startsWith(q)?0:1)-(fold(y[0]).startsWith(q)?0:1)||AIDX[x[1]]-AIDX[y[1]]);
     const have=new Set(extra.shop.filter(x=>!x.done).map(x=>fold(x.t)));
-    let h='';
-    AISLES.forEach(a=>{const l=res.filter(c=>c[1]===a[0]);if(!l.length)return;
-      h+='<div class="shaisle" style="--tc:'+a[4]+'"><span class="ai">'+food(a[2]||'vrecko',22)+'</span>'+a[1]+'</div>'+
-      l.map(c=>{const inn=have.has(fold(c[0]));return '<div class="sopt'+(inn?' in':'')+'" data-so="'+esc(c[0])+'"><span class="si">'+(c[2]?food(c[2],42,c[3]):food(a[2]||'vrecko',42))+'</span><b>'+esc(c[0])+'<small>'+(inn?'už v zozname':[(c[5]||[]).join(' · '),(c[4]||[]).slice(0,3).join(', ')].filter(Boolean).join(' · ')||a[1])+'</small></b><button type="button" class="sadd" data-sq="'+esc(c[0])+'" aria-label="Pridať '+esc(c[0])+'">'+(inn?'✓':'+')+'</button></div>'}).join('');});
-    const exact=res.some(c=>fold(c[0])===q);
-    if(!exact) h+='<div class="sopt custom" data-scustom="1"><span class="si"><span class="plusc">+</span></span><b>Pridať „'+esc(shopQ.trim())+'“<small>vlastná položka, appka si ju zapamätá</small></b></div>';
+    let h=res.slice(0,12).map(c=>{const a=AISLES[AIDX[c[1]]]||AISLES[AIDX.ine], inn=have.has(fold(c[0]));
+      return '<button type="button" class="sopt'+(inn?' in':'')+'" data-sq="'+esc(c[0])+'"><span class="si">'+(c[2]?food(c[2],42,c[3]):food(a[2]||'vrecko',42))+'</span><b>'+esc(c[0])+'<small>'+(inn?'už v zozname':a[1])+'</small></b><span class="sadd" aria-hidden="true">'+(inn?'✓':'+')+'</span></button>'}).join('');
+    if(!res.some(c=>fold(c[0])===q)) h+='<button type="button" class="sopt custom" data-scustom="1"><span class="si"><span class="plusc">+</span></span><b>Pridať „'+esc(shopQ.trim())+'“<small>vlastná položka</small></b></button>';
     return h;
   }
   function bindSearch(){
     const B=$('shopBody');
-    B.querySelectorAll('[data-so]').forEach(r=>r.onclick=e=>{if(e.target.closest('.sadd'))return;const c=catBy(r.dataset.so);openShopNew(c)});
-    B.querySelectorAll('[data-sq]').forEach(b=>b.onclick=()=>{const c=catBy(b.dataset.sq);shopPut({t:c[0],a:c[1]});shopQ='';$('shopIn').value='';renderShop()});
-    const cu=B.querySelector('[data-scustom]'); if(cu) cu.onclick=()=>{const t=shopQ.trim();const g=guessAisle(t);openShopNew(['%s'.replace('%s',t.charAt(0).toUpperCase()+t.slice(1)),g?g[1]:'ine','','',KS,0,'',true])};
+    B.querySelectorAll('[data-sq]').forEach(b=>b.onclick=()=>{const c=catBy(b.dataset.sq)||[b.dataset.sq,(guessAisle(b.dataset.sq)||[0,'ine'])[1]];shopPut({t:c[0],a:c[1]});shopQ='';$('shopIn').value='';renderShop();$('shopIn').focus()});
+    const cu=B.querySelector('[data-scustom]'); if(cu) cu.onclick=()=>{const t=shopQ.trim();shopPut({t:t.charAt(0).toUpperCase()+t.slice(1)});shopQ='';$('shopIn').value='';renderShop();$('shopIn').focus()};
   }
   function shopPut(o){
     const t=String(o.t||'').trim(); if(!t) return;
@@ -2969,9 +2967,7 @@ function food(k,size,col){
     const qs=(c[4]&&c[4].length?c[4]:KS), ps=c[5]||[];
     const ch=(k,v,arr)=>arr.map(o=>'<button type="button" class="ch'+(d[k]===o?' on':'')+'" data-'+k+'="'+esc(o)+'">'+esc(o)+'</button>').join('');
     $('shDet').innerHTML='<div class="grab"><i></i></div><div class="sdh"><span class="si">'+shopIcon(d,64)+'</span><div><b>'+esc(d.t)+'</b><span>'+a[1]+'</span></div></div>'+
-      (ps.length?'<div class="lbl">Druh / balenie</div><div class="chs">'+ch('b',0,ps)+'</div>':'')+
-      '<div class="lbl">Množstvo</div><div class="chs">'+ch('q',0,qs)+'<input class="qin" id="sdQ" placeholder="iné" value="'+esc(qs.includes(d.q)?'':d.q||'')+'" maxlength="14"></div>'+
-      '<div class="lbl">Oddelenie</div><div class="chs">'+AISLES.filter(z=>z[0]!=='moje').map(z=>'<button type="button" class="ch sm'+(d.a===z[0]?' on':'')+'" data-ai="'+z[0]+'">'+z[1]+'</button>').join('')+'</div>'+
+      '<div class="lbl">Koľko</div><div class="chs">'+ch('q',0,qs)+'<input class="qin" id="sdQ" placeholder="iné" value="'+esc(qs.includes(d.q)?'':d.q||'')+'" maxlength="14"></div>'+
       '<div class="lbl">Poznámka</div><input class="sdn" id="sdN" placeholder="napr. značka, „tá v červenej dóze“" value="'+esc(d.note||'')+'" maxlength="60">'+
       '<div class="sdact"><button type="button" class="btn pri" id="sdOk">'+(shopNew?'Pridať do nákupu':'Uložiť')+'</button>'+(shopNew?'':'<button type="button" class="btn ghost" id="sdDel">Odstrániť</button>')+'</div>';
     $('shDet').hidden=false; $('shDetBack').hidden=false;
