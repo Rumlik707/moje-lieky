@@ -506,6 +506,8 @@ button,input,select{font:inherit;color:inherit}
 .med{min-height:64px}
 .chk{width:34px;height:34px}
 .streak span{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#v-today .block{box-shadow:inset 0 0 0 1.5px var(--ring)}
+#v-today .block.now{box-shadow:inset 0 0 0 3px currentColor,0 6px 16px -10px currentColor}
 #opened .opened{margin-top:14px;border:1.5px solid var(--ring);box-shadow:none;background:var(--card)}
 .kindhint{margin:0;background:var(--warn-soft);color:var(--warn-ink);border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
 .kindhint .linkbtn{color:var(--warn-ink);font-weight:800}
@@ -1064,7 +1066,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v26</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v27</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1356,7 +1358,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   document.body.insertAdjacentHTML('afterbegin','<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">'+H3D+'</svg>');
   const BADGE_ICO={
     rano:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="rays" stroke="url(#h3r)" stroke-width="2.4" stroke-linecap="round"><path d="M12 1.6v2.6M12 19.8v2.6M1.6 12h2.6M19.8 12h2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g><circle cx="12" cy="12" r="5.8" fill="url(#h3s)"/><ellipse cx="10.2" cy="9.8" rx="2" ry="1.1" fill="#fff" opacity=".85" transform="rotate(-30 10.2 9.8)"/></svg>',
-    obed:'<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="17.6" rx="9.6" ry="3.6" fill="#AFBBCC"/><ellipse cx="12" cy="16.8" rx="9.6" ry="3.6" fill="url(#h3p)"/><ellipse cx="12" cy="16.6" rx="6" ry="2" fill="none" stroke="#C9D3E1" stroke-width=".8"/><g class="fork"><path d="M6.5 2.5v5.6a1.8 1.8 0 0 0 1.4 1.8V16M8 2.5v5M9.5 2.5v5.6a1.8 1.8 0 0 1-1.4 1.8" stroke="url(#h3st)" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M17 16V2.6c-2 1.4-3 3.6-3 6.4v2.6h3" fill="url(#h3st)" stroke="#8E9AAD" stroke-width=".6"/></g></svg>',
+    obed:'<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="18.6" rx="10" ry="3.6" fill="#9DAABD"/><ellipse cx="12" cy="17.8" rx="10" ry="3.6" fill="url(#h3p)"/><ellipse cx="12" cy="17.6" rx="6.4" ry="2.1" fill="#F4F7FB" stroke="#C3CDDB" stroke-width=".7"/><g class="fork"><path d="M6 1.8v5.8a2 2 0 0 0 1.6 2V17M7.6 1.8v5.2M9.2 1.8v5.8a2 2 0 0 1-1.6 2" stroke="#6E7B90" stroke-width="1.9" stroke-linecap="round" fill="none"/><path d="M6 1.8v5.8a2 2 0 0 0 1.6 2V17" stroke="#fff" stroke-width=".6" stroke-linecap="round" fill="none" opacity=".7"/><path d="M17.6 17V1.8c-2.3 1.6-3.4 4-3.4 7.2v2.8h3.4" fill="url(#h3st)" stroke="#6E7B90" stroke-width=".9" stroke-linejoin="round"/></g></svg>',
     vecer:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="sun"><g stroke="url(#h3r)" stroke-width="2.2" stroke-linecap="round"><path d="M12 3.6v2.4M4.4 7.4l1.7 1.7M19.6 7.4l-1.7 1.7M1.8 14.4h2.4M19.8 14.4h2.4"/></g><path d="M5.6 15a6.4 6.4 0 0 1 12.8 0z" fill="url(#h3o)"/><ellipse cx="9.8" cy="11.6" rx="1.7" ry=".9" fill="#fff" opacity=".8" transform="rotate(-25 9.8 11.6)"/></g><path d="M2.6 15.4h18.8" stroke="#C84A16" stroke-width="2" stroke-linecap="round"/><path d="M5.6 18.6h12.8M8.6 21.4h6.8" stroke="#E58A55" stroke-width="1.8" stroke-linecap="round"/></svg>',
     noc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M19.8 15A8.4 8.4 0 0 1 9 4.2a8.4 8.4 0 1 0 10.8 10.8z" fill="url(#h3m)"/><path d="M7.2 8.4a7 7 0 0 0 1.4 8.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".75"/><circle cx="9.2" cy="15" r="1" fill="#E3A82A" opacity=".6"/><circle cx="12.4" cy="18" r=".7" fill="#E3A82A" opacity=".6"/><path class="star" d="M17.2 2.6l.8 1.8 1.8.8-1.8.8-.8 1.8-.8-1.8-1.8-.8 1.8-.8zM21.2 8.4l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5z" fill="#FFC21A"/></svg>'
   };
@@ -1371,7 +1373,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const h=document.querySelector('[data-tog="'+k+'"]'); if(!h||h.getAttribute('aria-expanded')!=='true') return;
     const sec=h.closest('section,.block,.opened,.mlist')||h.parentElement;
     const icons=[...sec.querySelectorAll('.pillbox,.htile')].filter(p=>p.querySelector('.ic3')&&!h.contains(p)).filter(p=>{const r=p.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight-80}).slice(0,6);
-    icons.forEach((p,i)=>cascT.push(setTimeout(()=>{if(h.isConnected&&h.getAttribute('aria-expanded')==='true')goIcon(p)},2400+i*650)));
+    icons.forEach((p,i)=>cascT.push(setTimeout(()=>{if(h.isConnected&&h.getAttribute('aria-expanded')==='true')goIcon(p)},4000+i*700)));
   }
   document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-tog]');if(!b)return;const k=b.dataset.tog;openState[k]=!isOpen(k,b.dataset.def==='true');animKey=k;animLong=true;render();animKey=null;animLong=false;cascade(k)});
 
@@ -2856,19 +2858,23 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   resetForm();
   applyDiscreet(); applyTheme();
   init();
-  let lastTouch=Date.now(), lastIdle=null;
+  let lastTouch=Date.now(), lastIdle=null, idleBag=[];
   ['pointerdown','scroll','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{lastTouch=Date.now()},{passive:true,capture:true}));
   function idlePulse(){
-    const calm=!document.hidden&&!reduce()&&Date.now()-lastTouch>9000&&$('infoSheet').hidden&&$('quick').hidden&&($('form')?$('form').hidden:true)&&$('intro').hidden;
+    const calm=!document.hidden&&!reduce()&&Date.now()-lastTouch>6000&&$('infoSheet').hidden&&$('quick').hidden&&($('form')?$('form').hidden:true)&&$('intro').hidden;
     if(calm&&tab==='meds'){const r=[...document.querySelectorAll('#mlist .mr2 .pillbox')].filter(p=>{const b=p.getBoundingClientRect();return b.top>60&&b.bottom<innerHeight-100}).filter(p=>p!==lastIdle);
       if(r.length){lastIdle=r[Math.floor(Math.random()*r.length)];goIcon(lastIdle)}}
     if(calm&&tab==='today'){
-      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')].filter(e=>{const b=e.getBoundingClientRect();return b.top>0&&b.bottom<innerHeight-90&&e!==lastIdle&&!e.classList.contains('play')});
-      if(els.length){const el=els[Math.floor(Math.random()*els.length)];lastIdle=el;void el.offsetWidth;el.classList.add('play');setTimeout(()=>el.classList.remove('play'),3200)}
+      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')].filter(e=>{const b=e.getBoundingClientRect();return b.top>0&&b.bottom<innerHeight-90});
+      if(els.length){
+        if(!idleBag.length||idleBag.every(e=>!els.includes(e))){idleBag=els.slice().sort(()=>Math.random()-.5);if(idleBag[0]===lastIdle&&idleBag.length>1)idleBag.push(idleBag.shift())}
+        let el=idleBag.shift(); while(el&&!els.includes(el)) el=idleBag.shift();
+        if(el){lastIdle=el;el.classList.remove('play','long');void el.offsetWidth;el.classList.add('play');setTimeout(()=>el.classList.remove('play'),3200)}
+      }
     }
-    setTimeout(idlePulse,9000+Math.random()*6000);
+    setTimeout(idlePulse,tab==='today'?6000:10000+Math.random()*5000);
   }
-  setTimeout(idlePulse,6000+Math.random()*3000);
+  setTimeout(idlePulse,6000);
 })();
 </script>
 
