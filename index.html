@@ -304,7 +304,10 @@ button,input,select{font:inherit;color:inherit}
 .go .fpair>span svg{animation:fd-tilt 1.1s ease-in-out .25s}
 @keyframes fd-hop{0%,100%{transform:none}30%{transform:translateY(-7px) scale(1.06,.95)}55%{transform:translateY(0) scale(.96,1.04)}75%{transform:rotate(-6deg)}}
 @keyframes fd-tilt{0%,100%{transform:none}35%{transform:rotate(-16deg) translateY(-3px)}65%{transform:rotate(8deg)}}
-@media (prefers-reduced-motion: reduce){.go .fpair svg{animation:none}}
+.fpair .fshine{position:absolute;left:-8px;top:-6px;width:62px;height:62px;border-radius:17px;overflow:hidden;pointer-events:none}
+.fpair .fshine::after{content:"";position:absolute;left:-40px;top:-10px;width:16px;height:90px;background:#fff;opacity:0;transform:rotate(20deg)}
+.go .fpair .fshine::after{animation:ic-shine 1s ease-out .15s}
+@media (prefers-reduced-motion: reduce){.go .fpair svg,.go .fpair .fshine::after{animation:none}}
 @keyframes qb-in{from{opacity:0;transform:translate(-50%,60px) scale(.4)}to{opacity:1;transform:translate(-50%,0)}}
 @media (prefers-reduced-motion: reduce){.qb{animation:none;opacity:1}}
 .swhere{display:flex;background:var(--card2);border-radius:999px;padding:3px;flex:none}
@@ -1165,7 +1168,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v33</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v34</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2269,7 +2272,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const q=$('quick');
     if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
     const POS=[[13,64],[31,30],[50,3],[69,30],[87,64]];
-    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
+    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span><i class="fshine"></i></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
     $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
