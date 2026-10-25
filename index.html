@@ -321,8 +321,8 @@ button,input,select{font:inherit;color:inherit}
 .sctog:disabled{cursor:default;opacity:1}
 .sctog .stic{flex:none;color:var(--muted)}
 .sctog b{font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sctog span{color:var(--muted);font-weight:700;font-size:13px;white-space:nowrap}
-.sctog .chev{margin-left:auto;transition:transform .2s}.scard.closed .chev{transform:rotate(-90deg)}
-.scedit{flex:none;width:40px;height:40px;margin-right:6px;border:0;background:none;border-radius:50%;color:var(--muted);font-size:16px;cursor:pointer}
+.sctog .chev{margin-left:auto;margin-right:4px;color:var(--muted);transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.scedit{flex:none;width:40px;height:40px;margin-right:8px;border:0;background:var(--acc-soft);border-radius:50%;color:var(--acc-deep);display:grid;place-items:center;cursor:pointer;transition:transform .15s}.scedit:active{transform:scale(.92)}
 .scl .srow:first-child{border-top:1px solid var(--line)}
 .scadd{display:block;width:100%;border:0;border-top:1px dashed var(--line);background:none;text-align:left;padding:12px 14px;font:inherit;font-weight:800;font-size:14px;color:var(--acc-deep);cursor:pointer}
 .scl .srow+.scadd{border-top-style:dashed}
@@ -1199,7 +1199,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v40</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v41</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2997,7 +2997,7 @@ function food(k,size,col){
     const sec=(ic,title,rows,cls,extraH)=>'<div class="shaisle'+(cls?' '+cls:'')+'"><span class="ai">'+ic+'</span>'+title+(extraH||'')+'<span class="c">'+rows.length+'</span></div><div class="slist">'+rows.join('')+'</div>';
     const ST=extra.stores;
     const card=(st,name,list,got)=>{const id=st?st.id:'', cl=!!(st&&st.closed); got=got||[];
-      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(st?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(st?'<span class="chev">▾</span>':'')+'</button>'+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Upraviť obchod '+esc(name)+'">✎</button>':'')+'</div>'+
+      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(st?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(st?CHEV:'')+'</button>'+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Premenovať alebo odstrániť obchod '+esc(name)+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</div>'+
         (cl?'':'<div class="scl">'+kosHtml(got)+list.sort(byAisle).map(x=>rowHtml(x)).join('')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+'</section>'};
     ST.forEach(st=>{h+=card(st,st.n,open.filter(x=>x.s===st.id),done.filter(x=>x.s===st.id))});
     const free=open.filter(x=>!x.s), freeGot=done.filter(x=>!x.s);

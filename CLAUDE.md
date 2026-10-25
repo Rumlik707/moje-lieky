@@ -35,14 +35,15 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v40)
+## Nákup (stav pri v41)
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
 - Systémové Späť na Androide: zavrie detail veci, potom nákup; ak bol nákup otvorený z Rýchlo, vráti do Rýchlo (`history.pushState({ml:'shop'})`, `popstate`, `shopPop`, `shopFromQ`).
 - Rozloženie je variant B: obchody ako karty pod sebou.
   - Obchody si pomenúvam sám (`extra.stores` = `[{id,n,closed}]`). Vec patrí do obchodu cez pole `s`.
   - Veci bez obchodu sú v karte „Kdekoľvek“. Keď nemám žiadny obchod, karta sa volá „Nákup“.
 - Každá karta má „+ pridať do X“: nastaví `shopTarget` a vyhľadávanie potom pridáva do toho obchodu. Výber sa zruší chipom „X ×“ vo vyhľadávaní.
-- Karta sa dá zbaliť. Ceruzkou ✎ sa obchod premenuje alebo odstráni; veci z odstráneného obchodu ostanú, len bez obchodu.
+- Karta sa dá zbaliť. Kváčka (`CHEV`, ako v Zásobách) ukazuje ˄ pri otvorenom a ˅ pri zbalenom obchode, nikdy nie doprava na ceruzku.
+- Ceruzka (návrh A, v41): modrá SVG ceruzka v jemnom modrom krúžku (`.scedit`). Ňou sa obchod premenuje alebo odstráni; veci z odstráneného obchodu ostanú, len bez obchodu.
 - Na konci zoznamu je „+ Nový obchod“.
 - V karte sa veci radia automaticky podľa oddelení (`AISLES`, `AIDX`, `CAT`, `guessAisle`).
 - Košík (návrh C, v40): zaškrtnutá vec sa presunie do zeleného pásu „🛒 V košíku · N“ hore v karte svojho obchodu ako okrúhla ikonka s fajočkou (`kosHtml`, trieda `.kchip`, `data-kb`). Hlavička obchodu ukazuje „3 z 7 v košíku“.
