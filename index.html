@@ -296,12 +296,15 @@ button,input,select{font:inherit;color:inherit}
 .qb:active .o{transform:scale(.9)}
 .qb b{font-size:14px;font-weight:800}.qb small{font-size:11.5px;font-weight:700;color:var(--muted)}
 .qb.hot .o{background:radial-gradient(circle at 35% 30%,#FFF8EC,#FFE0B0);box-shadow:0 0 0 3px #FFB547,0 16px 30px -12px rgba(233,140,20,.6)}
+:root[data-theme=dark] .qb.hot .o{background:var(--card);box-shadow:0 0 0 2px rgba(255,181,71,.55),0 14px 26px -14px rgba(0,0,0,.6)}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .qb.hot .o{background:var(--card);box-shadow:0 0 0 2px rgba(255,181,71,.55),0 14px 26px -14px rgba(0,0,0,.6)}}
 .fpair{position:relative;display:grid;place-items:center}.fpair>span{position:absolute;right:-14px;bottom:-6px}
 @keyframes qb-in{from{opacity:0;transform:translate(-50%,60px) scale(.4)}to{opacity:1;transform:translate(-50%,0)}}
 @media (prefers-reduced-motion: reduce){.qb{animation:none;opacity:1}}
 .shback{position:fixed;inset:0;z-index:32;background:rgba(10,20,40,.42);animation:q-fade .25s ease-out}
 .shpanel{position:fixed;left:0;right:0;bottom:0;top:max(28px,env(safe-area-inset-top,0px));margin:0 auto;max-width:560px;z-index:33;background:var(--bg);border-radius:28px 28px 0 0;display:flex;flex-direction:column;box-shadow:0 -18px 40px -18px rgba(10,20,40,.45);animation:sh-up .38s cubic-bezier(.22,1,.36,1);overflow:hidden}
-.shtop{display:flex;align-items:center;gap:12px;padding:16px 16px 8px}
+.shtop{display:flex;align-items:center;gap:8px;padding:16px 14px 8px}
+.shbtn{display:inline-flex;align-items:center;gap:5px;padding-left:12px;padding-right:13px;flex:none}
 .shring{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;flex:none;transition:background .4s}
 .shring span{width:40px;height:40px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
 .shtt{flex:1;min-width:0}.shtt h2{margin:0;font-family:var(--f-display);font-size:24px;font-weight:800}.shtt span{display:block;font-size:13px;font-weight:600;color:var(--muted)}
@@ -1133,7 +1136,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v29</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v30</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1150,8 +1153,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   <div class="shtop">
     <div class="shring" id="shRing"><span id="shRingT">0/0</span></div>
     <div class="shtt"><h2 id="shopTitle">Nákup</h2><span id="shHint"></span></div>
-    <button type="button" class="btn pri sm" id="shopShare">Poslať</button>
-    <button type="button" class="x" id="shopClose" aria-label="Zavrieť">×</button>
+    <button type="button" class="btn ghost sm shbtn" id="shopShare"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v12M7 8l5-5 5 5"/></svg>Poslať</button>
+    <button type="button" class="btn pri sm shbtn" id="shopClose"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Uložiť</button>
   </div>
   <form class="shsearch" id="shopForm" autocomplete="off"><span aria-hidden="true">🔍</span><label class="sr" for="shopIn">Čo treba kúpiť</label><input id="shopIn" type="search" placeholder="Čo treba kúpiť? napr. paprika" maxlength="60" enterkeyhint="done"></form>
   <div class="shbody" id="shopBody"></div>
@@ -2903,7 +2906,7 @@ function food(k,size,col){
     const total=open.length+cart.length+auto.length, got=cart.length;
     $('shRing').style.background='conic-gradient(var(--ok) 0 '+(total?got*100/total:0)+'%,var(--line) 0 100%)';
     $('shRingT').textContent=got+'/'+total;
-    $('shHint').textContent=total?(open.length+auto.length?'ťuk = do košíka · podrž = upraviť':'Všetko v košíku ✓'):'Pridaj, čo treba kúpiť';
+    $('shHint').textContent=total?(open.length+auto.length?'ťuk = košík · podrž = úprava':'Všetko v košíku ✓'):'Pridaj, čo treba kúpiť';
     const B=$('shopBody');
     if(shopQ){B.innerHTML=renderSearch();bindSearch();return}
     let h='';
@@ -2992,7 +2995,7 @@ function food(k,size,col){
   $('shopForm').addEventListener('submit',e=>{e.preventDefault();const t=shopQ.trim();if(!t)return;const q=fold(t);const c=CAT.find(c=>fold(c[0])===q)||CAT.filter(c=>fold(c[0]+' '+(c[6]||'')).includes(q))[0];
     if(c&&fold(c[0])===q){shopPut({t:c[0],a:c[1]})}else{const g=guessAisle(t);shopPut({t:t.charAt(0).toUpperCase()+t.slice(1),a:g?g[1]:'ine'})}
     shopQ='';$('shopIn').value='';renderShop()});
-  $('shopClose').onclick=closeShop; $('shopBack').onclick=closeShop; $('shDetBack').onclick=closeShopDet;
+  $('shopClose').onclick=()=>{const n=extra.shop.filter(x=>!x.done).length;saveExtra();closeShop();buzz(12);toast(n?'Nákup uložený · '+(n===1?'1 vec':n<5?n+' veci':n+' vecí'):'Nákup uložený')}; $('shopBack').onclick=closeShop; $('shDetBack').onclick=closeShopDet;
   $('shopBtn').onclick=()=>openShop(false);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('shDet').hidden)closeShopDet();else if(!$('shopSheet').hidden)closeShop()}});
   $('shopShare').onclick=()=>{
