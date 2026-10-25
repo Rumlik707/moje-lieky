@@ -110,10 +110,11 @@ button,input,select{font:inherit;color:inherit}
 .ring .rbg{stroke:var(--acc-soft)}
 .tab.home .nb{top:2px;left:calc(50% + 14px)}
 .tab.home .nb.dot{top:8px;left:calc(50% + 20px)}
-.tab.plus svg .px{transform-origin:12px 12px;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.tab.plus svg .px,.tab.plus svg .bolt{transform-origin:12px 12px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s}
+.tab.plus svg .px{opacity:0;transform:rotate(-90deg) scale(.4)}
 .tab.plus[aria-expanded=true]{color:var(--acc-deep)}
-.tab.plus[aria-expanded=true] svg .px{transform:rotate(135deg)}
-@media (prefers-reduced-motion: reduce){.nb,.nb.pop,.nb.bad:not(.gone){animation:none;transition:none}.tab.home .hb,.tab.plus svg .px{transition:none}}
+.tab.plus[aria-expanded=true] svg .px{opacity:1;transform:none}.tab.plus[aria-expanded=true] svg .bolt{opacity:0;transform:scale(.4)}
+@media (prefers-reduced-motion: reduce){.nb,.nb.pop,.nb.bad:not(.gone){animation:none;transition:none}.tab.home .hb,.tab.plus svg .px,.tab.plus svg .bolt{transition:none}}
 .badge{position:absolute;top:4px;left:calc(50% + 12px);width:11px;height:11px;border-radius:50%;background:var(--warn);border:2px solid var(--card)}
 .vhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
 .achips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -1168,7 +1169,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v34</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v35</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1176,7 +1177,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   <button type="button" class="tab" data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><text id="calDay" data-calday="1" x="12" y="18.6" text-anchor="middle" font-size="8.6" font-weight="800" fill="currentColor" stroke="none" font-family="inherit">1</text></svg><span>Kalendár</span><i class="nb" id="nbWeek" hidden></i></button>
   <button type="button" class="tab" data-tab="meds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8L12 3.8 20.5 8v8.6L12 20.8 3.5 16.6z"/><path d="M3.5 8L12 12.2 20.5 8M12 12.2v8.6M7.8 5.9l8.4 4.2"/></svg><span>Zásoby</span><i class="nb" id="nbStock" hidden></i></button>
   <button type="button" class="tab home" data-tab="today" aria-current="page"><span class="hw"><svg class="ring" id="dayRing" viewBox="0 0 70 70" aria-hidden="true" hidden><circle cx="35" cy="35" r="32" class="rbg"/><circle cx="35" cy="35" r="32" class="rfg" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 35 35)"/></svg><span class="hb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.6V19a1.5 1.5 0 0 0 1.5 1.5h3.5v-5.5h3v5.5H17a1.5 1.5 0 0 0 1.5-1.5V9.6"/></svg></span><i class="nb" id="nbToday" hidden></i></span><span>Dnes</span></button>
-  <button type="button" class="tab plus" id="plusTab" aria-label="Pridať" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="6"/><path class="px" d="M12 8v8M8 12h8"/></svg><span>Pridať</span></button>
+  <button type="button" class="tab plus" id="plusTab" aria-label="Rýchlo: pridať alebo pozrieť nákup" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="bolt" d="M13.4 2.5L5.5 13.6h5.6L9.7 21.5l8-11.1h-5.6z"/><path class="px" d="M7 7l10 10M17 7L7 17"/></svg><span>Rýchlo</span></button>
   <button type="button" class="tab" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Viac</span><i class="nb" id="nbMore" hidden></i></button>
 </nav>
 <div class="iback" id="infoBack" hidden></div>
@@ -3117,7 +3118,7 @@ function food(k,size,col){
 
   /* ---------- intro ---------- */
   const INTRO=[
-    {t:'Všetko na jednom mieste',p:'Lieky, kvapky, kozmetika aj veci na výmenu. Pridáš ich tlačidlom Pridať v lište dole.',art:()=>'<div class="ia-row">'+[['tab','#2D6BE4'],['drop','#1FA3B8'],['pump','#D9658C'],['ebrush','#6E66E0']].map(x=>'<span>'+pillSvg(x[0],x[1],38)+'</span>').join('')+'</div>'},
+    {t:'Všetko na jednom mieste',p:'Lieky, kvapky, kozmetika aj veci na výmenu. Pridáš ich tlačidlom Rýchlo ⚡ v lište dole, tam je aj Nákup.',art:()=>'<div class="ia-row">'+[['tab','#2D6BE4'],['drop','#1FA3B8'],['pump','#D9658C'],['ebrush','#6E66E0']].map(x=>'<span>'+pillSvg(x[0],x[1],38)+'</span>').join('')+'</div>'},
     {t:'Odklikni, keď užiješ',p:'Na obrazovke Dnes ťukni na liek, keď ho užiješ. Zelený krúžok okolo domčeka ukáže, koľko máš za sebou.',art:()=>'<svg width="120" height="120" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="32" fill="none" stroke="var(--card)" stroke-width="4"/><circle cx="35" cy="35" r="32" fill="none" stroke="var(--ok)" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="70 100" transform="rotate(-90 35 35)"><animate attributeName="stroke-dasharray" from="0 100" to="70 100" dur="1.4s" fill="freeze"/></circle><circle cx="35" cy="35" r="25" fill="#2D6BE4"/><g transform="translate(23 23)" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.6V19a1.5 1.5 0 0 0 1.5 1.5h3.5v-5.5h3v5.5H17a1.5 1.5 0 0 0 1.5-1.5V9.6"/></g></svg>'},
     {t:'Appka stráži zásoby',p:'Upozorní ťa, keď treba dokúpiť, vymeniť alebo spotrebovať. Číslo na lište ukáže, kde treba niečo riešiť.',art:()=>'<div style="position:relative"><svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8L12 3.8 20.5 8v8.6L12 20.8 3.5 16.6z" fill="var(--card)"/><path d="M3.5 8L12 12.2 20.5 8M12 12.2v8.6M7.8 5.9l8.4 4.2"/></svg><i class="nb warn pop" style="top:2px;left:auto;right:-6px">2</i></div>'}
   ];
