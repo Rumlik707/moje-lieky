@@ -198,7 +198,7 @@ button,input,select{font:inherit;color:inherit}
 .med.future{cursor:default}
 .med.future .chk{border-style:dashed}
 .med:active{transform:scale(.985)}
-.pillbox{flex:none;width:38px;height:38px;display:grid;place-items:center}
+.pillbox{flex:none;min-width:38px;min-height:38px;display:grid;place-items:center}
 .med-t{flex:1;min-width:0}
 .med-n{font-weight:800;overflow-wrap:anywhere}
 .med-s{font-size:13px;color:var(--muted)}
@@ -427,6 +427,15 @@ button,input,select{font:inherit;color:inherit}
 .pillbox .ic3,.ipill .ic3,.qi .ic3{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
 .pillbox:active .ic3{transform:scale(.92)}
 @media (prefers-reduced-motion: reduce){.ic3 *{animation:none!important}}
+.hico,:root .hico{background:none!important;box-shadow:none!important;width:34px;height:34px;filter:drop-shadow(0 1.5px 1.5px rgba(15,35,75,.25))}
+.hico svg{width:30px!important;height:30px!important}
+.hico.sm{width:28px;height:28px}.hico.sm svg{width:23px!important;height:23px!important}
+.hico.xs{width:22px;height:22px}.hico.xs svg{width:19px!important;height:19px!important}
+.ipill,:root .ipill{background:none!important}
+.hero-pill,:root .hero-pill{background:rgba(255,255,255,.18)!important;border-radius:50%!important}
+.htile,:root .htile{background:rgba(255,255,255,.2)!important;border-radius:50%!important}
+.hero-pill .ic3,.htile .ic3{filter:drop-shadow(0 3px 4px rgba(10,25,60,.35))}
+.ipill .ic3{width:64px;height:64px}
 .msearch{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:0 12px;margin:0 0 6px;color:var(--muted)}
 .msearch input{flex:1;border:0;background:transparent;min-height:46px;font:inherit;font-size:16px;color:var(--ink);outline:none}
 .msearch:focus-within{border-color:var(--acc)}
@@ -1055,7 +1064,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v24</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v25</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1246,8 +1255,17 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
 
   /* ---------- premium tile wrapper + more recognizable shapes ---------- */
+  let TILE='none';
+  function tileBg(u,c){
+    if(TILE==='none') return '';
+    if(TILE==='circle') return '<circle cx="32" cy="32" r="30" fill="'+shd(c,.86)+'"/>';
+    if(TILE==='soft') return '<rect x="2" y="2" width="60" height="60" rx="20" fill="'+shd(c,.88)+'"/><rect x="2" y="2" width="60" height="60" rx="20" fill="url(#'+u+'tl)" opacity=".35"/>';
+    if(TILE==='jar') return '<rect x="1" y="1" width="62" height="62" rx="17" fill="url(#'+u+'tl)"/><path d="M8 2.2h48" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/><rect x="1" y="1" width="62" height="62" rx="17" fill="none" stroke="'+shd(c,.55)+'" stroke-opacity=".55" stroke-width="1"/>';
+    return '<rect x="2" y="2" width="60" height="60" rx="18" fill="'+shd(c,.88)+'"/>';
+  }
   function pillSvg(shape,c,size,st){
     st=st||{}; size=size||30; c=c||'#2D6BE4';
+    if(size<=28&&(shape==='tab'||shape==='cap'||!shape)) return pillOld(shape||'tab',c,size,st);
     const u='t'+(++_pid), lvl=st.lvl==null?1:Math.max(0,Math.min(1,st.lvl));
     const hi=shd(c,.6), lo=shd(c,-.3), dk=shd(c,-.5);
     let inner='';
@@ -1265,7 +1283,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         pk+='<ellipse cx="'+x+'" cy="'+(y+1.4)+'" rx="6.6" ry="6.2" fill="rgba(60,75,100,.25)"/>'+
           (has?'<ellipse cx="'+x+'" cy="'+y+'" rx="5" ry="4.6" fill="url(#'+u+'pl)"/><path d="M'+(x-4)+' '+(y+.3)+'h8" stroke="'+lo+'" stroke-width="1" stroke-linecap="round"/>'+
             '<ellipse cx="'+x+'" cy="'+y+'" rx="6.4" ry="6" fill="url(#'+u+'dm)" stroke="#fff" stroke-width=".6"/><ellipse cx="'+(x-2.2)+'" cy="'+(y-2.4)+'" rx="2" ry="1.1" fill="#fff" opacity=".95" transform="rotate(-30 '+(x-2.2)+' '+(y-2.4)+')"/>'
-          :'<ellipse cx="'+x+'" cy="'+y+'" rx="5.4" ry="5" fill="#4E5A6C"/><ellipse cx="'+x+'" cy="'+(y+1)+'" rx="4.2" ry="3.4" fill="#39444F"/><path d="M'+(x-5.4)+' '+y+'q1.6-3.6 4.4-1.8M'+(x+5.2)+' '+(y-.6)+'q-1.4 3.8-4.6 2.6" stroke="#E8EDF3" stroke-width="1.6" fill="none" stroke-linecap="round"/>');}
+          :'<ellipse cx="'+x+'" cy="'+y+'" rx="5.6" ry="5.2" fill="#DCE3EC"/><ellipse cx="'+x+'" cy="'+(y+.8)+'" rx="4.4" ry="3.6" fill="#C5CFDC"/><path d="M'+(x-4.6)+' '+(y-1.4)+'q2-2.6 5.2-1.6" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>'+
+            '<path d="M'+(x-5.8)+' '+(y-1)+'l1.6.6-.4-1.8 1.8.8.4-1.8 1.2 1.4 1.2-1.6.6 1.8 1.8-1-.2 1.8 1.6.2" stroke="#9AA6B6" stroke-width=".7" fill="#EEF2F7" stroke-linejoin="round"/>');}
       inner='<g class="a-body"><g transform="rotate(-10 32 32)"><rect x="7" y="13" width="50" height="38" rx="6" fill="#8B96A8" transform="translate(0 1.6)"/><rect x="7" y="13" width="50" height="38" rx="6" fill="url(#'+u+'fo)"/>'+
         '<path d="M8 32h48" stroke="#9AA5B5" stroke-width=".7" stroke-dasharray="1.6 1.4"/><path d="M24.5 14v36M39.5 14v36" stroke="#AEB8C6" stroke-width=".5"/>'+pk+
         '<path d="M10 15.5h44" stroke="#fff" stroke-width="1.2" opacity=".8"/></g></g>';
@@ -1295,8 +1314,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     }
     const m=inner.match(/^<defs>[\s\S]*?<\/defs>/); const defs=m?m[0]:''; if(m) inner=inner.slice(m[0].length);
     return '<svg class="ic3 ic-'+shape+'" width="'+size+'" height="'+size+'" viewBox="0 0 64 64" aria-hidden="true">'+G+defs+
-      '<rect x="1" y="1" width="62" height="62" rx="17" fill="url(#'+u+'tl)"/><path d="M8 2.2h48" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/><rect x="1" y="1" width="62" height="62" rx="17" fill="none" stroke="'+shd(c,.55)+'" stroke-opacity=".55" stroke-width="1"/>'+
-      '<g filter="url(#'+u+'ds)" transform="translate(4.5 3.5) scale(.86)">'+inner+'</g>'+
+      tileBg(u,c)+
+      '<g filter="url(#'+u+'ds)"'+(TILE==='none'?' transform="translate(1 0) scale(.97)"':' transform="translate(4.5 3.5) scale(.86)"')+'>'+inner+'</g>'+
       '<clipPath id="'+u+'tc"><rect x="1" y="1" width="62" height="62" rx="17"/></clipPath><g clip-path="url(#'+u+'tc)"><rect class="a-shine" x="-40" y="-10" width="16" height="90" fill="#fff" opacity=".0" transform="rotate(20 32 32)"/></g></svg>';
   }
 
@@ -1333,15 +1352,17 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   document.addEventListener('focusout',e=>{const t=e.target;if(t.classList&&t.classList.contains('tm')&&t.value){const n=normTime(t.value);if(n!==t.value){t.value=n;t.dispatchEvent(new Event('input',{bubbles:true}))}}});
   document.addEventListener('focusin',e=>{const t=e.target;if(t.classList&&t.classList.contains('tm'))setTimeout(()=>{try{t.select()}catch(_){}},30)});
   const cdFmt=m=>m<60?'<1h':Math.round(m/60)+'h';
+  const H3D='<defs><radialGradient id="h3s" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".45" stop-color="#FFC52E"/><stop offset="1" stop-color="#E08600"/></radialGradient><linearGradient id="h3r" x1="0" x2="1"><stop offset="0" stop-color="#FFB800"/><stop offset="1" stop-color="#FF8A00"/></linearGradient><radialGradient id="h3o" cx=".4" cy=".25" r=".9"><stop offset="0" stop-color="#FFE0B0"/><stop offset=".45" stop-color="#FF8A3D"/><stop offset="1" stop-color="#C84A16"/></radialGradient><radialGradient id="h3m" cx=".3" cy=".3" r=".9"><stop offset="0" stop-color="#FFF6D6"/><stop offset=".5" stop-color="#FFD66B"/><stop offset="1" stop-color="#D99A1E"/></radialGradient><radialGradient id="h3d" cx=".35" cy=".35" r=".8"><stop offset="0" stop-color="#B8F2FA"/><stop offset=".45" stop-color="#2CC3DA"/><stop offset="1" stop-color="#0E7F96"/></radialGradient><linearGradient id="h3a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6FA0FF"/><stop offset="1" stop-color="#2450C8"/></linearGradient><radialGradient id="h3p" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#EEF2F8"/><stop offset="1" stop-color="#BFCADB"/></radialGradient><linearGradient id="h3st" x1="0" x2="1"><stop offset="0" stop-color="#8E9AAD"/><stop offset=".4" stop-color="#F4F7FB"/><stop offset="1" stop-color="#8E9AAD"/></linearGradient><radialGradient id="h3v" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#E6E3FF"/><stop offset=".55" stop-color="#8F88F0"/><stop offset="1" stop-color="#4B44B8"/></radialGradient></defs>';
+  document.body.insertAdjacentHTML('afterbegin','<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">'+H3D+'</svg>');
   const BADGE_ICO={
-    rano:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="rays" stroke="#F2A900" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g><circle cx="12" cy="12" r="5.2" fill="#FFC21A" stroke="#F2A900" stroke-width="1.2"/></svg>',
-    obed:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="fork" fill="none" stroke="#2D6BE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 2 2v9M9 3v6M11 3v7a2 2 0 0 1-2 2"/><path d="M17 21V3c-2 1.5-3 4-3 7v3h3"/></g></svg>',
-    vecer:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="sun"><g stroke="#E0662A" stroke-width="2.2" stroke-linecap="round"><path d="M12 4.5v2.4M4.6 8.2l1.7 1.7M19.4 8.2l-1.7 1.7M2 15h2.4M19.6 15h2.4"/></g><path d="M6.5 15a5.5 5.5 0 0 1 11 0z" fill="#F57C3A"/></g><path d="M3 15h18M6 18.5h12" stroke="#B4441E" stroke-width="2" stroke-linecap="round"/></svg>',
-    noc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M19.5 14.8A8 8 0 0 1 9.2 4.5a8 8 0 1 0 10.3 10.3z" fill="#2B4A8F"/><path class="star" d="M17.2 2.8l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7zM21 8.5l.4.9.9.4-.9.4-.4.9-.4-.9-.9-.4.9-.4z" fill="#FFC21A"/></svg>'
+    rano:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="rays" stroke="url(#h3r)" stroke-width="2.4" stroke-linecap="round"><path d="M12 1.6v2.6M12 19.8v2.6M1.6 12h2.6M19.8 12h2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g><circle cx="12" cy="12" r="5.8" fill="url(#h3s)"/><ellipse cx="10.2" cy="9.8" rx="2" ry="1.1" fill="#fff" opacity=".85" transform="rotate(-30 10.2 9.8)"/></svg>',
+    obed:'<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="17.6" rx="9.6" ry="3.6" fill="#AFBBCC"/><ellipse cx="12" cy="16.8" rx="9.6" ry="3.6" fill="url(#h3p)"/><ellipse cx="12" cy="16.6" rx="6" ry="2" fill="none" stroke="#C9D3E1" stroke-width=".8"/><g class="fork"><path d="M6.5 2.5v5.6a1.8 1.8 0 0 0 1.4 1.8V16M8 2.5v5M9.5 2.5v5.6a1.8 1.8 0 0 1-1.4 1.8" stroke="url(#h3st)" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M17 16V2.6c-2 1.4-3 3.6-3 6.4v2.6h3" fill="url(#h3st)" stroke="#8E9AAD" stroke-width=".6"/></g></svg>',
+    vecer:'<svg viewBox="0 0 24 24" aria-hidden="true"><g class="sun"><g stroke="url(#h3r)" stroke-width="2.2" stroke-linecap="round"><path d="M12 3.6v2.4M4.4 7.4l1.7 1.7M19.6 7.4l-1.7 1.7M1.8 14.4h2.4M19.8 14.4h2.4"/></g><path d="M5.6 15a6.4 6.4 0 0 1 12.8 0z" fill="url(#h3o)"/><ellipse cx="9.8" cy="11.6" rx="1.7" ry=".9" fill="#fff" opacity=".8" transform="rotate(-25 9.8 11.6)"/></g><path d="M2.6 15.4h18.8" stroke="#C84A16" stroke-width="2" stroke-linecap="round"/><path d="M5.6 18.6h12.8M8.6 21.4h6.8" stroke="#E58A55" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    noc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M19.8 15A8.4 8.4 0 0 1 9 4.2a8.4 8.4 0 1 0 10.8 10.8z" fill="url(#h3m)"/><path d="M7.2 8.4a7 7 0 0 0 1.4 8.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".75"/><circle cx="9.2" cy="15" r="1" fill="#E3A82A" opacity=".6"/><circle cx="12.4" cy="18" r=".7" fill="#E3A82A" opacity=".6"/><path class="star" d="M17.2 2.6l.8 1.8 1.8.8-1.8.8-.8 1.8-.8-1.8-1.8-.8 1.8-.8zM21.2 8.4l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5z" fill="#FFC21A"/></svg>'
   };
-  const OSTICO='<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="nsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8F88F0"/><stop offset="1" stop-color="#5B53D6"/></linearGradient></defs><g class="opk"><g transform="rotate(16 15 7)"><rect x="13.8" y="3.6" width="2.4" height="9" rx="1.2" fill="#E98DBA"/><rect x="13.3" y="1" width="3.4" height="4" rx="1.2" fill="#fff" stroke="#AEBBCD" stroke-width=".6"/><path d="M14.3 1.8v2.4M15 1.8v2.4M15.7 1.8v2.4" stroke="#E98DBA" stroke-width=".6" stroke-linecap="round"/></g></g><g class="obag"><rect x="3" y="10" width="18" height="11.8" rx="3.4" fill="url(#nsg)"/><rect x="3" y="10" width="18" height="3.6" rx="1.8" fill="#4B4FC9"/><path d="M5.6 11.8h11" stroke="#fff" stroke-width=".9" stroke-dasharray="1 1" opacity=".65"/><circle cx="18.4" cy="11.8" r="1.25" fill="#F6C343"/><rect x="17.8" y="12.4" width="1.2" height="2.8" rx=".6" fill="#F6C343"/><path d="M12 15.6v3.6M10.2 17.4h3.6" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M5.4 15.6v3.4" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity=".35"/></g></svg>';
-  const SWAPICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="swap" fill="none" stroke="#2D6BE4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8a8.5 8.5 0 0 0-15.2-2.6M4 3.5V7h3.5"/><path d="M4 16a8.5 8.5 0 0 0 15.2 2.6M20 20.5V17h-3.5"/></g><circle cx="12" cy="12" r="3" fill="#7C74EA"/></svg>';
-  const NEEDICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="drip"><path d="M12 3c3.2 4.2 6 7.3 6 10.6a6 6 0 0 1-12 0C6 10.3 8.8 7.2 12 3z" fill="#26B5CC"/><path d="M9.6 14a2.6 2.6 0 0 0 1.8 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></g></svg>';
+  const OSTICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="opk"><g transform="rotate(16 15 7)"><rect x="13.8" y="3.6" width="2.4" height="9" rx="1.2" fill="#E98DBA"/><rect x="13.3" y="1" width="3.4" height="4" rx="1.2" fill="#fff" stroke="#AEBBCD" stroke-width=".6"/></g></g><g class="obag"><rect x="3" y="10" width="18" height="12" rx="3.6" fill="url(#h3v)"/><rect x="3" y="10" width="18" height="3.8" rx="1.9" fill="#5148C9"/><path d="M5.6 12h11" stroke="#fff" stroke-width=".9" stroke-dasharray="1 1" opacity=".65"/><circle cx="18.4" cy="12" r="1.3" fill="#F6C343"/><path d="M12 15.6v3.8M10.1 17.5h3.8" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><ellipse cx="7" cy="16" rx=".9" ry="2.6" fill="#fff" opacity=".45"/></g></svg>';
+  const SWAPICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="swap" fill="none" stroke="url(#h3a)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8a8.5 8.5 0 0 0-15.2-2.6M4 3.2V7h3.8"/><path d="M4 16a8.5 8.5 0 0 0 15.2 2.6M20 20.8V17h-3.8"/></g><circle cx="12" cy="12" r="3.4" fill="url(#h3v)"/><circle cx="11" cy="11" r="1" fill="#fff" opacity=".8"/></svg>';
+  const NEEDICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="drip"><path d="M12 2.6c3.4 4.4 6.4 7.6 6.4 11.2a6.4 6.4 0 0 1-12.8 0C5.6 10.2 8.6 7 12 2.6z" fill="url(#h3d)"/><path d="M9.2 13.6a3 3 0 0 0 2 3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".9"/><circle cx="10" cy="9.6" r="1" fill="#fff" opacity=".85"/></g></svg>';
   const CHEV='<svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-tog]');if(!b)return;const k=b.dataset.tog;openState[k]=!isOpen(k,b.dataset.def==='true');animKey=k;animLong=true;render();animKey=null;animLong=false});
 
@@ -1688,7 +1709,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
           const sub=[i.t?'o '+i.t:'',m.per>1?m.per+' '+ks(m.per):'',m.dose,m.days?durText(m):''].filter(Boolean).join(' · ');
           const sst=stockShort(m);
           const ord=needsOrder(m);
-          const btn='<button type="button" class="med'+(t?' taken':'')+(fut?' future':'')+'" data-key="'+key+'" '+(fut?'aria-disabled="true"':'aria-pressed="'+(!!t)+'"')+'><span class="pillbox">'+picM(m,32)+'</span><span class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span>'+(ord?' <span class="ordtag">objednať</span>':'')+'</div>'+(sub?'<div class="med-s">'+esc(sub)+'</div>':'')+(sst?'<div class="med-stock'+(ord?' warn':'')+'">'+esc(sst)+'</div>':'')+'</span>'+(t?'<span class="med-time">'+esc(t)+'</span>':skipped(log,m,i.k)?'<span class="med-skip">vynechané</span>':'')+'<span class="chk">'+CHECK+'</span></button>';
+          const btn='<button type="button" class="med'+(t?' taken':'')+(fut?' future':'')+'" data-key="'+key+'" '+(fut?'aria-disabled="true"':'aria-pressed="'+(!!t)+'"')+'><span class="pillbox">'+picM(m,42)+'</span><span class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span>'+(ord?' <span class="ordtag">objednať</span>':'')+'</div>'+(sub?'<div class="med-s">'+esc(sub)+'</div>':'')+(sst?'<div class="med-stock'+(ord?' warn':'')+'">'+esc(sst)+'</div>':'')+'</span>'+(t?'<span class="med-time">'+esc(t)+'</span>':skipped(log,m,i.k)?'<span class="med-skip">vynechané</span>':'')+'<span class="chk">'+CHECK+'</span></button>';
           return '<div class="rowx">'+btn+(fut||t?'':'<button type="button" class="tbtn" data-tk="'+key+'" aria-label="Zadať čas užitia pre '+esc(m.name)+'" title="Užil som skôr">'+CLOCK+'</button>')+'</div>';
         }).join('')+'</div></section>';
     }).join('')+'</div>';
@@ -1719,7 +1740,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const coAll=meds.filter(isCos);
     const needRow=m=>{
       const ent=extra.prn.filter(p=>p.m===m.id&&p.t.slice(0,10)===sel).sort((a,b)=>a.t<b.t?-1:1);
-      let r='<div class="ord wk-row"><span class="pillbox">'+picM(m,34)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div class="wk-times">'+(ent.length?ent.map(p=>'<span class="wk-chip">'+p.t.slice(11)+'<button type="button" class="wk-x" data-wkdel="'+p.id+'" aria-label="Zmazať záznam o '+p.t.slice(11)+'">×</button></span>').join(''):'<span class="note">v tento deň nič</span>')+'</div></div>';
+      let r='<div class="ord wk-row"><span class="pillbox">'+picM(m,40)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div class="wk-times">'+(ent.length?ent.map(p=>'<span class="wk-chip">'+p.t.slice(11)+'<button type="button" class="wk-x" data-wkdel="'+p.id+'" aria-label="Zmazať záznam o '+p.t.slice(11)+'">×</button></span>').join(''):'<span class="note">v tento deň nič</span>')+'</div></div>';
       if(wkAdd===m.id) r+='<div class="wk-add"><label class="sr" for="wkT">Čas</label><input id="wkT" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" value="'+(sel===today?nowHM():'12:00')+'"><button type="button" class="btn pri sm" id="wkSave" data-m="'+m.id+'">Uložiť</button><button type="button" class="btn ghost sm" id="wkCancel">Zrušiť</button></div>';
       else r+='<button type="button" class="btn ghost sm" data-wkadd="'+m.id+'">+ '+actLabel(m)+'</button>';
       return r+'</div>';
@@ -1727,7 +1748,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const swRow=m=>{
       const swap=m.kind==='swap'&&!isCos(m);
       const was=extra.sw.some(e=>e.m===m.id&&e.d===sel);
-      return '<div class="ord wk-row"><span class="pillbox">'+picM(m,34)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div>'+(was?(swap?'vymenené v tento deň ✓':'otvorené v tento deň ✓'):(m.opened?(swap?'naposledy vymenené ':'otvorené ')+nice(m.opened):'zatiaľ bez dátumu'))+'</div></div>'+
+      return '<div class="ord wk-row"><span class="pillbox">'+picM(m,40)+'</span><div class="t" data-winfo="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(nm(m))+'</span></div><div>'+(was?(swap?'vymenené v tento deň ✓':'otvorené v tento deň ✓'):(m.opened?(swap?'naposledy vymenené ':'otvorené ')+nice(m.opened):'zatiaľ bez dátumu'))+'</div></div>'+
         (was?'<button type="button" class="btn ghost sm" data-wkun="'+m.id+'">Zrušiť</button>':'<button type="button" class="btn ghost sm" data-wksw="'+m.id+'">'+(swap?'Vymenil som v tento deň':'Otvoril som v tento deň')+'</button>')+'</div>';
     };
     const groups=[
@@ -1795,7 +1816,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       list.map(m=>{
         const i=stockInfo(m)||{};
         const why=m.kind==='swap'&&m.left>0&&supplyInfo(m)?'posledná '+(isCos(m)?'zásoba':'náhradná')+' vydrží do '+nice(supplyInfo(m).end)+', objednaj včas':isCos(m)?'nemáš ďalšie balenie':m.kind==='swap'?'nemáš náhradné, kúp nové':byBottle(m)?'doma už nie je ďalšia '+pkW(m,1):i.course?'chýba '+i.short+' '+ks(i.short)+' do konca liečby':(i.out||i.left===0)?'zásoba došla':'vydrží do '+nice(i.last)+' ('+i.left+' '+ks(i.left)+')';
-        return '<div class="ord"><span class="pillbox">'+picM(m,34)+'</span><div class="t"><div>'+esc(nm(m))+'</div><div>'+why+'</div></div><button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button></div>';
+        return '<div class="ord"><span class="pillbox">'+picM(m,40)+'</span><div class="t"><div>'+esc(nm(m))+'</div><div>'+why+'</div></div><button class="btn ghost sm" type="button" data-refill="'+m.id+'">'+(m.kind==='swap'?'Kúpil som':'Doplnil som')+'</button></div>';
       }).join('')+'</section>';
     $('orders').querySelectorAll('[data-refill]').forEach(b=>b.onclick=()=>refill(b.dataset.refill));
   }
@@ -1830,12 +1851,12 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     if(!list.length){$('opened').innerHTML='';return}
     const oop=isOpen('opened',false);
     const urgent=list.filter(m=>{const o=openInfo(m);return (o&&o.state!=='ok')||needsOrder(m)}).length;
-    $('opened').innerHTML='<section class="opened'+(oop?'':' closed')+playCls('opened')+'" aria-label="Výmeny a otvorené balenia"><button type="button" class="opened-h" data-tog="opened" data-def="false" aria-expanded="'+oop+'"><span class="hico">'+SWAPICO+'</span><span>Výmeny a otvorené balenia<span class="cnt">· '+list.length+'</span></span>'+(urgent&&!oop?'<span class="ordtag">'+urgent+' čoskoro</span>':(()=>{if(oop)return '';const nx=list.map(m=>({m,o:openInfo(m)})).filter(x=>x.o).sort((a,b)=>a.o.last<b.o.last?-1:1)[0];return nx?'<span class="onext">'+esc(dname(nx.m.name).split(' ')[0])+' '+nice(nx.o.last)+'</span>':''})())+'<span class="bh-r">'+CHEV+'</span></button><div class="olist"'+(oop?'':' hidden')+'>'+
+    $('opened').innerHTML='<section class="opened'+(oop?'':' closed')+playCls('opened')+'" aria-label="Výmeny a otvorené balenia"><button type="button" class="opened-h" data-tog="opened" data-def="false" aria-expanded="'+oop+'"><span class="hico">'+SWAPICO+'</span><span>Výmeny a balenia<span class="cnt">· '+list.length+'</span></span>'+(urgent&&!oop?'<span class="ordtag" title="'+urgent+' čoskoro">'+urgent+'</span>':(()=>{if(oop)return '';const nx=list.map(m=>({m,o:openInfo(m)})).filter(x=>x.o).sort((a,b)=>a.o.last<b.o.last?-1:1)[0];return nx?'<span class="onext">'+esc(dname(nx.m.name).split(' ')[0])+' '+nice(nx.o.last)+'</span>':''})())+'<span class="bh-r">'+CHEV+'</span></button><div class="olist"'+(oop?'':' hidden')+'>'+
       grouped(list).map(m=>m.__h?'<div class="plh">'+(m.__h==='doma'?HOMEICO+'Doma':KEYICO+'Prechodný byt')+'</div>':(()=>{
         const o=openInfo(m); const st=o?o.state:'ok';
         const swap=m.kind==='swap'&&!isCos(m);
         const lines=[o?openText(m):(m.openDays?'zatiaľ neotvorené':''),m.mode==='need'&&m.kind!=='swap'?'podľa potreby':''].filter(Boolean).join(' · '); const sup=supplyInfo(m);
-        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,34)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div>'+(m.left!=null?'<div class="mchips">'+stockChip(m)+(sup&&m.left>0?'<span class="sp-note">vydrží do '+nice(sup.end)+'</span>':'')+'</div>':'')+'</div>'+
+        return '<div class="ord op-'+st+'"><span class="pillbox">'+picM(m,40)+'</span><div class="t" data-info="'+m.id+'" style="cursor:pointer"><div><span class="nm">'+esc(m.name)+'</span>'+(st==='exp'?' <span class="ordtag exp">vymeniť</span>':st==='soon'?' <span class="ordtag">čoskoro</span>':'')+'</div><div>'+esc(lines)+'</div>'+(m.left!=null?'<div class="mchips">'+stockChip(m)+(sup&&m.left>0?'<span class="sp-note">vydrží do '+nice(sup.end)+'</span>':'')+'</div>':'')+'</div>'+
           (m.openDays?'<button class="btn ghost sm" type="button" data-open="'+m.id+'">'+(swap?'Vymenil som':'Otvoril som nové')+'</button>':'')+'</div>';
       })()).join('')+'</div></section>';
     $('opened').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openedNew(b.dataset.open));
@@ -1866,7 +1887,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     else if(h.t) label=(nowM-dueMin(h)<=60?'Teraz · ':'Zabudnuté? · ')+h.t;
     else label=(h.s===cur?'Teraz · ':'Zabudnuté? · ')+slotLabel(h.s).toLowerCase();
     $('hero').innerHTML='<section class="hero thero s-'+h.s+'" aria-live="polite"><div class="thead"><span class="hero-top">'+esc(label)+'</span></div><div class="htiles">'+
-      group.map(i=>'<span class="htile s-'+i.s+'" aria-hidden="true">'+picM(i.m,34)+'<span class="sbadge">'+BADGE_ICO[i.s]+'</span></span>').join('')+
+      group.map(i=>'<span class="htile s-'+i.s+'" aria-hidden="true">'+picM(i.m,50)+'<span class="sbadge">'+BADGE_ICO[i.s]+'</span></span>').join('')+
       '<button type="button" class="hall" id="heroAll" aria-label="Odfajknúť všetko na užitie">'+CHECK+'</button></div></section>';
     $('heroAll').onclick=e=>{const b=e.currentTarget;if(b.classList.contains('ok'))return;b.classList.add('ok');try{navigator.vibrate&&navigator.vibrate(20)}catch(_){}
       $('hero').querySelectorAll('.htile').forEach((t,i)=>setTimeout(()=>t.classList.add('play','hop'),i*350));
@@ -1881,7 +1902,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       const st=itemState(m), o=openInfo(m), sup=supplyInfo(m), ended=m.days&&endKey(m)<today;
       let chip='', line='';
       if(m.kind==='swap'){const n=m.left;
-        chip=n==null?'':n<=0?(isCos(m)?'žiadne v zásobe':'žiadna v zásobe'):n+' v zásobe';
+        chip=n==null?'':n<=0?'0 v zásobe':n+' v zásobe';
         const nx=o?(o.state==='exp'?(isCos(m)?'po spotrebe':'vymeniť už teraz'):(isCos(m)?'spotrebovať do ':'vymeniť ')+nice(o.last)):'';
         line='';
         if(o) line='<span class="dp '+(o.state==='exp'?'bad':o.state==='soon'?'warn':'')+'"><i>'+(isCos(m)?'Otvorené':'Táto')+'</i>'+(o.state==='exp'?(isCos(m)?'po spotrebe':'vymeniť už'):'do '+nice(o.last))+'</span>';
@@ -1893,7 +1914,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
         line=[i&&!i.need?(i.course?(i.enough?'na celú liečbu':'chýba '+i.short+' '+ks(i.short)):i.out||i.left===0?'došlo':'vydrží do '+nice(i.last)):'',o?openText(m):''].filter(Boolean).join(' · ');}
       const al=m.kind==='swap'?'Kúpil som':'Doplniť';
       const plus=m.left!=null||(m.kind!=='swap'&&m.pack)?'<button class="qa'+(st==='warn'||st==='bad'?' hot':'')+'" type="button" data-refill="'+m.id+'" aria-label="'+al+': '+esc(m.name)+'" title="'+al+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>':'<span class="qa-sp"></span>';
-      return '<li class="mr2 st-'+st+(ended?' ended':'')+'" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="'+esc(m.name+(chip?', '+chip:''))+'"><span class="pillbox">'+picM(m,36)+'<i class="sdot" aria-hidden="true"></i></span>'+
+      return '<li class="mr2 st-'+st+(ended?' ended':'')+'" data-minfo="'+m.id+'" role="button" tabindex="0" aria-label="'+esc(m.name+(chip?', '+chip:''))+'"><span class="pillbox">'+picM(m,42)+'<i class="sdot" aria-hidden="true"></i></span>'+
         '<span class="mn2w"><span class="mn2">'+esc(m.name)+'</span>'+(line?'<span class="ml2">'+(line.startsWith('#H')?line.slice(2):esc(line))+'</span>':'')+'</span>'+(chip?'<span class="mc2 '+st+'">'+esc(chip)+'</span>':'')+plus+'</li>';
     };
     const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -2122,7 +2143,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   function quickOpen(on){
     const q=$('quick');
     if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
-    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qi" role="menuitem" data-qg="'+x.g+'" style="animation-delay:'+(i*55)+'ms"><span class="pillbox">'+pillSvg(x.sh,x.c,30)+'</span><span>'+x.l+'<small>'+x.d+'</small></span></button>').join('');
+    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qi" role="menuitem" data-qg="'+x.g+'" style="animation-delay:'+(i*55)+'ms"><span class="pillbox">'+pillSvg(x.sh,x.c,40)+'</span><span>'+x.l+'<small>'+x.d+'</small></span></button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
     $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
@@ -2393,12 +2414,12 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
           const why=s.overMax?'Dnes si už mal '+s.todayN+'× (najviac '+m.maxDay+'× denne).':'Od poslednej dávky ešte neuplynulo '+m.gapH+' h. Ďalšia najskôr o '+s.waitTo+'.';
           return '<div class="confirm"><p>'+esc(why)+' Zaznamenať aj tak?</p><button class="btn danger sm" type="button" data-prnforce="'+m.id+'">Zaznamenať</button><button class="btn ghost sm" type="button" data-prnno="1">Nie</button></div>';
         }
-        if(prnLate===m.id) return '<div class="prn-row"><span class="pillbox">'+picM(m,32)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">Kedy to bolo dnes?</div></div>'+
+        if(prnLate===m.id) return '<div class="prn-row"><span class="pillbox">'+picM(m,42)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">Kedy to bolo dnes?</div></div>'+
           '<div class="wk-add" style="width:100%"><label class="sr" for="prnT">Čas</label><input id="prnT" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" value=""><button type="button" class="btn pri sm" id="prnTSave" data-m="'+m.id+'">Zapísať</button><button type="button" class="btn ghost sm" id="prnTNo">Zrušiť</button></div><p class="err" id="prnTErr" hidden style="width:100%;margin:0"></p></div>';
         const info=[s.last?'naposledy '+whenLabel(s.last.t):'zatiaľ neužité',s.todayN?'dnes '+s.todayN+'×'+(m.maxDay?' z '+m.maxDay:''):'',m.dose].filter(Boolean).join(' · ');
         const extraLine=[s.waitTo?'ďalšia najskôr o '+s.waitTo:'',openText(m),stockShort(m)].filter(Boolean).join(' · ');
-        return '<div class="prn-row"><span class="pillbox">'+picM(m,32)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">'+esc(info)+'</div>'+(extraLine?'<div class="med-stock'+(s.waitTo?' warn':'')+'">'+esc(extraLine)+'</div>':'')+'</div>'+
-          '<div class="prn-act"><button class="btn pri sm" type="button" data-prn="'+m.id+'">'+(m.shape==='drop'?'Kvapkanie':isTop(m)?'Ošetrenie':'Užil som')+'</button><button class="linkbtn" type="button" data-prnlate="'+m.id+'">bolo to skôr? zadaj čas</button>'+(s.todayN?'<button class="linkbtn" type="button" data-prnrm="'+m.id+'">'+(m.shape==='drop'?'odstrániť kvapkanie':isTop(m)?'odstrániť ošetrenie':'odstrániť záznam')+'</button>':'')+(m.openDays?'<button class="linkbtn" type="button" data-open="'+m.id+'">nové balenie</button>':'')+'</div></div>';
+        return '<div class="prn-row"><span class="pillbox">'+picM(m,42)+'</span><div class="med-t"><div class="med-n"><span class="nm">'+esc(m.name)+'</span></div><div class="med-s">'+esc(info)+'</div>'+(extraLine?'<div class="med-stock'+(s.waitTo?' warn':'')+'">'+esc(extraLine)+'</div>':'')+'</div>'+
+          '<div class="prn-act"><button class="btn pri sm" type="button" data-prn="'+m.id+'">'+(m.shape==='drop'?'Kvapkanie':isTop(m)?'Ošetrenie':'Užil som')+'</button><button class="linkbtn" type="button" data-prnlate="'+m.id+'">zadať čas</button>'+(s.todayN?'<button class="linkbtn" type="button" data-prnrm="'+m.id+'">'+(m.shape==='drop'?'odstrániť kvapkanie':isTop(m)?'odstrániť ošetrenie':'odstrániť záznam')+'</button>':'')+(m.openDays?'<button class="linkbtn" type="button" data-open="'+m.id+'">nové balenie</button>':'')+'</div></div>';
       }).join('')+'</div></section>';
     $('prn').querySelectorAll('[data-prn]').forEach(b=>b.onclick=()=>takePrn(b.dataset.prn,false));
     $('prn').querySelectorAll('[data-prnlate]').forEach(b=>b.onclick=()=>{prnLate=b.dataset.prnlate;prnWarn=null;render();const t=$('prnT');if(t){t.focus();t.scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'})}});
@@ -2742,7 +2763,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const fxh=fx.length?'<div class="ih">Vedľajšie účinky</div>'+fx.map(f=>'<p class="note" style="margin:0">'+esc(whenLabel(f.t)+' · '+fxText(f)+' ('+LVL[f.lvl]+')')+'</p>').join(''):'';
     const ctx=fut||sel===today?'':'<span class="ictx past">Upravuješ '+esc(DAYS[parse(sel).getDay()].toLowerCase()+' '+nice(sel))+'</span>';
     const GN={med:'Liek',care:'Kvapky a ošetrenie',cosm:'Kozmetika',swap:'Výmena'};
-    $('infoBody').innerHTML='<div class="ihead"><span class="ipill">'+picM(m,46)+'</span><div style="min-width:0;padding-right:44px"><h2 id="infoTitle">'+esc(nm(m))+'</h2><div class="isub">'+esc(m.kind==='swap'&&!isCos(m)?freqText(m).replace(/^v/,'V'):GN[grpOf(m)]+' · '+freqText(m))+'</div>'+ctx+'</div></div>'+
+    $('infoBody').innerHTML='<div class="ihead"><span class="ipill">'+picM(m,62)+'</span><div style="min-width:0;padding-right:44px"><h2 id="infoTitle">'+esc(nm(m))+'</h2><div class="isub">'+esc(m.kind==='swap'&&!isCos(m)?freqText(m).replace(/^v/,'V'):GN[grpOf(m)]+' · '+freqText(m))+'</div>'+ctx+'</div></div>'+
       dsec+stkEd(m)+'<div class="ih">O položke</div><div class="irows">'+rows.join('')+'</div>'+hist+fxh+
       (delAsk?'<div class="confirm"><p>Zmazať '+esc(nm(m))+'? Záznamy z minulých dní zostanú.</p><button class="btn danger sm" type="button" id="infoDelYes">Zmazať</button><button class="btn ghost sm" type="button" id="infoDelNo">Nie</button></div>':
       '<div class="ifoot"><button class="btn ghost sm" type="button" id="infoEdit">Upraviť</button>'+
