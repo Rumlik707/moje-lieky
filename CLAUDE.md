@@ -18,6 +18,12 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
   - zvýš `const VERSION = 'vNN'` v `sw.js`;
   - zvýš text `Verzia appky: vNN` v `index.html`.
 - Pred pushom otestuj v Playwright (`file:///…/index.html`, v localStorage nastav `lieky-intro`=`1`), vo svetlom aj tmavom režime, a pošli mi screenshoty.
+- Kontrola screenshotov pred vydaním (každý bod, nielen „funguje“):
+  - horný a spodný okraj: nič nesmie presvitať ani trčať spoza panelu (stránka pod ním, lišty, tiene);
+  - nič nie je orezané (tlačidlo Dnes v lište, texty, okraje polí);
+  - okraje a zarovnanie sedia s ostatnými obrazovkami;
+  - prejdi celú cestu tam aj späť (otvoriť, prepnúť záložku, systémové Späť, Uložiť) a over, že sa dáta nestratili.
+- Keď si nie som istý, čo myslíš, opýtam sa jednou vetou pred robením, nie po vydaní.
 - Commit podpisuj `-c user.name="Rumlik707" -c user.email="rumlik@gmail.com"`. Potom spusti `git fetch origin main && git rebase origin/main && git push origin HEAD:main`.
 - Pri úpravách cez Python skripty použi zámenu presného reťazca a kontrolu počtu výskytov (assert).
 
@@ -29,7 +35,9 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v36)
+## Nákup (stav pri v39)
+- Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
+- Systémové Späť na Androide: zavrie detail veci, potom nákup; ak bol nákup otvorený z Rýchlo, vráti do Rýchlo (`history.pushState({ml:'shop'})`, `popstate`, `shopPop`, `shopFromQ`).
 - Rozloženie je variant B: obchody ako karty pod sebou.
   - Obchody si pomenúvam sám (`extra.stores` = `[{id,n,closed}]`). Vec patrí do obchodu cez pole `s`.
   - Veci bez obchodu sú v karte „Kdekoľvek“. Keď nemám žiadny obchod, karta sa volá „Nákup“.
