@@ -29,14 +29,20 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v35)
-- Typ zoznamu je odškrtni a zmizne.
-- Odškrtnuté veci idú do sekcie „Kúpené · dá sa vrátiť“. Po 24 h sa presunú do `shopRecent` („Kúpiť znova“).
-- Každá vec má pole `p`: 'trh' = časť „Trhovisko a iné“, prázdne = obchod. Vyberá sa prepínačom 🛒/🧺.
-- Oddelenia sa priraďujú automaticky (`AISLES`, `AIDX`, `CAT`, `guessAisle`).
-- Funkcie: `renderShop`, `rowHtml`, `shopPut`, `showShopDet`, `openShop`, `shopAuto`, `shareText`, `food()` (3D ikonky potravín).
-- Súkromie: tlačidlo Poslať posiela domácnosti len nákup. Moje lieky a kozmetika idú iba vtedy, keď zaškrtnem „pridať aj moje lieky a kozmetiku“.
-- Plánované: rozdelenie nákupu podľa obchodov, ktoré si sám pomenujem (napr. „Trh“: mak, paprika; „Billa“: horalky, pečivo).
+## Nákup (stav pri v36)
+- Rozloženie je variant B: obchody ako karty pod sebou.
+  - Obchody si pomenúvam sám (`extra.stores` = `[{id,n,closed}]`). Vec patrí do obchodu cez pole `s`.
+  - Veci bez obchodu sú v karte „Kdekoľvek“. Keď nemám žiadny obchod, karta sa volá „Nákup“.
+- Každá karta má „+ pridať do X“: nastaví `shopTarget` a vyhľadávanie potom pridáva do toho obchodu. Výber sa zruší chipom „X ×“ vo vyhľadávaní.
+- Karta sa dá zbaliť. Ceruzkou ✎ sa obchod premenuje alebo odstráni; veci z odstráneného obchodu ostanú, len bez obchodu.
+- Na konci zoznamu je „+ Nový obchod“.
+- V karte sa veci radia automaticky podľa oddelení (`AISLES`, `AIDX`, `CAT`, `guessAisle`).
+- Odškrtni a zmizne:
+  - odškrtnuté veci idú do sekcie „Kúpené · dá sa vrátiť“;
+  - po 24 h sa presunú do `shopRecent` („Kúpiť znova“).
+- Staré `p:'trh'` sa pri načítaní samo prevedie na obchod „Trh“.
+- Funkcie: `renderShop`, `rowHtml`, `shopPut`, `showShopDet` (Koľko / Kde kúpiť / Poznámka), `openStoreDet`, `openShop`, `shopAuto`, `food()`.
+- Súkromie: tlačidlo Poslať posiela domácnosti nákup po obchodoch. Moje lieky a kozmetika idú iba vtedy, keď zaškrtnem „pridať aj moje lieky a kozmetiku“.
 
 ## Moje rozhodnutia (nemeniť bez opýtania)
 - Pri ikonkách nepoužívať pozadie dlaždice (vyzeralo ako zaváraninový pohár). Jamky blistra sú svetlé.
