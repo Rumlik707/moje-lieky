@@ -377,29 +377,29 @@ button,input,select{font:inherit;color:inherit}
 .ic3 [class^="a-"],.ic3 [class*=" a-"]{transform-box:fill-box;transform-origin:center}
 .ic3 .a-shd{transform-origin:center}
 .ic3 .a-drip{opacity:1}
-:is(.go,.play) .ic3 .a-body{animation:ic-hop .9s cubic-bezier(.34,1.56,.64,1)}
-:is(.go,.play) .ic3 .a-shd{animation:ic-shd .9s cubic-bezier(.34,1.56,.64,1)}
-:is(.go,.play) .ic-tab .a-body{animation:ic-flip 1.2s cubic-bezier(.34,1.4,.64,1)}
-:is(.go,.play) .ic-cap .a-body{animation:ic-wig 1.1s ease-in-out}
-:is(.go,.play) .ic-cap .a-gran{animation:ic-jig .35s ease-in-out 3}
-:is(.go,.play) .ic-drop .a-body{animation:ic-squeeze 1.3s ease-in-out}
-:is(.go,.play) .ic-drop .a-drip{animation:ic-drip 1.3s cubic-bezier(.55,0,.85,.4)}
-:is(.go,.play) :is(.ic-bottle,.ic-pump,.ic-jar,.ic-drop) .a-wave{animation:ic-wave 1.4s ease-in-out}
-:is(.go,.play) .ic-bottle .a-body{animation:ic-tilt 1.4s ease-in-out}
-:is(.go,.play) .ic-pump .a-body{animation:none}
-:is(.go,.play) .ic-pump .a-pump{animation:ic-press .55s ease-in-out 2}
-:is(.go,.play) .ic-pump .a-bub{animation:ic-bub 1.4s ease-out}
-:is(.go,.play) .ic-jar .a-body{animation:none}
-:is(.go,.play) .ic-jar .a-lid{animation:ic-lid 1.4s cubic-bezier(.34,1.4,.64,1)}
-:is(.go,.play) .ic-tube .a-body{animation:none}
-:is(.go,.play) .ic-tube .a-sq{animation:ic-sq 1.1s ease-in-out}
-:is(.go,.play) .ic-tube .a-cap{animation:ic-cap 1.1s cubic-bezier(.34,1.56,.64,1)}
-:is(.go,.play) :is(.ic-brush,.ic-tuft) .a-body{animation:ic-brush .5s ease-in-out 3}
-:is(.go,.play) .ic-ebrush .a-body{animation:ic-buzz .09s linear 12}
-:is(.go,.play) .ic-ebrush .a-spin{animation:ic-osc .18s ease-in-out 7}
-:is(.go,.play) .ic-razor .a-body{animation:ic-shave 1.2s ease-in-out}
-:is(.go,.play) .ic-razor .a-glint{animation:ic-glint 1.2s ease-in-out}
-:is(.go,.play) .ic3 .a-warn{animation:ic-warn .6s cubic-bezier(.34,1.56,.64,1) 2}
+.go .ic3 .a-body{animation:ic-hop .9s cubic-bezier(.34,1.56,.64,1)}
+.go .ic3 .a-shd{animation:ic-shd .9s cubic-bezier(.34,1.56,.64,1)}
+.go .ic-tab .a-body{animation:ic-flip 1.2s cubic-bezier(.34,1.4,.64,1)}
+.go .ic-cap .a-body{animation:ic-wig 1.1s ease-in-out}
+.go .ic-cap .a-gran{animation:ic-jig .35s ease-in-out 3}
+.go .ic-drop .a-body{animation:ic-squeeze 1.3s ease-in-out}
+.go .ic-drop .a-drip{animation:ic-drip 1.3s cubic-bezier(.55,0,.85,.4)}
+.go :is(.ic-bottle,.ic-pump,.ic-jar,.ic-drop) .a-wave{animation:ic-wave 1.4s ease-in-out}
+.go .ic-bottle .a-body{animation:ic-tilt 1.4s ease-in-out}
+.go .ic-pump .a-body{animation:none}
+.go .ic-pump .a-pump{animation:ic-press .55s ease-in-out 2}
+.go .ic-pump .a-bub{animation:ic-bub 1.4s ease-out}
+.go .ic-jar .a-body{animation:none}
+.go .ic-jar .a-lid{animation:ic-lid 1.4s cubic-bezier(.34,1.4,.64,1)}
+.go .ic-tube .a-body{animation:none}
+.go .ic-tube .a-sq{animation:ic-sq 1.1s ease-in-out}
+.go .ic-tube .a-cap{animation:ic-cap 1.1s cubic-bezier(.34,1.56,.64,1)}
+.go :is(.ic-brush,.ic-tuft) .a-body{animation:ic-brush .5s ease-in-out 3}
+.go .ic-ebrush .a-body{animation:ic-buzz .09s linear 12}
+.go .ic-ebrush .a-spin{animation:ic-osc .18s ease-in-out 7}
+.go .ic-razor .a-body{animation:ic-shave 1.2s ease-in-out}
+.go .ic-razor .a-glint{animation:ic-glint 1.2s ease-in-out}
+.go .ic3 .a-warn{animation:ic-warn .6s cubic-bezier(.34,1.56,.64,1) 2}
 @keyframes ic-hop{0%,100%{transform:none}35%{transform:translateY(-7px) scale(1.04)}60%{transform:translateY(1px) scaleY(.95)}80%{transform:translateY(-1.5px)}}
 @keyframes ic-shd{0%,100%{transform:none;opacity:1}35%{transform:scaleX(.7);opacity:.5}}
 @keyframes ic-flip{0%,100%{transform:none}30%{transform:translateY(-9px) rotate(-20deg)}55%{transform:translateY(-4px) rotate(10deg) scaleY(.9)}75%{transform:translateY(1px) scaleY(.94)}}
@@ -422,8 +422,8 @@ button,input,select{font:inherit;color:inherit}
 @keyframes ic-warn{50%{transform:scale(1.35)}}
 @keyframes ic-shine{0%{transform:rotate(20deg) translateX(0);opacity:0}15%{opacity:.55}100%{transform:rotate(20deg) translateX(110px);opacity:0}}
 @keyframes ic-foam{50%{transform:translateY(-2px) scale(1.15)}}
-:is(.go,.play) .ic3 .a-shine{animation:ic-shine 1s ease-out .15s}
-:is(.go,.play) .ic-pump .a-foam{animation:ic-foam .55s ease-in-out 2}
+.go .ic3 .a-shine{animation:ic-shine 1s ease-out .15s}
+.go .ic-pump .a-foam{animation:ic-foam .55s ease-in-out 2}
 .pillbox .ic3,.ipill .ic3,.qi .ic3{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
 .pillbox:active .ic3{transform:scale(.92)}
 @media (prefers-reduced-motion: reduce){.ic3 *{animation:none!important}}
@@ -1064,7 +1064,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v25</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v26</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1364,7 +1364,16 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   const SWAPICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="swap" fill="none" stroke="url(#h3a)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8a8.5 8.5 0 0 0-15.2-2.6M4 3.2V7h3.8"/><path d="M4 16a8.5 8.5 0 0 0 15.2 2.6M20 20.8V17h-3.8"/></g><circle cx="12" cy="12" r="3.4" fill="url(#h3v)"/><circle cx="11" cy="11" r="1" fill="#fff" opacity=".8"/></svg>';
   const NEEDICO='<svg viewBox="0 0 24 24" aria-hidden="true"><g class="drip"><path d="M12 2.6c3.4 4.4 6.4 7.6 6.4 11.2a6.4 6.4 0 0 1-12.8 0C5.6 10.2 8.6 7 12 2.6z" fill="url(#h3d)"/><path d="M9.2 13.6a3 3 0 0 0 2 3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".9"/><circle cx="10" cy="9.6" r="1" fill="#fff" opacity=".85"/></g></svg>';
   const CHEV='<svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-tog]');if(!b)return;const k=b.dataset.tog;openState[k]=!isOpen(k,b.dataset.def==='true');animKey=k;animLong=true;render();animKey=null;animLong=false});
+  let cascT=[];
+  function cascade(k){
+    cascT.forEach(clearTimeout); cascT=[];
+    if(reduce()) return;
+    const h=document.querySelector('[data-tog="'+k+'"]'); if(!h||h.getAttribute('aria-expanded')!=='true') return;
+    const sec=h.closest('section,.block,.opened,.mlist')||h.parentElement;
+    const icons=[...sec.querySelectorAll('.pillbox,.htile')].filter(p=>p.querySelector('.ic3')&&!h.contains(p)).filter(p=>{const r=p.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight-80}).slice(0,6);
+    icons.forEach((p,i)=>cascT.push(setTimeout(()=>{if(h.isConnected&&h.getAttribute('aria-expanded')==='true')goIcon(p)},2400+i*650)));
+  }
+  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-tog]');if(!b)return;const k=b.dataset.tog;openState[k]=!isOpen(k,b.dataset.def==='true');animKey=k;animLong=true;render();animKey=null;animLong=false;cascade(k)});
 
   /* ---------- model ---------- */
   const posInt=(v,max)=>Number.isInteger(v)&&v>0&&v<=max?v:null;
@@ -2847,18 +2856,19 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   resetForm();
   applyDiscreet(); applyTheme();
   init();
+  let lastTouch=Date.now(), lastIdle=null;
+  ['pointerdown','scroll','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{lastTouch=Date.now()},{passive:true,capture:true}));
   function idlePulse(){
-    if(!document.hidden&&tab==='meds'&&!reduce()&&$('infoSheet').hidden){const r=[...document.querySelectorAll('#mlist .mr2 .pillbox')].filter(p=>{const b=p.getBoundingClientRect();return b.top>0&&b.bottom<innerHeight-90});if(r.length)goIcon(r[Math.floor(Math.random()*r.length)])}
-    if(!document.hidden&&tab==='today'&&!reduce()){
-      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')].filter(e=>!e.classList.contains('play'));
-      if(els.length){
-        const n=Math.min(els.length,Math.random()<.45?2:1);
-        for(let i=0;i<n;i++){const el=els.splice(Math.floor(Math.random()*els.length),1)[0];void el.offsetWidth;el.classList.add('play','long');setTimeout(()=>el.classList.remove('play','long'),6000)}
-      }
+    const calm=!document.hidden&&!reduce()&&Date.now()-lastTouch>9000&&$('infoSheet').hidden&&$('quick').hidden&&($('form')?$('form').hidden:true)&&$('intro').hidden;
+    if(calm&&tab==='meds'){const r=[...document.querySelectorAll('#mlist .mr2 .pillbox')].filter(p=>{const b=p.getBoundingClientRect();return b.top>60&&b.bottom<innerHeight-100}).filter(p=>p!==lastIdle);
+      if(r.length){lastIdle=r[Math.floor(Math.random()*r.length)];goIcon(lastIdle)}}
+    if(calm&&tab==='today'){
+      const els=[...document.querySelectorAll('#v-today .block, #v-today .opened')].filter(e=>{const b=e.getBoundingClientRect();return b.top>0&&b.bottom<innerHeight-90&&e!==lastIdle&&!e.classList.contains('play')});
+      if(els.length){const el=els[Math.floor(Math.random()*els.length)];lastIdle=el;void el.offsetWidth;el.classList.add('play');setTimeout(()=>el.classList.remove('play'),3200)}
     }
-    setTimeout(idlePulse,3500+Math.random()*3500);
+    setTimeout(idlePulse,9000+Math.random()*6000);
   }
-  setTimeout(idlePulse,2500+Math.random()*2000);
+  setTimeout(idlePulse,6000+Math.random()*3000);
 })();
 </script>
 
