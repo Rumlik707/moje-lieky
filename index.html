@@ -351,8 +351,9 @@ button,input,select{font:inherit;color:inherit}
 .shback{position:fixed;inset:0;z-index:32;background:rgba(10,20,40,.42);animation:q-fade .25s ease-out}
 .shpanel{position:fixed;left:0;right:0;bottom:0;top:max(28px,env(safe-area-inset-top,0px));margin:0 auto;max-width:560px;z-index:33;background:var(--bg);border-radius:28px 28px 0 0;display:flex;flex-direction:column;box-shadow:0 -18px 40px -18px rgba(10,20,40,.45);animation:sh-up .38s cubic-bezier(.22,1,.36,1);overflow:hidden}
 .shtop{display:flex;align-items:center;gap:8px;padding:16px 14px 8px}
-.shret{display:inline-flex;align-items:center;gap:4px;margin:12px 0 -6px 12px;padding:6px 14px 6px 8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;align-self:flex-start}
-.shret[hidden]{display:none}
+.shop-on .tabbar{z-index:34}
+.shop-on .shpanel{bottom:var(--tbh,72px)}
+.shop-on .shpriv{padding-bottom:12px}
 .shbtn{display:inline-flex;align-items:center;gap:5px;padding-left:12px;padding-right:13px;flex:none}
 .shring{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;flex:none;transition:background .4s}
 .shring span{width:40px;height:40px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
@@ -1186,7 +1187,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v37</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v38</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1200,7 +1201,6 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 <div class="iback" id="infoBack" hidden></div>
 <div class="shback" id="shopBack" hidden></div>
 <section class="shpanel" id="shopSheet" hidden role="dialog" aria-modal="true" aria-labelledby="shopTitle">
-  <button type="button" class="shret" id="shRet" hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Rýchla voľba</button>
   <div class="shtop">
     <div class="shring" id="shRing"><span id="shRingT">0/0</span></div>
     <div class="shtt"><h2 id="shopTitle">Nákup</h2><span id="shHint"></span></div>
@@ -2284,7 +2284,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const h=nbHid(); h[id]={t:Date.now(),k:nbCur[id]||''}; try{localStorage.setItem(NBH,JSON.stringify(h))}catch(e){}
     el.classList.add('gone'); setTimeout(()=>{el.hidden=true;el.classList.remove('gone')},reduce()?0:320);
   }
-  document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);quickOpen(false);if(!$('infoSheet').hidden)closeCard();nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
+  document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);if(!$('shopSheet').hidden){saveExtra();shopLeave()}quickOpen(false);if(!$('infoSheet').hidden)closeCard();nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
   const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms||10)}catch(_){}};
   const QG=[{g:'med',l:'Liek',d:'tablety',sh:'tab',c:'#4F7BF0'},{g:'care',l:'Kvapky',d:'a masti',sh:'drop',c:'#1FA3B8'},{g:'cosm',l:'Kozmetika',d:'',sh:'pump',c:'#D9658C'},{g:'swap',l:'Výmena',d:'kefky',sh:'ebrush',c:'#2D6BE4'},{g:'shop',l:'Nákup',d:'potraviny'}];
   function quickOpen(on){
@@ -2297,7 +2297,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(true,true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
     const f=$('qMenu').querySelector('.qb'); if(f) f.focus({preventScroll:true});
   }
-  $('plusTab').onclick=()=>{buzz(12);if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
+  $('plusTab').onclick=()=>{buzz(12);if(!$('shopSheet').hidden){saveExtra();shopLeave();quickOpen(true);return}if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
   $('qBack').onclick=()=>quickOpen(false);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('quick').hidden)quickOpen(false)});
   function moveInd(){
@@ -3085,18 +3085,18 @@ function food(k,size,col){
       saveExtra(); closeShopDet(); renderShop(); toast(st.n+' odstránený',()=>{extra.stores.splice(idx,0,st);moved.forEach(x=>x.s=st.id);saveExtra();renderShop()})};
   }
   function closeShopDet(){$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null}
-  function openShop(focus,fromQ){shopFromQ=!!fromQ;$('shRet').hidden=!shopFromQ;if(!(history.state&&history.state.ml==='shop'))try{history.pushState({ml:'shop'},'')}catch(_){}shopTarget=null;$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();quickOpen(false);$('shopSheet').hidden=false;$('shopBack').hidden=false;document.body.style.overflow='hidden';shopQ='';$('shopIn').value='';renderShop();if(focus)setTimeout(()=>$('shopIn').focus(),250)}
+  function openShop(focus,fromQ){shopFromQ=!!fromQ;document.documentElement.style.setProperty('--tbh',document.querySelector('.tabbar').offsetHeight+'px');document.body.classList.add('shop-on');if(!(history.state&&history.state.ml==='shop'))try{history.pushState({ml:'shop'},'')}catch(_){}shopTarget=null;$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();quickOpen(false);$('shopSheet').hidden=false;$('shopBack').hidden=false;document.body.style.overflow='hidden';shopQ='';$('shopIn').value='';renderShop();if(focus)setTimeout(()=>$('shopIn').focus(),250)}
   let shopFromQ=false;
   function shopLeave(back){if(!back)shopFromQ=false;if(history.state&&history.state.ml==='shop')history.back();else shopPop()}
   function shopPop(){if($('shopSheet').hidden)return;const q=shopFromQ;shopFromQ=false;closeShop();if(q)quickOpen(true)}
   window.addEventListener('popstate',()=>{if($('shopSheet').hidden)return;if(!$('shDet').hidden){closeShopDet();try{history.pushState({ml:'shop'},'')}catch(_){}return}shopPop()});
-  function closeShop(){closeShopDet();$('shopSheet').hidden=true;$('shopBack').hidden=true;document.body.style.overflow='';renderShop()}
+  function closeShop(){closeShopDet();document.body.classList.remove('shop-on');$('shopSheet').hidden=true;$('shopBack').hidden=true;document.body.style.overflow='';renderShop()}
   $('shopIn').addEventListener('input',e=>{shopQ=e.target.value;renderShop()});
   $('shTarget').onclick=()=>{shopTarget=null;buzz(8);renderShop();$('shopIn').focus()};
   $('shopForm').addEventListener('submit',e=>{e.preventDefault();const t=shopQ.trim();if(!t)return;const q=fold(t);const c=CAT.find(c=>fold(c[0])===q)||CAT.filter(c=>fold(c[0]+' '+(c[6]||'')).includes(q))[0];
     if(c&&fold(c[0])===q){shopPut({t:c[0],a:c[1]})}else{const g=guessAisle(t);shopPut({t:t.charAt(0).toUpperCase()+t.slice(1),a:g?g[1]:'ine'})}
     shopQ='';$('shopIn').value='';renderShop()});
-  $('shopClose').onclick=()=>{const n=extra.shop.filter(x=>!x.done).length;saveExtra();shopLeave();buzz(12);toast(n?'Nákup uložený · '+(n===1?'1 vec':n<5?n+' veci':n+' vecí'):'Nákup uložený')}; $('shopBack').onclick=()=>shopLeave();$('shRet').onclick=()=>{buzz(12);saveExtra();shopLeave(true)}; $('shDetBack').onclick=closeShopDet;
+  $('shopClose').onclick=()=>{const n=extra.shop.filter(x=>!x.done).length;saveExtra();shopLeave();buzz(12);toast(n?'Nákup uložený · '+(n===1?'1 vec':n<5?n+' veci':n+' vecí'):'Nákup uložený')}; $('shopBack').onclick=()=>shopLeave(); $('shDetBack').onclick=closeShopDet;
   $('shopBtn').onclick=()=>openShop(false);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('shDet').hidden)closeShopDet();else if(!$('shopSheet').hidden)shopLeave(true)}});
   $('shopShare').onclick=()=>{
