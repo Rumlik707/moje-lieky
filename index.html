@@ -336,6 +336,17 @@ button,input,select{font:inherit;color:inherit}
 .scb svg{width:28px;height:28px;padding:4px;box-sizing:border-box;border-radius:9px;border:2.5px solid #9DB0CC;stroke:transparent;transition:background .2s,border-color .2s}
 .srow.done .scb svg,.srow.going .scb svg{background:var(--ok);border-color:var(--ok);stroke:#fff}
 .srow.going{background:var(--ok-soft);opacity:.0;max-height:0;min-height:0}
+.srm{flex:none;margin-right:12px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:5px 11px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.skos{background:var(--ok-soft);padding:10px 12px 12px;border-top:1px solid var(--line)}
+.skos>b{display:flex;align-items:center;gap:6px;color:var(--ok);font-size:14px;margin:0 0 8px 6px}
+.kchips{display:flex;gap:6px 4px;flex-wrap:wrap}
+.kchip{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;width:66px;border:0;background:none;padding:2px 0;font:inherit;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer}
+.kchip .ci{width:48px;height:48px;border-radius:50%;background:var(--card);display:grid;place-items:center;box-shadow:0 2px 8px -3px rgba(0,0,0,.25)}
+.kchip .ok{position:absolute;top:0;right:6px;width:20px;height:20px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;border:2px solid var(--card)}
+.kchip .kn{max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kchip.new .ci{animation:k-in .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes k-in{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.kchip.new .ci{animation:none}}
 .sbody{flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:0;background:none;font:inherit;color:inherit;text-align:left;padding:6px 14px 6px 0;cursor:pointer;min-height:54px}
 .sbody .si{flex:none;display:grid;place-items:center;width:32px}
 .sbody .sn{font-weight:800;font-size:16.5px;overflow-wrap:anywhere}
@@ -1188,7 +1199,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v39</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v40</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2959,7 +2970,12 @@ function food(k,size,col){
   function rowHtml(x,done){
     const meta=[x.q,x.note].filter(Boolean).join(' · ');
     return '<div class="srow'+(done?' done':'')+'" data-id="'+x.id+'"><button type="button" class="scb" data-cb="'+x.id+'" aria-label="'+(done?'Vrátiť do zoznamu: ':'Mám v košíku: ')+esc(x.t)+'" aria-pressed="'+(!!done)+'">'+ROW_CB+'</button>'+
-      '<button type="button" class="sbody" data-ed="'+x.id+'"><span class="si">'+shopIcon(x,30)+'</span><span class="sn">'+esc(x.t)+'</span>'+(meta?'<span class="sm">'+esc(meta)+'</span>':'')+'</button></div>';
+      '<button type="button" class="sbody" data-ed="'+x.id+'"><span class="si">'+shopIcon(x,30)+'</span><span class="sn">'+esc(x.t)+'</span>'+(meta?'<span class="sm">'+esc(meta)+'</span>':'')+'</button>'+(done?'':'<button type="button" class="srm" data-rm="'+x.id+'" aria-label="Odobrať zo zoznamu: '+esc(x.t)+'">Odobrať</button>')+'</div>';
+  }
+  const OKC='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function kosHtml(list){
+    if(!list.length) return '';
+    return '<div class="skos"><b>🛒 V košíku · '+list.length+'</b><div class="kchips">'+list.map(x=>'<button type="button" class="kchip'+(x.doneAt&&Date.now()-x.doneAt<1500?' new':'')+'" data-kb="'+x.id+'" aria-label="Vrátiť do zoznamu: '+esc(x.t)+'"><span class="ci">'+shopIcon(x,34)+'</span><i class="ok">'+OKC+'</i><span class="kn">'+esc(x.t)+'</span></button>').join('')+'</div></div>';
   }
   function renderShop(){
     normShop();
@@ -2980,16 +2996,15 @@ function food(k,size,col){
     let h='';
     const sec=(ic,title,rows,cls,extraH)=>'<div class="shaisle'+(cls?' '+cls:'')+'"><span class="ai">'+ic+'</span>'+title+(extraH||'')+'<span class="c">'+rows.length+'</span></div><div class="slist">'+rows.join('')+'</div>';
     const ST=extra.stores;
-    const card=(st,name,list)=>{const id=st?st.id:'', cl=!!(st&&st.closed);
-      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(st?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(list.length?vecN(list.length):'prázdne')+'</span>'+(st?'<span class="chev">▾</span>':'')+'</button>'+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Upraviť obchod '+esc(name)+'">✎</button>':'')+'</div>'+
-        (cl?'':'<div class="scl">'+list.sort(byAisle).map(x=>rowHtml(x)).join('')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+'</section>'};
-    ST.forEach(st=>{h+=card(st,st.n,open.filter(x=>x.s===st.id))});
-    const free=open.filter(x=>!x.s);
-    if(free.length||!ST.length) h+=(open.length||ST.length)?card(null,ST.length?'Kdekoľvek':'Nákup',free):'';
+    const card=(st,name,list,got)=>{const id=st?st.id:'', cl=!!(st&&st.closed); got=got||[];
+      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(st?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(st?'<span class="chev">▾</span>':'')+'</button>'+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Upraviť obchod '+esc(name)+'">✎</button>':'')+'</div>'+
+        (cl?'':'<div class="scl">'+kosHtml(got)+list.sort(byAisle).map(x=>rowHtml(x)).join('')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+'</section>'};
+    ST.forEach(st=>{h+=card(st,st.n,open.filter(x=>x.s===st.id),done.filter(x=>x.s===st.id))});
+    const free=open.filter(x=>!x.s), freeGot=done.filter(x=>!x.s);
+    if(free.length||freeGot.length||!ST.length) h+=(open.length||done.length||ST.length)?card(null,ST.length?'Kdekoľvek':'Nákup',free,freeGot):'';
     if(auto.length) h+=sec('🔒','Moje zásoby',auto.map(z=>'<div class="srow priv"><button type="button" class="scb" data-sa="'+z.m.id+'" aria-label="Kúpil som: '+esc(nm(z.m))+'">'+ROW_CB+'</button><span class="sbody"><span class="si">'+picM(z.m,30)+'</span><span class="sn">'+esc(nm(z.m))+'</span><span class="sm">'+esc(z.why)+'</span></span></div>'),'',' <span class="lock">len pre teba</span>');
     h+='<button type="button" class="newst" id="shNewSt">+ Nový obchod</button>';
-    if(!open.length&&!auto.length&&!ST.length) h='<div class="shempty">'+food('vrecko',64)+'<b>'+(done.length?'Všetko kúpené ✓':'Zoznam je prázdny')+'</b><span>'+(done.length?'Kúpené nájdeš nižšie, dajú sa vrátiť.':'Napíš hore, čo treba kúpiť, alebo si vytvor obchod.')+'</span></div>'+h;
-    if(done.length) h+='<button type="button" class="shaisle donebar" id="shDoneTog" aria-expanded="'+shopDoneOpen+'"><span class="ai">✓</span>Kúpené · dá sa vrátiť<span class="c">'+done.length+'</span><span class="chev'+(shopDoneOpen?' up':'')+'">▾</span></button>'+(shopDoneOpen?'<div class="slist">'+done.map(x=>rowHtml(x,true)).join('')+'</div><button type="button" class="linkbtn shclr" id="shClr">Vyčistiť kúpené</button>':'');
+    if(!open.length&&!done.length&&!auto.length&&!ST.length) h='<div class="shempty">'+food('vrecko',64)+'<b>Zoznam je prázdny</b><span>Napíš hore, čo treba kúpiť, alebo si vytvor obchod.</span></div>'+h;
     const rec=extra.shopRecent.filter(r=>!items.some(x=>fold(x.t)===fold(r.t)));
     if(rec.length) h+='<div class="shaisle"><span class="ai">↺</span>Kúpiť znova</div><div class="srec">'+rec.slice(0,16).map((r,i)=>'<button type="button" class="rchip" data-sr="'+i+'">'+shopIcon(r,22)+esc(r.t)+'</button>').join('')+'</div>';
     B.innerHTML=h;
@@ -3001,6 +3016,10 @@ function food(k,size,col){
         toast(x.t+' kúpené',()=>{x.done=false;x.doneAt=null;saveExtra();renderShop()});
       }else{x.done=false;x.doneAt=null;buzz(8);saveExtra();renderShop();toast(x.t+' vrátené do zoznamu')}
     });
+    B.querySelectorAll('[data-kb]').forEach(b=>b.onclick=()=>{const x=items.find(i=>i.id===b.dataset.kb);if(!x)return;const at=x.doneAt;x.done=false;x.doneAt=null;buzz(8);saveExtra();renderShop();toast(x.t+' vrátené do zoznamu',()=>{x.done=true;x.doneAt=at;saveExtra();renderShop()})});
+    B.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const i=items.findIndex(z=>z.id===b.dataset.rm);if(i<0)return;const x=items[i];buzz(12);const row=b.closest('.srow');
+      const go=()=>{const j=extra.shop.indexOf(x);if(j>=0)extra.shop.splice(j,1);saveExtra();renderShop();toast(x.t+' odobraté',()=>{extra.shop.splice(Math.min(i,extra.shop.length),0,x);saveExtra();renderShop()})};
+      if(row&&!reduce()){row.classList.add('going');setTimeout(go,380)}else go()});
     B.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>openShopDet(b.dataset.ed));
     B.querySelectorAll('[data-stog]').forEach(b=>b.onclick=()=>{const st=ST.find(z=>z.id===b.dataset.stog);if(!st)return;st.closed=!st.closed;buzz(8);saveExtra();renderShop()});
     B.querySelectorAll('[data-sted]').forEach(b=>b.onclick=()=>openStoreDet(b.dataset.sted));
@@ -3008,7 +3027,6 @@ function food(k,size,col){
     if($('shNewSt')) $('shNewSt').onclick=()=>openStoreDet(null);
     B.querySelectorAll('[data-sa]').forEach(b=>b.onclick=()=>{buzz(18);const row=b.closest('.srow');if(row&&!reduce())row.classList.add('going');setTimeout(()=>{refill(b.dataset.sa);renderShop()},reduce()?0:420)});
     B.querySelectorAll('[data-sr]').forEach(b=>b.onclick=()=>{const r=rec[+b.dataset.sr];if(!r)return;shopPut({t:r.t,a:r.a,q:r.q,note:r.note,s:shopTarget||r.s})});
-    if($('shDoneTog')) $('shDoneTog').onclick=()=>{shopDoneOpen=!shopDoneOpen;renderShop()};
     if($('shClr')) $('shClr').onclick=()=>{const gone=items.filter(x=>x.done);gone.forEach(x=>{extra.shopRecent=[{t:x.t,a:x.a,q:x.q,note:x.note,s:x.s}].concat(extra.shopRecent.filter(r=>fold(r.t)!==fold(x.t)))});extra.shopRecent=extra.shopRecent.slice(0,24);extra.shop=items.filter(x=>!x.done);saveExtra();renderShop();toast('Kúpené vyčistené',()=>{extra.shop=extra.shop.concat(gone);saveExtra();renderShop()})};
   }
   function bindHold(el,tap,hold){
@@ -3054,7 +3072,7 @@ function food(k,size,col){
       '<div class="lbl">Koľko</div><div class="chs">'+ch('q',0,qs)+'<input class="qin" id="sdQ" placeholder="iné" value="'+esc(qs.includes(d.q)?'':d.q||'')+'" maxlength="14"></div>'+
       (extra.stores.length?'<div class="lbl">Kde kúpiť</div><div class="chs">'+extra.stores.map(z=>'<button type="button" class="ch'+(d.s===z.id?' on':'')+'" data-ps="'+z.id+'">'+esc(z.n)+'</button>').join('')+'<button type="button" class="ch'+(!d.s?' on':'')+'" data-ps="">Kdekoľvek</button></div>':'')+
       '<div class="lbl">Poznámka</div><input class="sdn" id="sdN" placeholder="napr. značka, „tá v červenej dóze“" value="'+esc(d.note||'')+'" maxlength="60">'+
-      '<div class="sdact"><button type="button" class="btn pri" id="sdOk">'+(shopNew?'Pridať do nákupu':'Uložiť')+'</button>'+(shopNew?'':'<button type="button" class="btn ghost" id="sdDel">Odstrániť</button>')+'</div>';
+      '<div class="sdact"><button type="button" class="btn pri" id="sdOk">'+(shopNew?'Pridať do nákupu':'Uložiť')+'</button>'+(shopNew?'':'<button type="button" class="btn ghost" id="sdDel">Odobrať zo zoznamu</button>')+'</div>';
     $('shDet').hidden=false; $('shDetBack').hidden=false;
     const D=$('shDet');
     D.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{d.q=d.q===b.dataset.q?'':b.dataset.q;$('sdQ').value='';showShopDet()});
@@ -3067,7 +3085,7 @@ function food(k,size,col){
       else{const x=extra.shop.find(i=>i.id===d.id);if(x){Object.assign(x,{a:d.a,q:d.q,b:d.b,note:(d.note||'').trim(),s:d.s});saveExtra()}}
       closeShopDet(); renderShop();
     };
-    if($('sdDel')) $('sdDel').onclick=()=>{const x=extra.shop.find(i=>i.id===d.id);if(!x)return;extra.shop=extra.shop.filter(i=>i!==x);saveExtra();closeShopDet();renderShop();toast(x.t+' odstránené',()=>{extra.shop.push(x);saveExtra();renderShop()})};
+    if($('sdDel')) $('sdDel').onclick=()=>{const x=extra.shop.find(i=>i.id===d.id);if(!x)return;extra.shop=extra.shop.filter(i=>i!==x);saveExtra();closeShopDet();renderShop();toast(x.t+' odobraté',()=>{extra.shop.push(x);saveExtra();renderShop()})};
   }
   function openStoreDet(id){
     const st=id?extra.stores.find(z=>z.id===id):null; shopDet={store:1};

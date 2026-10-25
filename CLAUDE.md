@@ -35,7 +35,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v39)
+## Nákup (stav pri v40)
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
 - Systémové Späť na Androide: zavrie detail veci, potom nákup; ak bol nákup otvorený z Rýchlo, vráti do Rýchlo (`history.pushState({ml:'shop'})`, `popstate`, `shopPop`, `shopFromQ`).
 - Rozloženie je variant B: obchody ako karty pod sebou.
@@ -45,9 +45,10 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Karta sa dá zbaliť. Ceruzkou ✎ sa obchod premenuje alebo odstráni; veci z odstráneného obchodu ostanú, len bez obchodu.
 - Na konci zoznamu je „+ Nový obchod“.
 - V karte sa veci radia automaticky podľa oddelení (`AISLES`, `AIDX`, `CAT`, `guessAisle`).
-- Odškrtni a zmizne:
-  - odškrtnuté veci idú do sekcie „Kúpené · dá sa vrátiť“;
-  - po 24 h sa presunú do `shopRecent` („Kúpiť znova“).
+- Košík (návrh C, v40): zaškrtnutá vec sa presunie do zeleného pásu „🛒 V košíku · N“ hore v karte svojho obchodu ako okrúhla ikonka s fajočkou (`kosHtml`, trieda `.kchip`, `data-kb`). Hlavička obchodu ukazuje „3 z 7 v košíku“.
+  - Ťuknutie na ikonku v košíku vráti vec do zoznamu (toast so Späť).
+  - Kúpené veci sa po 24 h presunú do `shopRecent` („Kúpiť znova“). Globálna sekcia „Kúpené“ už nie je.
+- Odobrať (bez kúpenia, napr. rozmyslel som si to): pri každej veci tlačidlo „Odobrať“ (`.srm`, `data-rm`), toast „X odobraté · Späť“. V detaile je „Odobrať zo zoznamu“. Používať slovo **Odobrať**, nie „Nekúpim“ ani „Vyhodiť“.
 - Staré `p:'trh'` sa pri načítaní samo prevedie na obchod „Trh“.
 - Funkcie: `renderShop`, `rowHtml`, `shopPut`, `showShopDet` (Koľko / Kde kúpiť / Poznámka), `openStoreDet`, `openShop`, `shopAuto`, `food()`.
 - Súkromie: tlačidlo Poslať posiela domácnosti nákup po obchodoch. Moje lieky a kozmetika idú iba vtedy, keď zaškrtnem „pridať aj moje lieky a kozmetiku“.
