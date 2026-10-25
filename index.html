@@ -287,27 +287,72 @@ button,input,select{font:inherit;color:inherit}
 .panel{background:var(--card);border-radius:26px;padding:20px;margin:12px 0 0;box-shadow:0 1px 2px rgba(15,37,71,.06)}
 .panel h2{margin:0 0 12px;font-family:var(--f-display);font-weight:600;font-size:21px}
 .panel h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:18px}
-.shadd{display:flex;gap:8px}
-.shadd input{flex:1;min-width:0;font-size:17px;font-weight:600}
-.shrow{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer;min-height:52px}
-.shrow:last-child{border-bottom:0}
-.shrow input{width:24px;height:24px;accent-color:var(--ok);flex:none}
-.shrow .t{flex:1;min-width:0;font-weight:800;font-size:16px;overflow-wrap:anywhere}
-.shrow .t small{display:block;font-weight:600;font-size:12.5px;color:var(--muted)}
-.shrow.done .t{text-decoration:line-through;opacity:.5}
-.shrow .del{flex:none;border:0;background:none;color:var(--muted);font-size:22px;line-height:1;width:34px;height:34px;border-radius:50%;cursor:pointer}
-.shrow .del:active{background:var(--card2)}
-.shrow .pillbox{min-width:30px;min-height:30px}
-.shh{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 4px 2px}
-.shh .cnt{background:var(--acc-soft);color:var(--acc-deep);border-radius:999px;padding:0 8px;letter-spacing:0}
-.shempty{color:var(--muted);font-size:14px;margin:6px 4px}
-.shpriv{align-self:flex-start;max-width:100%}
-.shpriv span{white-space:normal!important;text-align:left}
-#shopSheet{min-width:0;max-width:100%;overflow:hidden}
-#shopSheet>*{min-width:0}
-.shadd .btn{flex:none}
-.shrow .t small{overflow-wrap:anywhere}
-#shopQuick .btn{min-height:36px;padding:4px 12px;font-size:13px}
+.qback{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);background:rgba(234,242,252,.5)!important}
+:root[data-theme=dark] .qback{background:rgba(12,21,36,.55)!important}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .qback{background:rgba(12,21,36,.55)!important}}
+.qmenu{display:block!important;width:min(400px,100%)!important;height:330px;bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
+.qb{position:absolute;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;font:inherit;color:var(--ink);cursor:pointer;width:96px;opacity:0;animation:qb-in .5s cubic-bezier(.34,1.56,.64,1) forwards}
+.qb .o{width:68px;height:68px;border-radius:50%;background:var(--card);display:grid;place-items:center;box-shadow:0 14px 26px -14px rgba(15,37,71,.6);margin-bottom:4px;transition:transform .2s}
+.qb:active .o{transform:scale(.9)}
+.qb b{font-size:14px;font-weight:800}.qb small{font-size:11.5px;font-weight:700;color:var(--muted)}
+.qb.hot .o{background:radial-gradient(circle at 35% 30%,#FFF8EC,#FFE0B0);box-shadow:0 0 0 3px #FFB547,0 16px 30px -12px rgba(233,140,20,.6)}
+.fpair{position:relative;display:grid;place-items:center}.fpair>span{position:absolute;right:-14px;bottom:-6px}
+@keyframes qb-in{from{opacity:0;transform:translate(-50%,60px) scale(.4)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.qb{animation:none;opacity:1}}
+.shback{position:fixed;inset:0;z-index:32;background:rgba(10,20,40,.42);animation:q-fade .25s ease-out}
+.shpanel{position:fixed;left:0;right:0;bottom:0;top:max(28px,env(safe-area-inset-top,0px));margin:0 auto;max-width:560px;z-index:33;background:var(--bg);border-radius:28px 28px 0 0;display:flex;flex-direction:column;box-shadow:0 -18px 40px -18px rgba(10,20,40,.45);animation:sh-up .38s cubic-bezier(.22,1,.36,1);overflow:hidden}
+.shtop{display:flex;align-items:center;gap:12px;padding:16px 16px 8px}
+.shring{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;flex:none;transition:background .4s}
+.shring span{width:40px;height:40px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+.shtt{flex:1;min-width:0}.shtt h2{margin:0;font-family:var(--f-display);font-size:24px;font-weight:800}.shtt span{display:block;font-size:13px;font-weight:600;color:var(--muted)}
+.shsearch{display:flex;align-items:center;gap:10px;margin:2px 14px 6px;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:0 14px;min-height:52px}
+.shsearch:focus-within{border-color:var(--acc);border-width:2px}
+.shsearch input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:17px;font-weight:700;color:var(--ink);outline:none;min-height:48px}
+.shbody{flex:1;overflow:auto;padding:0 0 calc(110px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
+.shaisle{display:flex;align-items:center;gap:8px;margin:14px 18px 7px;font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--tc,var(--muted))}
+.shaisle .ai{display:grid;place-items:center;width:22px;height:22px}
+.shaisle .c{margin-left:auto;background:var(--card);color:var(--muted);border-radius:999px;padding:0 8px;letter-spacing:0}
+.shaisle .lock{background:#EEE9FE;color:#4B3FC0;border-radius:999px;padding:1px 8px;letter-spacing:0;text-transform:none;font-size:11px}
+.shaisle.cart .linkbtn{margin-left:8px;padding:0;font-size:12.5px;letter-spacing:0;text-transform:none}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;padding:0 14px}
+.stile{position:relative;border:0;border-radius:18px;min-height:100px;padding:8px 4px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:var(--tb,#fff);color:var(--tc,var(--ink));font:inherit;font-weight:800;font-size:12.5px;line-height:1.15;text-align:center;cursor:pointer;box-shadow:0 8px 16px -14px rgba(15,37,71,.6);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.stile:active{transform:scale(.93)}
+:root[data-theme=dark] .stile:not(.old){background:color-mix(in srgb,var(--tb) 16%,var(--card2));color:color-mix(in srgb,var(--tc) 35%,#fff)}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .stile:not(.old){background:color-mix(in srgb,var(--tb) 16%,var(--card2));color:color-mix(in srgb,var(--tc) 35%,#fff)}}
+:root[data-theme=dark] .shaisle{filter:brightness(1.6)}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .shaisle{filter:brightness(1.6)}}
+.stile .si{display:grid;place-items:center;height:48px}
+.stile .sn{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto;font-size:12px}
+.stile small{font-weight:700;font-size:10.5px;opacity:.75;overflow-wrap:anywhere}
+.stile .sq{position:absolute;top:5px;right:5px;min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:#fff;color:#0F2547;font-size:11px;display:grid;place-items:center;box-shadow:0 1px 3px rgba(15,37,71,.2)}
+.stile .lk{position:absolute;top:5px;left:6px;font-size:11px}
+.stile.got{opacity:.5;filter:grayscale(.6)}.stile.got .sn{text-decoration:line-through}
+.stile.got::after{content:"✓";position:absolute;top:5px;left:6px;width:20px;height:20px;border-radius:50%;background:var(--ok);color:#fff;font-size:12px;display:grid;place-items:center}
+.srec{display:flex;gap:8px;overflow-x:auto;padding:0 14px 4px;scrollbar-width:none}.srec::-webkit-scrollbar{display:none}
+.stile.old{flex:none;width:78px;min-height:78px;background:var(--card);color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line)}
+.stile.old .si{height:36px}
+.shempty{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:26px 30px;color:var(--muted)}.shempty b{color:var(--ink);font-size:17px}
+.sopt{display:flex;align-items:center;gap:12px;margin:0 14px;padding:8px 6px;border-bottom:1px solid var(--line);cursor:pointer}
+.sopt .si{flex:none;display:grid;place-items:center;width:46px}
+.sopt b{flex:1;min-width:0;font-size:16px}.sopt b small{display:block;font-weight:600;font-size:12.5px;color:var(--muted)}
+.sopt .sadd{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:var(--acc-soft);color:var(--acc-deep);font-size:22px;font-weight:800;cursor:pointer}
+.sopt.in .sadd{background:var(--ok);color:#fff;font-size:17px}
+.sopt.custom b{color:var(--acc-deep)}
+.plusc{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:2px dashed var(--acc);color:var(--acc);font-weight:900;font-size:20px}
+.shpriv{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);font-size:13px;font-weight:700;color:var(--muted)}
+.shpriv input{width:20px;height:20px;accent-color:var(--acc)}
+.shback2{position:fixed;inset:0;z-index:34;background:rgba(10,20,40,.35)}
+.shdet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:560px;z-index:35;background:var(--card);border-radius:28px 28px 0 0;padding:6px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -24px 50px -18px rgba(10,20,40,.55);animation:sh-up .32s cubic-bezier(.22,1,.36,1);max-height:88vh;overflow:auto}
+.shdet .sdh{display:flex;align-items:center;gap:14px;margin:4px 0 6px}.shdet .sdh b{display:block;font-size:21px}.shdet .sdh span{color:var(--muted);font-weight:600;font-size:13.5px}
+.shdet .lbl{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.shdet .chs{display:flex;flex-wrap:wrap;gap:8px}
+.shdet .ch{border:1.5px solid var(--line);border-radius:999px;padding:7px 13px;font:inherit;font-weight:800;font-size:14px;background:var(--card);color:var(--ink);cursor:pointer;min-height:38px}
+.shdet .ch.sm{font-size:12.5px;padding:5px 10px;min-height:32px}
+.shdet .ch.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.shdet .qin{width:86px;border:1.5px solid var(--line);border-radius:999px;padding:7px 12px;font:inherit;font-weight:700;font-size:14px;background:var(--card);color:var(--ink)}
+.shdet .sdn{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:11px 14px;font:inherit;font-size:16px;background:var(--card);color:var(--ink)}
+.shdet .sdact{display:flex;gap:10px;margin-top:16px}.shdet .sdact .btn.pri{flex:1}
+@media (prefers-reduced-motion: reduce){.shpanel,.shdet,.shback{animation:none}}
 .pk{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
 .pk:last-child{border-bottom:0}
 .pk input{width:22px;height:22px;accent-color:var(--ok);flex:none}
@@ -859,20 +904,6 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </div>
   </section>
 
-  <section class="sheet" id="shopSheet" hidden aria-labelledby="shopTitle">
-    <div class="sheet-h"><h2 id="shopTitle">Nákup</h2><button type="button" class="x" id="shopClose" aria-label="Zavrieť">×</button></div>
-    <form class="shadd" id="shopForm" autocomplete="off">
-      <label class="sr" for="shopIn">Čo treba kúpiť</label>
-      <input id="shopIn" class="tinput" type="text" placeholder="napr. červená paprika" maxlength="60" enterkeyhint="done">
-      <button class="btn pri" type="submit" aria-label="Pridať do nákupu">Pridať</button>
-    </form>
-    <div class="chips" id="shopQuick" aria-label="Rýchle pridanie"></div>
-    <div id="shopList"></div>
-    <label class="chip shpriv"><input type="checkbox" id="shopMine"><span>Pri posielaní pridať aj moje lieky a kozmetiku</span></label>
-    <p class="note" style="margin:0">Domácnosť dostane len text zoznamu. Appku ani tvoje lieky neuvidí.</p>
-    <div class="actions"><button class="btn pri" type="button" id="shopShare">Poslať domácnosti</button><button class="btn ghost" type="button" id="shopClear" hidden>Vymazať kúpené</button></div>
-  </section>
-
   <section class="sheet" id="packSheet" hidden aria-labelledby="packTitle">
     <div class="sheet-h"><h2 id="packTitle">Balím sa na cestu</h2><button type="button" class="x" id="packClose" aria-label="Zavrieť">×</button></div>
     <div class="chips" id="packDays" role="radiogroup" aria-label="Na koľko dní"></div>
@@ -1102,7 +1133,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v28</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v29</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1114,6 +1145,20 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   <button type="button" class="tab" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Viac</span><i class="nb" id="nbMore" hidden></i></button>
 </nav>
 <div class="iback" id="infoBack" hidden></div>
+<div class="shback" id="shopBack" hidden></div>
+<section class="shpanel" id="shopSheet" hidden role="dialog" aria-modal="true" aria-labelledby="shopTitle">
+  <div class="shtop">
+    <div class="shring" id="shRing"><span id="shRingT">0/0</span></div>
+    <div class="shtt"><h2 id="shopTitle">Nákup</h2><span id="shHint"></span></div>
+    <button type="button" class="btn pri sm" id="shopShare">Poslať</button>
+    <button type="button" class="x" id="shopClose" aria-label="Zavrieť">×</button>
+  </div>
+  <form class="shsearch" id="shopForm" autocomplete="off"><span aria-hidden="true">🔍</span><label class="sr" for="shopIn">Čo treba kúpiť</label><input id="shopIn" type="search" placeholder="Čo treba kúpiť? napr. paprika" maxlength="60" enterkeyhint="done"></form>
+  <div class="shbody" id="shopBody"></div>
+  <label class="shpriv"><input type="checkbox" id="shopMine"> Pri posielaní pridať aj moje lieky a kozmetiku</label>
+</section>
+<div class="shback2" id="shDetBack" hidden></div>
+<section class="shdet" id="shDet" hidden role="dialog" aria-modal="true"></section>
 <div id="toastHost"></div>
 <div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="introT">
   <div class="icard">
@@ -1584,7 +1629,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       if(q.get('add')) setTimeout(()=>{setTab('meds');quickOpen(true)},60);
       else if(q.get('tab')&&['today','week','meds','more'].includes(q.get('tab'))) setTab(q.get('tab'));
       if(q.get('pack')) setTimeout(()=>{setTab('more');openPack()},60);
-      if(q.get('shop')) setTimeout(()=>{setTab('more');openShop()},60);
+      if(q.get('shop')) setTimeout(()=>openShop(true),60);
       if(location.search) history.replaceState(null,'',location.pathname);
     }catch(e){}
     try{if(!meds.length&&localStorage.getItem('lieky-intro')!=='1') setTimeout(introOpen,400)}catch(e){}
@@ -2187,15 +2232,16 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);quickOpen(false);if(!$('infoSheet').hidden)closeCard();nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
   const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms||10)}catch(_){}};
-  const QG=[{g:'med',l:'Liek',d:'tablety, kapsuly',sh:'tab',c:'#2D6BE4'},{g:'care',l:'Kvapky a ošetrenie',d:'kvapky, masti',sh:'drop',c:'#1FA3B8'},{g:'cosm',l:'Kozmetika',d:'šampón, krém',sh:'pump',c:'#D9658C'},{g:'swap',l:'Výmena',d:'kefka, žiletka',sh:'brush',c:'#6E66E0'}];
+  const QG=[{g:'med',l:'Liek',d:'tablety',sh:'tab',c:'#4F7BF0'},{g:'care',l:'Kvapky',d:'a masti',sh:'drop',c:'#1FA3B8'},{g:'cosm',l:'Kozmetika',d:'',sh:'pump',c:'#D9658C'},{g:'swap',l:'Výmena',d:'kefky',sh:'ebrush',c:'#2D6BE4'},{g:'shop',l:'Nákup',d:'potraviny'}];
   function quickOpen(on){
     const q=$('quick');
     if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
-    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qi" role="menuitem" data-qg="'+x.g+'" style="animation-delay:'+(i*55)+'ms"><span class="pillbox">'+pillSvg(x.sh,x.c,40)+'</span><span>'+x.l+'<small>'+x.d+'</small></span></button>').join('');
+    const POS=[[13,64],[31,30],[50,3],[69,30],[87,64]];
+    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb'+(x.g==='shop'?' hot':'')+'" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
-    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
-    const f=$('qMenu').querySelector('.qi'); if(f) f.focus({preventScroll:true});
+    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
+    const f=$('qMenu').querySelector('.qb'); if(f) f.focus({preventScroll:true});
   }
   $('plusTab').onclick=()=>{buzz(12);if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
   $('qBack').onclick=()=>quickOpen(false);
@@ -2427,7 +2473,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   function normExtra(o){
     o=o&&typeof o==='object'?o:{};
     const arr=a=>Array.isArray(a)?a.filter(x=>x&&typeof x==='object'&&x.id):[];
-    return {prn:arr(o.prn).slice(-400),fx:arr(o.fx).slice(-300),visits:arr(o.visits).slice(-100),sw:arr(o.sw).slice(-200),shop:arr(o.shop).filter(x=>typeof x.t==='string'&&x.t.trim()).slice(-300)};
+    return {prn:arr(o.prn).slice(-400),fx:arr(o.fx).slice(-300),visits:arr(o.visits).slice(-100),sw:arr(o.sw).slice(-200),shop:arr(o.shop).filter(x=>typeof x.t==='string'&&x.t.trim()).slice(-300),shopRecent:(Array.isArray(o.shopRecent)?o.shopRecent:[]).filter(r=>r&&typeof r.t==='string').slice(0,24)};
   }
   function saveExtra(){ extra=normExtra(extra); if(db) queue('data/users/'+uid+'/extra',JSON.parse(JSON.stringify(extra))); lsSave(); }
   const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -2651,56 +2697,313 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   $('fxBtn').onclick=()=>openFx('');
   $('repBtn').onclick=openRep;
 
-  /* ---------- shopping list ---------- */
-  const SHOP_Q=['Chlieb','Mlieko','Vajcia','Maslo','Syr','Šunka','Jogurt','Paprika','Paradajky','Uhorka','Banány','Jablká','Zemiaky','Cibuľa','Káva','Voda'];
+// glossy 3D food icons, viewBox 64
+  let _f=0;
+function food(k,size,col){
+  size=size||44; const u='f'+(++_f);
+  const cs={red:['#FF9C8A','#E8302A','#9E1410'],yellow:['#FFF1A0','#F7C21A','#B88600'],green:['#C6F28A','#4FAE2A','#2A6E12']}[col||'red']||['#FF9C8A','#E8302A','#9E1410'];
+  const rg=(id,a,b,c)=>'<radialGradient id="'+u+id+'" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="'+a+'"/><stop offset=".55" stop-color="'+b+'"/><stop offset="1" stop-color="'+c+'"/></radialGradient>';
+  const lg=(id,a,b,c)=>'<linearGradient id="'+u+id+'" x1="0" x2="1"><stop offset="0" stop-color="'+a+'"/><stop offset=".4" stop-color="'+b+'"/><stop offset="1" stop-color="'+c+'"/></linearGradient>';
+  const sh='<ellipse cx="32" cy="58" rx="17" ry="3" fill="rgba(15,35,75,.18)"/>';
+  const sp=(x,y,rx,ry,r)=>'<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="#fff" opacity=".8" transform="rotate('+(r||0)+' '+x+' '+y+')"/>';
+  let d='',b='';
+  switch(k){
+  case 'paprika': d=rg('a',cs[0],cs[1],cs[2])+lg('s','#2E8B3A','#5FC05A','#1F6B2A');
+    b=sh+'<path d="M32 16c-6-4-16-2-19 7-3 9 0 22 6 28 4 4 8 4 10 1 1.5 2 4.5 2 6 0 2 3 6 3 10-1 6-6 9-19 6-28-3-9-13-11-19-7z" fill="url(#'+u+'a)"/><path d="M32 17c-1.5 6-1.5 26 0 35" stroke="#B81E18" stroke-width="1.6" fill="none" opacity=".6"/>'+
+      '<path d="M29 17c0-5 2-9 6-11" stroke="url(#'+u+'s)" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M24 16c3-3 13-3 16 0-3 2-13 2-16 0z" fill="#3E9B42"/>'+sp(21,28,3,7,10);break;
+  case 'mlieko': d=lg('a','#C9D7EC','#FFFFFF','#B9C8DE')+lg('b','#2E7BE0','#5EA2FF','#1D56B0');
+    b=sh+'<path d="M18 22l6-12h16l6 12z" fill="#E7EEF8" stroke="#AEBDD2" stroke-width=".8"/><rect x="28" y="4" width="8" height="6" rx="1.5" fill="#2E7BE0"/><rect x="18" y="22" width="28" height="34" rx="3" fill="url(#'+u+'a)" stroke="#AEBDD2" stroke-width=".8"/>'+
+      '<path d="M18 40c5-3 9 3 14 0s9 3 14 0v13a3 3 0 0 1-3 3H21a3 3 0 0 1-3-3z" fill="url(#'+u+'b)"/><text x="32" y="34" text-anchor="middle" font-size="7" font-weight="800" fill="#1D56B0" font-family="system-ui">MLIEKO</text>'+sp(21,30,1.4,7,0);break;
+  case 'chlieb': d=rg('a','#FFD9A0','#D98B3A','#8E4E17');
+    b=sh+'<path d="M8 38c0-14 10-22 24-22s24 8 24 22c0 9-5 15-12 15H20C13 53 8 47 8 38z" fill="url(#'+u+'a)"/><path d="M18 26c2 4 2 8 1 12M29 22c2 5 2 10 1 15M41 24c2 5 2 9 1 13" stroke="#F7D08F" stroke-width="2.4" stroke-linecap="round" fill="none"/>'+sp(19,23,6,2.4,-20);break;
+  case 'vajcia': d=rg('a','#FFFFFF','#F6E7D2','#D2B48C')+rg('b','#FFFFFF','#F3E2CB','#C9A57A');
+    b=sh+'<ellipse cx="24" cy="36" rx="11" ry="15" fill="url(#'+u+'a)"/><ellipse cx="41" cy="39" rx="10.5" ry="14" fill="url(#'+u+'b)"/>'+sp(20,28,2.6,5,-15)+sp(37,32,2.4,4.6,-15);break;
+  case 'syr': d=lg('a','#FFE37A','#FFD13A','#E5A800');
+    b=sh+'<path d="M8 40l40-18 8 6v20l-48 4z" fill="url(#'+u+'a)"/><path d="M8 40l40-18 8 6-48 12z" fill="#FFEB9E"/><circle cx="22" cy="46" r="3" fill="#E0A400"/><circle cx="40" cy="44" r="2.4" fill="#E0A400"/><circle cx="48" cy="48" r="1.6" fill="#E0A400"/><circle cx="32" cy="35" r="1.6" fill="#F2C94C"/>';break;
+  case 'banan': d=lg('a','#C79400','#FFD93B','#E8A800');
+    b=sh+'<path d="M12 18c4 18 18 30 40 26 3-.6 4 2 1 4-22 12-48-6-47-30 0-3 5-3 6 0z" fill="url(#'+u+'a)"/><path d="M8 15l3-4 3 3z" fill="#6B4A10"/><path d="M15 24c6 12 17 19 32 19" stroke="#FFF2A8" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>';break;
+  case 'jablko': d=rg('a','#C6F28A','#5CBF2A','#2F7A12');
+    b=sh+'<path d="M32 20c-8-6-22-3-22 12 0 14 10 24 17 24 3 0 4-1.5 5-1.5S34 56 37 56c7 0 17-10 17-24 0-15-14-18-22-12z" fill="url(#'+u+'a)"/><path d="M32 20c0-5 1-9 4-12" stroke="#6B4A10" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M34 14c4-5 10-5 13-3-3 4-9 5-13 3z" fill="#3E9B42"/>'+sp(19,29,3,7,15);break;
+  case 'paradajka': d=rg('a','#FFB0A0','#F0412E','#A81A0E');
+    b=sh+'<ellipse cx="32" cy="36" rx="22" ry="19" fill="url(#'+u+'a)"/><path d="M32 18l-3 4-7-1 4 4-6 3 7 0 3 4 2-5 6 1-4-4 5-3h-6z" fill="#3E9B42"/>'+sp(21,30,4,6,25);break;
+  case 'kava': d=lg('a','#5B3A23','#8C5A35','#3A2414');
+    b=sh+'<rect x="16" y="14" width="32" height="42" rx="4" fill="url(#'+u+'a)"/><path d="M16 22h32" stroke="#C9A27A" stroke-width="2"/><ellipse cx="32" cy="38" rx="7" ry="9" fill="#C9A27A"/><path d="M32 30c-3 5 3 11 0 16" stroke="#5B3A23" stroke-width="1.6" fill="none"/>';break;
+  case 'korenie': { const c=col==='hot'?['#FF8A5C','#C8290F','#7A1206']:col==='smoked'?['#D98A5C','#9C3F1A','#5A220C']:['#FF9C6E','#E0461C','#9E2A0C'];
+    d=lg('g','#D8E2EE','#FFFFFF','#C3CFDE')+rg('p',c[0],c[1],c[2]);
+    b=sh+'<rect x="18" y="20" width="28" height="36" rx="6" fill="url(#'+u+'g)" stroke="#AEBBCD" stroke-width=".8" fill-opacity=".9"/><path d="M19 32c4-3 9 2 13-1s9 2 13-1v19a5 5 0 0 1-5 5H24a5 5 0 0 1-5-5z" fill="url(#'+u+'p)"/>'+
+      '<g fill="'+c[2]+'" opacity=".5"><circle cx="25" cy="40" r=".9"/><circle cx="31" cy="46" r=".8"/><circle cx="38" cy="42" r=".9"/><circle cx="35" cy="50" r=".7"/></g>'+
+      '<rect x="16" y="10" width="32" height="11" rx="3" fill="'+(col==='hot'?'#1F1F1F':'#C8102E')+'"/><path d="M19 12v7M23 12v7M27 12v7M31 12v7M35 12v7M39 12v7M43 12v7" stroke="#fff" stroke-width=".7" opacity=".35"/>'+
+      '<rect x="22" y="36" width="20" height="9" rx="2" fill="#fff" opacity=".9"/><path d="M25 40.5h14" stroke="'+c[1]+'" stroke-width="1.6" stroke-linecap="round"/>'+sp(21,30,1.2,8,0);break; }
+  case 'konzerva': d=lg('m','#8E9AAD','#F4F7FB','#7F8B9F')+lg('l','#B81E18','#E8302A','#8E1410');
+    b=sh+'<rect x="14" y="18" width="36" height="38" rx="4" fill="url(#'+u+'m)"/><ellipse cx="32" cy="18" rx="18" ry="4.5" fill="#E3E9F1" stroke="#8E9AAD" stroke-width=".8"/><ellipse cx="32" cy="18" rx="13" ry="3" fill="none" stroke="#AEB8C6" stroke-width=".8"/>'+
+      '<rect x="14" y="26" width="36" height="22" fill="url(#'+u+'l)"/><circle cx="32" cy="37" r="7.5" fill="#F0412E" stroke="#fff" stroke-width="1.4"/><path d="M32 30l-1.6 2.4-3-.4 2 2-2.6 1.6h3.2l2 2 .6-2.6 2.8.4-2-2 2.4-1.6h-3z" fill="#3E9B42"/>'+
+      '<path d="M14 26h36M14 48h36" stroke="#7A0E0A" stroke-width=".8"/>'+sp(18,36,1.2,9,0);break;
+  case 'kecup': d=lg('a','#8E1410','#E8302A','#7A0E0A');
+    b=sh+'<path d="M26 4h12v8l4 6v34a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V18l4-6z" fill="url(#'+u+'a)"/><rect x="25" y="2" width="14" height="7" rx="2" fill="#F4F7FB"/><rect x="24" y="28" width="16" height="16" rx="3" fill="#fff" opacity=".92"/><circle cx="32" cy="36" r="4" fill="#F0412E"/>'+sp(25,30,1,10,0);break;
+  case 'uhorka': d=lg('a','#2A6E12','#6CC04A','#1F5A0E');
+    b=sh+'<g transform="rotate(-35 32 34)"><rect x="8" y="26" width="48" height="16" rx="8" fill="url(#'+u+'a)"/><g fill="#A8E08A" opacity=".8"><circle cx="18" cy="31" r="1"/><circle cx="26" cy="36" r="1"/><circle cx="34" cy="30" r="1"/><circle cx="42" cy="35" r="1"/><circle cx="48" cy="30" r="1"/></g><path d="M14 30h34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".45"/></g>';break;
+  case 'cibula': d=rg('a','#FFE2B8','#D9932E','#8E5A12');
+    b=sh+'<path d="M32 10c2 6 18 12 18 28a18 16 0 0 1-36 0c0-16 16-22 18-28z" fill="url(#'+u+'a)"/><path d="M32 12c-3 10-8 18-8 28M32 12c3 10 8 18 8 28" stroke="#B87420" stroke-width="1.2" fill="none" opacity=".6"/><path d="M28 52c2 2 6 2 8 0" stroke="#8E5A12" stroke-width="1.6" fill="none"/>'+sp(22,34,3,7,10);break;
+  case 'zemiak': d=rg('a','#F2D29A','#C99A55','#8A6430');
+    b=sh+'<path d="M12 36c0-12 10-20 22-20s20 7 20 18-9 20-22 20S12 48 12 36z" fill="url(#'+u+'a)"/><g fill="#8A6430" opacity=".55"><circle cx="24" cy="30" r="1.4"/><circle cx="38" cy="26" r="1.2"/><circle cx="44" cy="40" r="1.3"/><circle cx="28" cy="44" r="1.1"/></g>'+sp(22,28,4,2,-20);break;
+  case 'mrkva': d=lg('a','#C84A16','#FF8A3D','#B83E0E');
+    b=sh+'<g transform="rotate(-40 32 34)"><path d="M10 34c0-5 8-7 16-7h20l12 7-12 7H26c-8 0-16-2-16-7z" fill="url(#'+u+'a)" transform="rotate(180 34 34)"/><path d="M50 30l8-6M51 34h9M50 38l8 6" stroke="#3E9B42" stroke-width="3" stroke-linecap="round"/><path d="M20 31l2 3M28 30l2 4M36 30l2 4" stroke="#B83E0E" stroke-width="1.2" opacity=".6"/></g>';break;
+  case 'citron': d=rg('a','#FFF6B0','#F7D21A','#C9A000');
+    b=sh+'<ellipse cx="32" cy="36" rx="21" ry="15" fill="url(#'+u+'a)"/><path d="M10 36l-4 0M54 36l4 0" stroke="#C9A000" stroke-width="4" stroke-linecap="round"/>'+sp(22,30,5,2.6,-15);break;
+  case 'maso': d=rg('a','#FF9FA0','#D9434A','#8E1C22');
+    b=sh+'<path d="M10 34c0-12 12-20 26-18 12 2 18 10 18 18 0 12-12 20-24 20S10 46 10 34z" fill="url(#'+u+'a)"/><path d="M18 32c6-8 18-10 26-4" stroke="#FFE3E3" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="40" cy="38" r="5" fill="#FFF1E8" stroke="#E9C3B5"/>';break;
+  case 'sunka': d=lg('a','#F7B6B8','#FFD6D6','#E58F93');
+    b=sh+'<ellipse cx="30" cy="40" rx="20" ry="11" fill="#E58F93"/><ellipse cx="30" cy="37" rx="20" ry="11" fill="url(#'+u+'a)"/><ellipse cx="36" cy="30" rx="18" ry="10" fill="#F2A3A6"/><ellipse cx="36" cy="27" rx="18" ry="10" fill="url(#'+u+'a)"/><path d="M22 27c6-4 18-4 26 0" stroke="#fff" stroke-width="1.6" fill="none" opacity=".8"/>';break;
+  case 'jogurt': d=lg('a','#D7E3F4','#FFFFFF','#C0CFE3');
+    b=sh+'<path d="M16 20h32l-4 34a3 3 0 0 1-3 3H23a3 3 0 0 1-3-3z" fill="url(#'+u+'a)" stroke="#AEBDD2" stroke-width=".8"/><rect x="14" y="15" width="36" height="7" rx="2" fill="#E8302A"/><path d="M19 34h26" stroke="#E8302A" stroke-width="5" opacity=".85"/><circle cx="32" cy="43" r="4" fill="#F0412E"/>';break;
+  case 'maslo': d=lg('a','#FFF3B0','#FFE066','#E3B800');
+    b=sh+'<path d="M8 36l14-10h34l-14 10z" fill="#FFF6C8"/><path d="M8 36h34v14H8z" fill="url(#'+u+'a)"/><path d="M42 36l14-10v14l-14 10z" fill="#E3B800"/><rect x="12" y="40" width="22" height="6" rx="1.5" fill="#fff" opacity=".7"/>';break;
+  case 'voda': d=lg('a','#7FC4FF','#D9F0FF','#5AA7F0');
+    b=sh+'<rect x="27" y="3" width="10" height="7" rx="2" fill="#2E7BE0"/><path d="M25 10h14v4l5 6v32a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4V20l5-6z" fill="url(#'+u+'a)" stroke="#5AA7F0" stroke-width=".8"/><rect x="20" y="30" width="24" height="12" fill="#2E7BE0" opacity=".85"/><path d="M24 36h16" stroke="#fff" stroke-width="1.6"/>'+sp(24,24,1.2,6,0);break;
+  case 'olej': d=lg('a','#C99A00','#FFE066','#B88600');
+    b=sh+'<rect x="27" y="3" width="10" height="7" rx="2" fill="#3E9B42"/><path d="M25 10h14v4l5 6v32a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4V20l5-6z" fill="url(#'+u+'a)"/><rect x="21" y="30" width="22" height="12" rx="2" fill="#fff" opacity=".9"/><circle cx="32" cy="36" r="3.4" fill="#3E9B42"/>'+sp(24,24,1.2,6,0);break;
+  case 'cestoviny': d=lg('a','#F2C94C','#FFE58A','#D9A92A');
+    b=sh+'<rect x="14" y="14" width="36" height="42" rx="5" fill="#2E7BE0"/><rect x="18" y="20" width="28" height="22" rx="4" fill="#E9F2FF"/><g stroke="url(#'+u+'a)" stroke-width="3" stroke-linecap="round" fill="none"><path d="M22 26c4 4 8-4 12 0s8-4 10 0"/><path d="M22 32c4 4 8-4 12 0s8-4 10 0"/><path d="M22 38c4 4 8-4 12 0s8-4 10 0"/></g><rect x="18" y="46" width="28" height="4" rx="2" fill="#fff" opacity=".6"/>';break;
+  case 'vrecko': { const c=col==='brown'?['#E8C9A0','#B98A50']:col==='white'?['#FFFFFF','#C9D3E2']:['#F7E7C8','#C9A46A'];
+    d=lg('a',c[1],c[0],c[1]);
+    b=sh+'<path d="M16 16h32l2 38a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3z" fill="url(#'+u+'a)" stroke="#AEBBCD" stroke-width=".8"/><path d="M16 16l4-6h24l4 6" fill="'+c[0]+'" stroke="#AEBBCD" stroke-width=".8"/><rect x="20" y="28" width="24" height="16" rx="3" fill="#fff" opacity=".9"/><path d="M24 34h16M24 38h10" stroke="#8A9AB3" stroke-width="1.6" stroke-linecap="round"/>';break; }
+  case 'cokolada': d=lg('a','#5A2E14','#8C4A22','#3E1E0C');
+    b=sh+'<g transform="rotate(-15 32 34)"><rect x="12" y="16" width="40" height="34" rx="4" fill="url(#'+u+'a)"/><path d="M12 27h40M12 38h40M25 16v34M38 16v34" stroke="#3E1E0C" stroke-width="1.6"/><path d="M12 36h40v14a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4z" fill="#C8102E"/><path d="M12 36h40" stroke="#E8C14C" stroke-width="2"/></g>';break;
+  case 'mrazene': d=lg('a','#7FC4FF','#E3F3FF','#5AA7F0');
+    b=sh+'<rect x="12" y="16" width="40" height="38" rx="5" fill="url(#'+u+'a)" stroke="#5AA7F0" stroke-width=".8"/><g stroke="#2E7BE0" stroke-width="2.2" stroke-linecap="round"><path d="M32 24v22M22.5 29.5l19 11M22.5 40.5l19-11"/></g>';break;
+  case 'mydlo': d=lg('a','#B8F2E6','#5ED6BE','#1FA08A');
+    b=sh+'<rect x="29" y="4" width="6" height="8" fill="#DCE4EF"/><path d="M22 6h16v4H22z" fill="#F4F7FB" stroke="#AEBBCD" stroke-width=".7"/><rect x="18" y="12" width="28" height="44" rx="8" fill="url(#'+u+'a)"/><rect x="22" y="26" width="20" height="14" rx="3" fill="#fff" opacity=".9"/><circle cx="46" cy="18" r="3" fill="#fff" opacity=".8"/><circle cx="50" cy="13" r="1.8" fill="#fff" opacity=".8"/>';break;
+  case 'papier': d=lg('a','#D7E0EC','#FFFFFF','#C3CFDE');
+    b=sh+'<rect x="12" y="20" width="40" height="34" rx="4" fill="url(#'+u+'a)" stroke="#AEBBCD" stroke-width=".8"/><ellipse cx="32" cy="20" rx="20" ry="6" fill="#FFFFFF" stroke="#AEBBCD" stroke-width=".8"/><ellipse cx="32" cy="20" rx="6" ry="2.4" fill="#C3CFDE"/>';break;
+  default: d=rg('a','#E3EAF5','#B9C6DA','#8A9AB3');
+    b=sh+'<path d="M14 24h36l-4 30H18z" fill="url(#'+u+'a)"/><path d="M22 24c0-8 4-12 10-12s10 4 10 12" stroke="#8A9AB3" stroke-width="3" fill="none"/>';
+  }
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" aria-hidden="true"><defs>'+d+'</defs>'+b+'</svg>';
+}
+
+  /* ---------- shopping 2.0: catalog, store-walk aisles, tiles ---------- */
+  const AISLES=[
+    ['zel','Ovocie a zelenina','paprika','#E3F5E5','#1F6B2A'],
+    ['pec','Pečivo','chlieb','#FBEBD3','#8E4E17'],
+    ['mas','Mäso a údeniny','maso','#FCE4E4','#9E2A2A'],
+    ['mli','Mliečne a vajcia','mlieko','#E3EDFD','#1D56B0'],
+    ['trv','Trvanlivé','cestoviny','#FFF4D6','#8A6A10'],
+    ['kon','Konzervy a poháre','konzerva','#F1E9E4','#7A3B1E'],
+    ['kor','Korenie a ochucovadlá','korenie','#FCE6DF','#9E2A0C'],
+    ['sla','Káva a sladké','kava','#F0E6DE','#5B3A23'],
+    ['nap','Nápoje','voda','#E0F1FC','#1C6FA8'],
+    ['mra','Mrazené','mrazene','#E6F3FF','#2E6FB8'],
+    ['dro','Drogéria','mydlo','#DDF6F0','#13786A'],
+    ['ine','Ostatné','vrecko','#EEF1F5','#5A6C8A'],
+    ['moje','Moje zásoby','', '#EEE9FE','#4B3FC0']];
+  const AIDX={}; AISLES.forEach((a,i)=>AIDX[a[0]]=i);
+  const KS=['1 ks','2 ks','3 ks','4 ks','6 ks'], KG=['250 g','500 g','1 kg','2 kg'], GR=['50 g','100 g','200 g'], LT=['1 l','2 l','6 l'];
+  // [name, aisle, icon, color, qty options, pack options, keywords]
+  const CAT=[
+    ['Paprika červená','zel','paprika','red',KS.concat(['500 g','1 kg']),0,'paprika'],
+    ['Paprika žltá','zel','paprika','yellow',KS.concat(['500 g']),0,'paprika'],
+    ['Paprika zelená','zel','paprika','green',KS.concat(['500 g']),0,'paprika'],
+    ['Paradajky','zel','paradajka','',KG.concat(KS),0,'rajciny paradajka'],
+    ['Paradajky cherry','zel','paradajka','',['250 g','500 g'],['vanička'],'rajciny paradajka'],
+    ['Uhorka šalátová','zel','uhorka','',KS,0,'uhorka'],
+    ['Cibuľa','zel','cibula','',KG.concat(['sieťka']),0,'cibula'],
+    ['Zemiaky','zel','zemiak','',['1 kg','2 kg','5 kg'],0,'zemiaky'],
+    ['Mrkva','zel','mrkva','',['500 g','1 kg'],0,'mrkva'],
+    ['Cesnak','zel','cibula','',['1 ks','2 ks','3 ks'],0,'cesnak'],
+    ['Citróny','zel','citron','',KS,0,'citron'],
+    ['Banány','zel','banan','',['1 kg','5 ks','trs'],0,'banan'],
+    ['Jablká','zel','jablko','',KG.concat(KS),0,'jablko'],
+    ['Šalát ľadový','zel','uhorka','',['1 ks','2 ks'],0,'salat'],
+    ['Chlieb','pec','chlieb','',['1 ks','½ ks'],['krájaný','celý'],'chlieb'],
+    ['Rožky','pec','chlieb','',['5 ks','10 ks','15 ks'],0,'rozky pecivo'],
+    ['Bageta','pec','chlieb','',['1 ks','2 ks'],0,'bageta pecivo'],
+    ['Kuracie prsia','mas','maso','',['500 g','1 kg'],0,'kura maso'],
+    ['Mleté mäso','mas','maso','',['500 g','1 kg'],['bravčové','hovädzie','mix'],'mlete maso'],
+    ['Šunka','mas','sunka','',['100 g','200 g'],['krájaná'],'sunka'],
+    ['Saláma','mas','sunka','',['100 g','200 g'],0,'salama'],
+    ['Párky','mas','sunka','',['1 bal.','2 bal.'],0,'parky'],
+    ['Mlieko','mli','mlieko','',['1 l','2 l','4 l','6 l'],['polotučné','plnotučné','bezlaktózové'],'mlieko'],
+    ['Vajcia','mli','vajcia','',['6 ks','10 ks','30 ks'],0,'vajcia vajce'],
+    ['Maslo','mli','maslo','',['1 ks','2 ks'],0,'maslo'],
+    ['Syr','mli','syr','',['100 g','200 g','400 g'],['eidam','gouda','krájaný','na váhu'],'syr'],
+    ['Jogurt','mli','jogurt','',KS,['biely','ovocný','grécky'],'jogurt'],
+    ['Smotana','mli','jogurt','',['1 ks','2 ks'],['na varenie','na šľahanie','kyslá'],'smotana'],
+    ['Tvaroh','mli','jogurt','',['1 ks','2 ks'],0,'tvaroh'],
+    ['Cestoviny','trv','cestoviny','',['500 g','1 kg'],['špagety','penne','vretená'],'cestoviny'],
+    ['Ryža','trv','vrecko','white',['500 g','1 kg'],['guľatozrnná','dlhozrnná','basmati'],'ryza'],
+    ['Múka hladká','trv','vrecko','white',['1 kg','2 kg'],0,'muka'],
+    ['Múka polohrubá','trv','vrecko','white',['1 kg','2 kg'],0,'muka'],
+    ['Cukor','trv','vrecko','white',['1 kg'],['kryštálový','práškový'],'cukor'],
+    ['Olej','trv','olej','',['1 l','2 l'],['slnečnicový','olivový'],'olej'],
+    ['Ovsené vločky','trv','vrecko','brown',['500 g'],0,'vlocky'],
+    ['Paradajkový pretlak','kon','konzerva','',['1 ks','2 ks','3 ks'],['plechovka','tuba'],'paradajka pretlak'],
+    ['Paradajky lúpané','kon','konzerva','',['1 ks','2 ks'],['plechovka'],'paradajka konzerva'],
+    ['Paprika sterilizovaná','kon','konzerva','',['1 ks','2 ks'],['pohár'],'paprika'],
+    ['Kukurica','kon','konzerva','',['1 ks','2 ks'],0,'kukurica'],
+    ['Fazuľa','kon','konzerva','',['1 ks','2 ks'],0,'fazula'],
+    ['Tuniak','kon','konzerva','',['1 ks','2 ks','3 ks'],0,'tuniak ryba'],
+    ['Uhorky sterilizované','kon','konzerva','',['1 ks'],['pohár'],'uhorka'],
+    ['Paprika sladká mletá','kor','korenie','sweet',GR,['vrecko','dóza'],'paprika korenie sypana'],
+    ['Paprika štipľavá','kor','korenie','hot',GR,['vrecko','dóza'],'paprika korenie sypana pálivá'],
+    ['Paprika údená','kor','korenie','smoked',GR,['dóza'],'paprika korenie sypana'],
+    ['Soľ','kor','vrecko','white',['1 kg'],0,'sol'],
+    ['Čierne korenie','kor','korenie','smoked',GR,['mleté','celé'],'korenie'],
+    ['Kečup','kor','kecup','',['1 ks','2 ks'],['jemný','pikantný'],'kecup paradajka'],
+    ['Horčica','kor','kecup','',['1 ks'],0,'horcica'],
+    ['Majonéza','kor','jogurt','',['1 ks'],0,'majoneza'],
+    ['Káva','sla','kava','',['250 g','500 g','1 kg'],['zrnková','mletá','kapsule'],'kava'],
+    ['Čaj','sla','vrecko','brown',['1 bal.','2 bal.'],0,'caj'],
+    ['Čokoláda','sla','cokolada','',['1 ks','2 ks'],0,'cokolada'],
+    ['Sušienky','sla','vrecko','brown',['1 bal.','2 bal.'],0,'susienky'],
+    ['Voda','nap','voda','',['1,5 l','6 × 1,5 l'],['neperlivá','jemne perlivá','perlivá'],'voda'],
+    ['Džús','nap','voda','',['1 l','2 l'],0,'dzus'],
+    ['Pivo','nap','voda','',['1 ks','4 ks','6 ks'],0,'pivo'],
+    ['Zmrzlina','mra','mrazene','',['1 ks'],0,'zmrzlina'],
+    ['Mrazená zelenina','mra','mrazene','',['1 bal.','2 bal.'],0,'zelenina mrazena'],
+    ['Pizza mrazená','mra','mrazene','',['1 ks','2 ks'],0,'pizza'],
+    ['Toaletný papier','dro','papier','',['8 ks','16 ks'],0,'papier'],
+    ['Kuchynské utierky','dro','papier','',['2 ks','4 ks'],0,'utierky'],
+    ['Saponát na riad','dro','mydlo','',['1 ks'],0,'saponat jar'],
+    ['Prací prostriedok','dro','mydlo','',['1 ks'],['gél','prášok','kapsule'],'pracie'],
+    ['Mydlo','dro','mydlo','',['1 ks','2 ks'],0,'mydlo'],
+    ['Vrecia na odpad','dro','vrecko','',['1 bal.'],0,'vrecia odpad']];
+  const fold=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const catBy=n=>CAT.find(c=>fold(c[0])===fold(n));
+  function guessAisle(t){const f=fold(t);const c=CAT.find(c=>fold(c[0])===f)||CAT.find(c=>f.includes(fold(c[0]))||fold(c[0]).includes(f)||(c[6]||'').split(' ').some(k=>k&&f.includes(k)));return c?c:null}
+  function shopIcon(x,size){
+    if(x.m){const m=meds.find(z=>z.id===x.m);if(m)return picM(m,size)}
+    const c=catBy(x.t)||(x.i?[0,0,x.i,x.c]:null);
+    if(c&&c[2]) return food(c[2],size,c[3]);
+    const a=AISLES[(x.a in AIDX)?AIDX[x.a]:AIDX.ine]; return food(a[2]||'vrecko',size);
+  }
+  function normShop(){
+    extra.shop=(extra.shop||[]).map(x=>{if(!x.a){const c=guessAisle(x.t);x.a=c?c[1]:'ine';if(c&&!catBy(x.t)){x.i=c[2];x.c=c[3]}}return x});
+    extra.shopRecent=Array.isArray(extra.shopRecent)?extra.shopRecent.filter(r=>r&&r.t).slice(0,24):[];
+  }
+  let shopQ='', shopDet=null, shopNew=false;
   function shopAuto(){
     return meds.filter(m=>needsOrder(m)&&(!m.days||endKey(m)>=today)).map(m=>{
       const g=grpOf(m), i=stockInfo(m)||{}, sp=supplyInfo(m);
-      const why=m.kind==='swap'?(m.left>0&&sp?'zásoba do '+nice(sp.end):(isCos(m)?'nemáš ďalšie balenie':'žiadna náhradná')):byBottle(m)?'doma už nie je ďalšia':(i.out||i.left===0)?'došlo':i.course?'chýba '+i.short+' '+ks(i.short):'vydrží do '+nice(i.last);
+      const why=m.kind==='swap'?(m.left>0&&sp?'zásoba do '+nice(sp.end):'0 v zásobe'):byBottle(m)?'doma už nie je ďalšia':(i.out||i.left===0)?'došlo':i.course?'chýba '+i.short+' '+ks(i.short):'do '+nice(i.last);
       return {m,g,why,priv:g==='med'||g==='care'};
     });
   }
   function shopCount(){return (extra.shop||[]).filter(x=>!x.done).length+shopAuto().length}
+  function tileHtml(x,cls){
+    const a=AISLES[AIDX[x.a]]||AISLES[AIDX.ine];
+    const sub=[x.b,x.note].filter(Boolean).join(' · ');
+    return '<button type="button" class="stile '+(cls||'')+'" data-st="'+x.id+'" style="--tb:'+a[3]+';--tc:'+a[4]+'">'+(x.q?'<span class="sq">'+esc(x.q)+'</span>':'')+
+      '<span class="si">'+shopIcon(x,46)+'</span><span class="sn">'+esc(x.t)+'</span>'+(sub?'<small>'+esc(sub)+'</small>':'')+'</button>';
+  }
   function renderShop(){
+    normShop();
     const sub=$('shopSub'); if(sub){const n=shopCount();sub.textContent=n?(n===1?'1 vec na kúpenie':n<5?n+' veci na kúpenie':n+' vecí na kúpenie'):'Čo treba kúpiť'}
     if($('shopSheet').hidden) return;
-    const items=(extra.shop||[]).slice().sort((a,b)=>(a.done-b.done)||(a.ts<b.ts?1:-1));
-    const auto=shopAuto();
-    const has=new Set(items.filter(x=>!x.done).map(x=>x.t.toLowerCase()));
-    $('shopQuick').innerHTML=SHOP_Q.filter(q=>!has.has(q.toLowerCase())).slice(0,8).map(q=>'<button type="button" class="btn ghost" data-sq="'+esc(q)+'">+ '+esc(q)+'</button>').join('');
+    const items=extra.shop, open=items.filter(x=>!x.done), cart=items.filter(x=>x.done), auto=shopAuto();
+    const total=open.length+cart.length+auto.length, got=cart.length;
+    $('shRing').style.background='conic-gradient(var(--ok) 0 '+(total?got*100/total:0)+'%,var(--line) 0 100%)';
+    $('shRingT').textContent=got+'/'+total;
+    $('shHint').textContent=total?(open.length+auto.length?'ťuk = do košíka · podrž = upraviť':'Všetko v košíku ✓'):'Pridaj, čo treba kúpiť';
+    const B=$('shopBody');
+    if(shopQ){B.innerHTML=renderSearch();bindSearch();return}
     let h='';
-    const open=items.filter(x=>!x.done), done=items.filter(x=>x.done);
-    h+='<div class="shh">Na nákup <span class="cnt">'+open.length+'</span></div>';
-    h+=open.length?open.map(x=>'<label class="shrow"><input type="checkbox" data-sh="'+x.id+'"><span class="t">'+esc(x.t)+'</span><button type="button" class="del" data-shdel="'+x.id+'" aria-label="Zmazať '+esc(x.t)+'">×</button></label>').join(''):'<p class="shempty">Zatiaľ nič. Napíš hore, čo treba kúpiť.</p>';
-    if(auto.length) h+='<div class="shh">Dochádza v zásobách <span class="cnt">'+auto.length+'</span></div>'+auto.map(a=>'<label class="shrow"><input type="checkbox" data-sha="'+a.m.id+'"><span class="pillbox">'+picM(a.m,30)+'</span><span class="t">'+esc(nm(a.m))+'<small>'+esc(a.why)+' · zaškrtni, keď kúpiš</small></span></label>').join('');
-    if(done.length) h+='<div class="shh">Kúpené <span class="cnt">'+done.length+'</span></div>'+done.map(x=>'<label class="shrow done"><input type="checkbox" checked data-sh="'+x.id+'"><span class="t">'+esc(x.t)+'</span><button type="button" class="del" data-shdel="'+x.id+'" aria-label="Zmazať '+esc(x.t)+'">×</button></label>').join('');
-    $('shopList').innerHTML=h;
-    $('shopClear').hidden=!done.length;
-    $('shopList').querySelectorAll('[data-sh]').forEach(c=>c.onchange=()=>{const x=extra.shop.find(i=>i.id===c.dataset.sh);if(!x)return;x.done=c.checked;x.ts=Date.now();buzz(c.checked?15:8);saveExtra();renderShop()});
-    $('shopList').querySelectorAll('[data-shdel]').forEach(b=>b.onclick=e=>{e.preventDefault();const x=extra.shop.find(i=>i.id===b.dataset.shdel);if(!x)return;extra.shop=extra.shop.filter(i=>i!==x);saveExtra();renderShop();toast(x.t+' zmazané',()=>{extra.shop.push(x);saveExtra();renderShop()})});
-    $('shopList').querySelectorAll('[data-sha]').forEach(c=>c.onchange=()=>{if(!c.checked)return;buzz(15);refill(c.dataset.sha);renderShop()});
-    $('shopQuick').querySelectorAll('[data-sq]').forEach(b=>b.onclick=()=>shopAdd(b.dataset.sq));
+    AISLES.forEach(a=>{
+      let tiles;
+      if(a[0]==='moje') tiles=auto.map(z=>'<button type="button" class="stile priv" data-sa="'+z.m.id+'" style="--tb:'+a[3]+';--tc:'+a[4]+'"><span class="lk">🔒</span><span class="si">'+picM(z.m,46)+'</span><span class="sn">'+esc(nm(z.m))+'</span><small>'+esc(z.why)+'</small></button>');
+      else tiles=open.filter(x=>x.a===a[0]).sort((p,q)=>p.ts-q.ts).map(x=>tileHtml(x));
+      if(!tiles.length) return;
+      h+='<div class="shaisle" style="--tc:'+a[4]+'"><span class="ai">'+(a[2]?food(a[2],22):'🔒')+'</span>'+a[1]+(a[0]==='moje'?' <span class="lock">len pre teba</span>':'')+'<span class="c">'+tiles.length+'</span></div><div class="sgrid">'+tiles.join('')+'</div>';
+    });
+    if(!open.length&&!auto.length) h+='<div class="shempty">'+food('vrecko',64)+'<b>Zoznam je prázdny</b><span>Napíš hore, čo treba kúpiť, alebo vyber z naposledy kúpených.</span></div>';
+    if(cart.length) h+='<div class="shaisle cart"><span class="ai">🛒</span>V košíku<span class="c">'+cart.length+'</span><button type="button" class="linkbtn" id="shDone">Hotovo, vyprázdniť</button></div><div class="sgrid">'+cart.map(x=>tileHtml(x,'got')).join('')+'</div>';
+    const rec=extra.shopRecent.filter(r=>!items.some(x=>fold(x.t)===fold(r.t)));
+    if(rec.length) h+='<div class="shaisle"><span class="ai">↺</span>Naposledy kúpené · ťukni a vráť</div><div class="srec">'+rec.slice(0,14).map((r,i)=>'<button type="button" class="stile old" data-sr="'+i+'"><span class="si">'+shopIcon(r,34)+'</span><span class="sn">'+esc(r.t)+'</span></button>').join('')+'</div>';
+    B.innerHTML=h;
+    B.querySelectorAll('[data-st]').forEach(b=>bindHold(b,()=>{const x=items.find(i=>i.id===b.dataset.st);if(!x)return;x.done=!x.done;x.ts2=Date.now();buzz(x.done?18:8);saveExtra();renderShop()},()=>openShopDet(b.dataset.st)));
+    B.querySelectorAll('[data-sa]').forEach(b=>b.onclick=()=>{buzz(18);refill(b.dataset.sa);renderShop()});
+    B.querySelectorAll('[data-sr]').forEach(b=>b.onclick=()=>{const r=rec[+b.dataset.sr];if(!r)return;shopPut({t:r.t,a:r.a,q:r.q,b:r.b,note:r.note});});
+    if($('shDone')) $('shDone').onclick=()=>{const gone=items.filter(x=>x.done);gone.forEach(x=>{extra.shopRecent=[{t:x.t,a:x.a,q:x.q,b:x.b,note:x.note}].concat(extra.shopRecent.filter(r=>fold(r.t)!==fold(x.t)))});extra.shopRecent=extra.shopRecent.slice(0,24);extra.shop=items.filter(x=>!x.done);saveExtra();renderShop();toast('Košík vyprázdnený',()=>{extra.shop=extra.shop.concat(gone);saveExtra();renderShop()})};
   }
-  function shopAdd(t){
-    t=String(t||'').trim().replace(/\s+/g,' '); if(!t) return;
-    t=t.charAt(0).toUpperCase()+t.slice(1);
-    extra.shop=extra.shop||[];
-    const ex=extra.shop.find(x=>x.t.toLowerCase()===t.toLowerCase());
-    if(ex&&!ex.done){toast(t+' už v zozname je');return}
-    if(ex){ex.done=false;ex.ts=Date.now()} else extra.shop.push({id:rid(),t,done:false,ts:Date.now()});
-    buzz(10); saveExtra(); renderShop();
+  function bindHold(el,tap,hold){
+    let t=null,held=false,x0=0,y0=0;
+    el.addEventListener('pointerdown',e=>{held=false;x0=e.clientX;y0=e.clientY;t=setTimeout(()=>{held=true;buzz(25);hold()},480)});
+    el.addEventListener('pointermove',e=>{if(t&&(Math.abs(e.clientX-x0)>8||Math.abs(e.clientY-y0)>8)){clearTimeout(t);t=null}});
+    ['pointerup','pointercancel','pointerleave'].forEach(ev=>el.addEventListener(ev,()=>{clearTimeout(t);t=null}));
+    el.addEventListener('click',e=>{if(held){e.preventDefault();held=false;return}tap()});
+    el.addEventListener('contextmenu',e=>e.preventDefault());
   }
-  function openShop(){$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();$('shopSheet').hidden=false;renderShop();$('shopSheet').scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'})}
-  $('shopForm').addEventListener('submit',e=>{e.preventDefault();shopAdd($('shopIn').value);$('shopIn').value='';$('shopIn').focus()});
-  $('shopClose').onclick=()=>{$('shopSheet').hidden=true};
-  $('shopBtn').onclick=openShop;
-  $('shopClear').onclick=()=>{const gone=extra.shop.filter(x=>x.done);extra.shop=extra.shop.filter(x=>!x.done);saveExtra();renderShop();toast('Kúpené vymazané',()=>{extra.shop=extra.shop.concat(gone);saveExtra();renderShop()})};
+  function renderSearch(){
+    const q=fold(shopQ).trim(); const words=q.split(/\s+/).filter(Boolean);
+    let res=CAT.filter(c=>{const hay=fold(c[0]+' '+(c[6]||''));return words.every(w=>hay.includes(w))});
+    extra.shopRecent.forEach(r=>{if(!catBy(r.t)&&words.every(w=>fold(r.t).includes(w)))res.push([r.t,r.a,'','',0,0,'',true])});
+    const have=new Set(extra.shop.filter(x=>!x.done).map(x=>fold(x.t)));
+    let h='';
+    AISLES.forEach(a=>{const l=res.filter(c=>c[1]===a[0]);if(!l.length)return;
+      h+='<div class="shaisle" style="--tc:'+a[4]+'"><span class="ai">'+food(a[2]||'vrecko',22)+'</span>'+a[1]+'</div>'+
+      l.map(c=>{const inn=have.has(fold(c[0]));return '<div class="sopt'+(inn?' in':'')+'" data-so="'+esc(c[0])+'"><span class="si">'+(c[2]?food(c[2],42,c[3]):food(a[2]||'vrecko',42))+'</span><b>'+esc(c[0])+'<small>'+(inn?'už v zozname':[(c[5]||[]).join(' · '),(c[4]||[]).slice(0,3).join(', ')].filter(Boolean).join(' · ')||a[1])+'</small></b><button type="button" class="sadd" data-sq="'+esc(c[0])+'" aria-label="Pridať '+esc(c[0])+'">'+(inn?'✓':'+')+'</button></div>'}).join('');});
+    const exact=res.some(c=>fold(c[0])===q);
+    if(!exact) h+='<div class="sopt custom" data-scustom="1"><span class="si"><span class="plusc">+</span></span><b>Pridať „'+esc(shopQ.trim())+'“<small>vlastná položka, appka si ju zapamätá</small></b></div>';
+    return h;
+  }
+  function bindSearch(){
+    const B=$('shopBody');
+    B.querySelectorAll('[data-so]').forEach(r=>r.onclick=e=>{if(e.target.closest('.sadd'))return;const c=catBy(r.dataset.so);openShopNew(c)});
+    B.querySelectorAll('[data-sq]').forEach(b=>b.onclick=()=>{const c=catBy(b.dataset.sq);shopPut({t:c[0],a:c[1]});shopQ='';$('shopIn').value='';renderShop()});
+    const cu=B.querySelector('[data-scustom]'); if(cu) cu.onclick=()=>{const t=shopQ.trim();const g=guessAisle(t);openShopNew(['%s'.replace('%s',t.charAt(0).toUpperCase()+t.slice(1)),g?g[1]:'ine','','',KS,0,'',true])};
+  }
+  function shopPut(o){
+    const t=String(o.t||'').trim(); if(!t) return;
+    const ex=extra.shop.find(x=>fold(x.t)===fold(t));
+    if(ex&&!ex.done){Object.assign(ex,{q:o.q||ex.q,b:o.b||ex.b,note:o.note||ex.note});toast(t+' už v zozname je');saveExtra();renderShop();return}
+    if(ex){ex.done=false;Object.assign(ex,{q:o.q||ex.q,b:o.b||ex.b,note:o.note||ex.note,ts:Date.now()})}
+    else{const g=catBy(t)?null:guessAisle(t);extra.shop.push({id:rid(),t,a:o.a||(g||[0,'ine'])[1],i:g&&fold(g[0]).split(' ')[0]===fold(t).split(' ').pop()?g[2]:undefined,c:g?g[3]:undefined,q:o.q||'',b:o.b||'',note:o.note||'',done:false,ts:Date.now()})}
+    buzz(12); saveExtra(); renderShop(); toast(t+' pridané');
+  }
+  function openShopNew(c){shopNew=true;shopDet={t:c[0],a:c[1],q:'',b:'',note:'',cat:c};showShopDet()}
+  function openShopDet(id){const x=extra.shop.find(i=>i.id===id);if(!x)return;shopNew=false;shopDet=Object.assign({},x,{cat:catBy(x.t)||[x.t,x.a,'','',KS,0]});showShopDet()}
+  function showShopDet(){
+    const d=shopDet, c=d.cat||[], a=AISLES[AIDX[d.a]]||AISLES[AIDX.ine];
+    const qs=(c[4]&&c[4].length?c[4]:KS), ps=c[5]||[];
+    const ch=(k,v,arr)=>arr.map(o=>'<button type="button" class="ch'+(d[k]===o?' on':'')+'" data-'+k+'="'+esc(o)+'">'+esc(o)+'</button>').join('');
+    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="sdh"><span class="si">'+shopIcon(d,64)+'</span><div><b>'+esc(d.t)+'</b><span>'+a[1]+'</span></div></div>'+
+      (ps.length?'<div class="lbl">Druh / balenie</div><div class="chs">'+ch('b',0,ps)+'</div>':'')+
+      '<div class="lbl">Množstvo</div><div class="chs">'+ch('q',0,qs)+'<input class="qin" id="sdQ" placeholder="iné" value="'+esc(qs.includes(d.q)?'':d.q||'')+'" maxlength="14"></div>'+
+      '<div class="lbl">Oddelenie</div><div class="chs">'+AISLES.filter(z=>z[0]!=='moje').map(z=>'<button type="button" class="ch sm'+(d.a===z[0]?' on':'')+'" data-ai="'+z[0]+'">'+z[1]+'</button>').join('')+'</div>'+
+      '<div class="lbl">Poznámka</div><input class="sdn" id="sdN" placeholder="napr. značka, „tá v červenej dóze“" value="'+esc(d.note||'')+'" maxlength="60">'+
+      '<div class="sdact"><button type="button" class="btn pri" id="sdOk">'+(shopNew?'Pridať do nákupu':'Uložiť')+'</button>'+(shopNew?'':'<button type="button" class="btn ghost" id="sdDel">Odstrániť</button>')+'</div>';
+    $('shDet').hidden=false; $('shDetBack').hidden=false;
+    const D=$('shDet');
+    D.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{d.q=d.q===b.dataset.q?'':b.dataset.q;$('sdQ').value='';showShopDet()});
+    D.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{d.b=d.b===b.dataset.b?'':b.dataset.b;showShopDet()});
+    D.querySelectorAll('[data-ai]').forEach(b=>b.onclick=()=>{d.a=b.dataset.ai;showShopDet()});
+    $('sdQ').oninput=e=>{d.q=e.target.value.trim();D.querySelectorAll('[data-q]').forEach(b=>b.classList.remove('on'))};
+    $('sdN').oninput=e=>{d.note=e.target.value};
+    $('sdOk').onclick=()=>{
+      if(shopNew){shopPut({t:d.t,a:d.a,q:d.q,b:d.b,note:d.note.trim()});shopQ='';$('shopIn').value=''}
+      else{const x=extra.shop.find(i=>i.id===d.id);if(x){Object.assign(x,{a:d.a,q:d.q,b:d.b,note:d.note.trim()});saveExtra()}}
+      closeShopDet(); renderShop();
+    };
+    if($('sdDel')) $('sdDel').onclick=()=>{const x=extra.shop.find(i=>i.id===d.id);if(!x)return;extra.shop=extra.shop.filter(i=>i!==x);saveExtra();closeShopDet();renderShop();toast(x.t+' odstránené',()=>{extra.shop.push(x);saveExtra();renderShop()})};
+  }
+  function closeShopDet(){$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null}
+  function openShop(focus){$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();quickOpen(false);$('shopSheet').hidden=false;$('shopBack').hidden=false;document.body.style.overflow='hidden';shopQ='';$('shopIn').value='';renderShop();if(focus)setTimeout(()=>$('shopIn').focus(),250)}
+  function closeShop(){closeShopDet();$('shopSheet').hidden=true;$('shopBack').hidden=true;document.body.style.overflow='';renderShop()}
+  $('shopIn').addEventListener('input',e=>{shopQ=e.target.value;renderShop()});
+  $('shopForm').addEventListener('submit',e=>{e.preventDefault();const t=shopQ.trim();if(!t)return;const q=fold(t);const c=CAT.find(c=>fold(c[0])===q)||CAT.filter(c=>fold(c[0]+' '+(c[6]||'')).includes(q))[0];
+    if(c&&fold(c[0])===q){shopPut({t:c[0],a:c[1]})}else{const g=guessAisle(t);shopPut({t:t.charAt(0).toUpperCase()+t.slice(1),a:g?g[1]:'ine'})}
+    shopQ='';$('shopIn').value='';renderShop()});
+  $('shopClose').onclick=closeShop; $('shopBack').onclick=closeShop; $('shDetBack').onclick=closeShopDet;
+  $('shopBtn').onclick=()=>openShop(false);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('shDet').hidden)closeShopDet();else if(!$('shopSheet').hidden)closeShop()}});
   $('shopShare').onclick=()=>{
-    const open=(extra.shop||[]).filter(x=>!x.done).map(x=>x.t);
-    const auto=shopAuto().filter(a=>$('shopMine').checked||!a.priv).map(a=>a.m.name);
-    const all=open.concat(auto);
-    if(!all.length) return toast('Zoznam je prázdny');
-    shareText('Nákup','Treba kúpiť:\n'+all.map(t=>'☐ '+t).join('\n'));
+    const open=extra.shop.filter(x=>!x.done);
+    const auto=shopAuto().filter(a=>$('shopMine').checked||!a.priv);
+    if(!open.length&&!auto.length) return toast('Zoznam je prázdny');
+    const L=['🛒 Nákup'];
+    AISLES.forEach(a=>{let l;
+      if(a[0]==='moje') l=auto.map(z=>z.m.name); else l=open.filter(x=>x.a===a[0]).map(x=>x.t+([x.q,x.b].filter(Boolean).length?' – '+[x.q,x.b].filter(Boolean).join(', '):'')+(x.note?' ('+x.note+')':''));
+      if(l.length){L.push('');L.push(a[0]==='moje'?'Ďalšie:':a[1]+':');l.forEach(t=>L.push('☐ '+t))}});
+    shareText('Nákup',L.join('\n'));
   };
 
   /* ---------- packing list ---------- */
