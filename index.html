@@ -1218,7 +1218,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v48</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v49</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1713,7 +1713,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
       if(q.get('add')) setTimeout(()=>{setTab('meds');quickOpen(true)},60);
       else if(q.get('tab')&&['today','week','meds','more'].includes(q.get('tab'))) setTab(q.get('tab'));
       if(q.get('pack')) setTimeout(()=>{setTab('more');openPack()},60);
-      if(q.get('shop')) setTimeout(()=>openShop(true),60);
+      if(q.get('shop')) setTimeout(()=>openShop(false),60);
       if(location.search) history.replaceState(null,'',location.pathname);
     }catch(e){}
     try{if(!meds.length&&localStorage.getItem('lieky-intro')!=='1') setTimeout(introOpen,400)}catch(e){}
@@ -2324,7 +2324,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span><i class="fshine"></i></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
-    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(true,true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
+    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(false,true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
     const f=$('qMenu').querySelector('.qb'); if(f) f.focus({preventScroll:true});
   }
   $('plusTab').onclick=()=>{buzz(12);if(!$('shopSheet').hidden){saveExtra();shopLeave();quickOpen(true);return}if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
