@@ -35,8 +35,8 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v47)
-- Hlavička (návrh B, v43): pod nadpisom rad troch rovnakých tlačidiel **Poslať · História · Uložiť** (`.shtri`, `.shtb`, `#shopShare`, `#shopHist`, `#shopClose`).
+## Nákup (stav pri v48)
+- Hlavička (v48): pod nadpisom dve rovnaké tlačidlá **Poslať · História** (`.shtri`, `.shtb`, `#shopShare`, `#shopHist`). Tlačidlo Uložiť je zrušené – každá zmena sa ukladá hneď sama, nákup sa zavrie spodnou lištou alebo systémovým Späť.
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
 - Systémové Späť na Androide: zavrie detail veci, potom nákup; ak bol nákup otvorený z Rýchlo, vráti do Rýchlo (`history.pushState({ml:'shop'})`, `popstate`, `shopPop`, `shopFromQ`).
 - Rozloženie je variant B: obchody ako karty pod sebou.

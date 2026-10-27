@@ -375,7 +375,7 @@ button,input,select{font:inherit;color:inherit}
 .shop-on .shpanel{bottom:var(--tbh,72px);top:0;border-radius:0;box-shadow:none;padding-top:env(safe-area-inset-top,0px);animation:q-fade .2s ease-out}
 .shop-on .shback{display:none}
 .shop-on .shpriv{padding-bottom:12px}
-.shtri{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 14px 12px}
+.shtri{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 14px 12px}
 .shtb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:7px 4px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;transition:transform .15s}
 .shtb:active{transform:scale(.96)}.shtb.pri{background:var(--acc);border-color:var(--acc);color:#fff}
 .hfil{display:flex;gap:8px;overflow-x:auto;margin:10px -2px 2px;padding:0 2px 4px;scrollbar-width:none}.hfil::-webkit-scrollbar{display:none}
@@ -1218,7 +1218,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v47</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v48</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1236,7 +1236,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     <div class="shring" id="shRing"><span id="shRingT">0/0</span></div>
     <div class="shtt"><h2 id="shopTitle">Nákup</h2><span id="shHint"></span></div>
   </div>
-  <div class="shtri"><button type="button" class="shtb" id="shopShare"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v12M7 8l5-5 5 5"/></svg><span>Poslať</span></button><button type="button" class="shtb" id="shopHist"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg><span>História</span></button><button type="button" class="shtb pri" id="shopClose"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Uložiť</span></button></div>
+  <div class="shtri"><button type="button" class="shtb" id="shopShare"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v12M7 8l5-5 5 5"/></svg><span>Poslať</span></button><button type="button" class="shtb" id="shopHist"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg><span>História</span></button></div>
   <form class="shsearch" id="shopForm" autocomplete="off"><span aria-hidden="true">🔍</span><label class="sr" for="shopIn">Čo treba kúpiť</label><input id="shopIn" type="search" placeholder="Čo treba kúpiť?" maxlength="60" enterkeyhint="done"><button type="button" class="starget" id="shTarget" hidden aria-label="Zrušiť výber obchodu"><span id="shTargetN"></span> ×</button></form>
   <div class="shbody" id="shopBody"></div>
   <label class="shpriv"><input type="checkbox" id="shopMine"> Pri posielaní pridať aj moje lieky a kozmetiku</label>
@@ -3196,7 +3196,7 @@ function food(k,size,col){
   $('shopForm').addEventListener('submit',e=>{e.preventDefault();const t=shopQ.trim();if(!t)return;const q=fold(t);const c=CAT.find(c=>fold(c[0])===q)||CAT.filter(c=>fold(c[0]+' '+(c[6]||'')).includes(q))[0];
     if(c&&fold(c[0])===q){shopPut({t:c[0],a:c[1]})}else{const g=guessAisle(t);shopPut({t:t.charAt(0).toUpperCase()+t.slice(1),a:g?g[1]:'ine'})}
     shopQ='';$('shopIn').value='';renderShop()});
-  $('shopClose').onclick=()=>{const n=extra.shop.filter(x=>!x.done).length;saveExtra();shopLeave();buzz(12);toast(n?'Nákup uložený · '+(n===1?'1 vec':n<5?n+' veci':n+' vecí'):'Nákup uložený')}; $('shopBack').onclick=()=>shopLeave();$('shopHist').onclick=()=>{buzz(8);openHist('')}; $('shDetBack').onclick=closeShopDet;
+  if($('shopClose')) $('shopClose').onclick=()=>{const n=extra.shop.filter(x=>!x.done).length;saveExtra();shopLeave();buzz(12);toast(n?'Nákup uložený · '+(n===1?'1 vec':n<5?n+' veci':n+' vecí'):'Nákup uložený')}; $('shopBack').onclick=()=>shopLeave();$('shopHist').onclick=()=>{buzz(8);openHist('')}; $('shDetBack').onclick=closeShopDet;
   $('shopBtn').onclick=()=>openShop(false);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('shDet').hidden)closeShopDet();else if(!$('shopSheet').hidden)shopLeave(true)}});
   $('shopShare').onclick=()=>{
