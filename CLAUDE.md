@@ -35,7 +35,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v49)
+## Nákup (stav pri v50)
 - Po otvorení nákupu (aj z Rýchlo) sa klávesnica sama neotvorí; až po ťuknutí na riadok „Čo treba kúpiť?“ alebo na „+ pridať do X“ (v49).
 - Hlavička (v48): pod nadpisom dve rovnaké tlačidlá **Poslať · História** (`.shtri`, `.shtb`, `#shopShare`, `#shopHist`). Tlačidlo Uložiť je zrušené – každá zmena sa ukladá hneď sama, nákup sa zavrie spodnou lištou alebo systémovým Späť.
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
@@ -52,8 +52,8 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - V karte sa veci radia automaticky podľa oddelení (`AISLES`, `AIDX`, `CAT`, `guessAisle`).
 - Košík (návrh C, v40): zaškrtnutá vec sa presunie do zeleného pásu „🛒 V košíku · N“ hore v karte svojho obchodu ako okrúhla ikonka s fajočkou (`kosHtml`, trieda `.kchip`, `data-kb`). Hlavička obchodu ukazuje „3 z 7 v košíku“.
   - Ťuknutie na ikonku v košíku vráti vec do zoznamu (toast so Späť).
-  - Kúpené veci sa po 24 h samé presunú do histórie a do `shopRecent` („Kúpiť znova“). Globálna sekcia „Kúpené“ už nie je.
-- Ukončenie nákupu po obchodoch (v42): keď je v karte aspoň 1 vec v košíku, ukáže sa zelené „✓ Ukončiť nákup v X“ (`.sfin`, `data-fin`, `finishStore`). Kúpené veci idú do histórie a „Kúpiť znova“, nekúpené ostanú na zozname, karta sa zbalí. Toast so Späť. Keď sa do zbaleného obchodu niečo pridá, sám sa rozbalí (`shopPut`).
+  - Kúpené veci sa po 24 h samé presunú do histórie a do `shopRecent` („Naposledy kúpené“, v50). Globálna sekcia „Kúpené“ už nie je.
+- Ukončenie nákupu po obchodoch (v42): keď je v karte aspoň 1 vec v košíku, ukáže sa zelené „✓ Ukončiť nákup v X“ (`.sfin`, `data-fin`, `finishStore`). Kúpené veci idú do histórie a „Naposledy kúpené“, nekúpené ostanú na zozname, karta sa zbalí. Toast so Späť. Keď sa do zbaleného obchodu niečo pridá, sám sa rozbalí (`shopPut`).
 - História: `extra.shopHist` = `[{id,s,at,items:[{t,a,q,note,i,c}]}]`, drží sa 31 dní (`HIST_DAYS`). Otvára sa tlačidlom História v hlavičke (v43; riadky „Naposledy…“ v kartách obchodov sú zrušené). Okno „História nákupov“ v `shDet` (`openHist`, filter `histF`): filtre Všetky · obchody v ich poradí · Kdekoľvek (`_`), nákupy podľa dátumu s názvom obchodu, ťuknutie na vec ju pridá späť do zoznamu toho obchodu. Prázdny stav má vysvetľujúci text. História je len pre mňa, k domácnosti cez Poslať nejde.
 - Okná v nákupe (detail veci, obchod, história, všetko v `shDet`) sa dajú zavrieť potiahnutím čiarky dole (návrh A, v44, ako karta lieku): okno ide za prstom, pozadie sa zosvetľuje, nad 90 px sa zavrie, inak sa vráti. Bez nápisov. Dotyková plocha čiarky je cez celú šírku a ~45 px vysoká (`.shdet .grab`, v45). V histórii je dole tlačidlo „Zavrieť“ (nie Hotovo) a nie je tam podnadpis „Ťukni na vec…“.
 - Odobrať (bez kúpenia, napr. rozmyslel som si to): pri každej veci tlačidlo „Odobrať“ (`.srm`, `data-rm`), toast „X odobraté · Späť“. V detaile je „Odobrať zo zoznamu“. Používať slovo **Odobrať**, nie „Nekúpim“ ani „Vyhodiť“.

@@ -1218,7 +1218,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v49</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v50</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3062,7 +3062,7 @@ function food(k,size,col){
     h+='<button type="button" class="newst" id="shNewSt">+ Nový obchod</button>';
     if(!open.length&&!done.length&&!auto.length&&!ST.length) h='<div class="shempty">'+food('vrecko',64)+'<b>Zoznam je prázdny</b><span>Napíš hore, čo treba kúpiť, alebo si vytvor obchod.</span></div>'+h;
     const rec=extra.shopRecent.filter(r=>!items.some(x=>fold(x.t)===fold(r.t)));
-    if(rec.length) h+='<div class="shaisle"><span class="ai">↺</span>Kúpiť znova</div><div class="srec">'+rec.slice(0,16).map((r,i)=>'<button type="button" class="rchip" data-sr="'+i+'">'+shopIcon(r,22)+esc(r.t)+'</button>').join('')+'</div>';
+    if(rec.length) h+='<div class="shaisle"><span class="ai">↺</span>Naposledy kúpené</div><div class="srec">'+rec.slice(0,16).map((r,i)=>'<button type="button" class="rchip" data-sr="'+i+'">'+shopIcon(r,22)+esc(r.t)+'</button>').join('')+'</div>';
     B.innerHTML=h;
     B.querySelectorAll('[data-cb]').forEach(b=>b.onclick=()=>{
       const x=items.find(i=>i.id===b.dataset.cb); if(!x) return;
