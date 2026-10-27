@@ -35,14 +35,14 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v46)
+## Nákup (stav pri v47)
 - Hlavička (návrh B, v43): pod nadpisom rad troch rovnakých tlačidiel **Poslať · História · Uložiť** (`.shtri`, `.shtb`, `#shopShare`, `#shopHist`, `#shopClose`).
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
 - Systémové Späť na Androide: zavrie detail veci, potom nákup; ak bol nákup otvorený z Rýchlo, vráti do Rýchlo (`history.pushState({ml:'shop'})`, `popstate`, `shopPop`, `shopFromQ`).
 - Rozloženie je variant B: obchody ako karty pod sebou.
   - Obchody si pomenúvam sám (`extra.stores` = `[{id,n,closed}]`). Vec patrí do obchodu cez pole `s`.
   - Veci bez obchodu sú v karte „Kdekoľvek“. Keď nemám žiadny obchod, karta sa volá „Nákup“.
-  - Kdekoľvek sa dá zbaliť kváčkou ako ostatné obchody (`extra.freeClosed`, v46); kváčka je zarovnaná s ostatnými (`.scsp` namiesto ceruzky). Karta „Nákup“ (bez obchodov) sa nezbaľuje.
+  - Kdekoľvek sa dá zbaliť kváčkou ako ostatné obchody (`extra.freeClosed`, v46); pri Kdekoľvek je ceruzka (`data-sfree`, `openFreeDet`, v47, voľba 2b): napíšem názov (napr. „Billa 2“) a všetky veci bez obchodu sa presunú do nového obchodu s týmto názvom; ak taký obchod už mám, pridajú sa k nemu. Toast so Späť. Karta „Nákup“ (bez obchodov) sa nezbaľuje.
   - Presun veci do iného obchodu: ťuknúť na názov veci → „Kde kúpiť“ → Uložiť. Cieľový obchod sa rozbalí a ukáže sa toast „X presunuté do Y“ (v46).
 - Každá karta má „+ pridať do X“: nastaví `shopTarget` a vyhľadávanie potom pridáva do toho obchodu. Výber sa zruší chipom „X ×“ vo vyhľadávaní.
 - Karta sa dá zbaliť. Kváčka (`CHEV`, ako v Zásobách) ukazuje ˄ pri otvorenom a ˅ pri zbalenom obchode, nikdy nie doprava na ceruzku.

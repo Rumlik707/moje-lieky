@@ -1218,7 +1218,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v46</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v47</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3053,7 +3053,7 @@ function food(k,size,col){
     const sec=(ic,title,rows,cls,extraH)=>'<div class="shaisle'+(cls?' '+cls:'')+'"><span class="ai">'+ic+'</span>'+title+(extraH||'')+'<span class="c">'+rows.length+'</span></div><div class="slist">'+rows.join('')+'</div>';
     const ST=extra.stores;
     const card=(st,name,list,got)=>{const id=st?st.id:'', tg=!!st||ST.length>0, cl=st?!!st.closed:(tg&&!!extra.freeClosed); got=got||[];
-      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(tg?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(tg?CHEV:'')+'</button>'+(st?'':tg?'<span class="scsp" aria-hidden="true"></span>':'')+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Premenovať alebo odstrániť obchod '+esc(name)+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</div>'+
+      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(tg?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(tg?CHEV:'')+'</button>'+(st?'':tg?'<button type="button" class="scedit" data-sfree="1" aria-label="Premenovať Kdekoľvek na obchod"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Premenovať alebo odstrániť obchod '+esc(name)+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</div>'+
         (cl?'':'<div class="scl">'+kosHtml(got)+list.sort(byAisle).map(x=>rowHtml(x)).join('')+(got.length?'<button type="button" class="sfin" data-fin="'+id+'">'+FIN_IC+(st||ST.length?'Ukončiť nákup v '+esc(name):'Ukončiť nákup')+'</button>':'')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+'</section>'};
     ST.forEach(st=>{h+=card(st,st.n,open.filter(x=>x.s===st.id),done.filter(x=>x.s===st.id))});
     const free=open.filter(x=>!x.s), freeGot=done.filter(x=>!x.s);
@@ -3082,6 +3082,7 @@ function food(k,size,col){
     B.querySelectorAll('[data-sted]').forEach(b=>b.onclick=()=>openStoreDet(b.dataset.sted));
     B.querySelectorAll('[data-sadd]').forEach(b=>b.onclick=()=>{shopTarget=b.dataset.sadd||null;buzz(8);renderShop();$('shopIn').focus()});
     if($('shNewSt')) $('shNewSt').onclick=()=>openStoreDet(null);
+    B.querySelectorAll('[data-sfree]').forEach(b=>b.onclick=()=>openFreeDet());
     B.querySelectorAll('[data-sa]').forEach(b=>b.onclick=()=>{buzz(18);const row=b.closest('.srow');if(row&&!reduce())row.classList.add('going');setTimeout(()=>{refill(b.dataset.sa);renderShop()},reduce()?0:420)});
     B.querySelectorAll('[data-sr]').forEach(b=>b.onclick=()=>{const r=rec[+b.dataset.sr];if(!r)return;shopPut({t:r.t,a:r.a,q:r.q,note:r.note,s:shopTarget||r.s})});
     if($('shClr')) $('shClr').onclick=()=>{const gone=items.filter(x=>x.done);gone.forEach(x=>{extra.shopRecent=[{t:x.t,a:x.a,q:x.q,note:x.note,s:x.s}].concat(extra.shopRecent.filter(r=>fold(r.t)!==fold(x.t)))});extra.shopRecent=extra.shopRecent.slice(0,24);extra.shop=items.filter(x=>!x.done);saveExtra();renderShop();toast('Kúpené vyčistené',()=>{extra.shop=extra.shop.concat(gone);saveExtra();renderShop()})};
@@ -3161,6 +3162,21 @@ function food(k,size,col){
     if($('stDel')) $('stDel').onclick=()=>{const moved=extra.shop.filter(x=>x.s===st.id), idx=extra.stores.indexOf(st);
       extra.stores=extra.stores.filter(z=>z!==st); moved.forEach(x=>delete x.s); if(shopTarget===st.id) shopTarget=null;
       saveExtra(); closeShopDet(); renderShop(); toast(st.n+' odstránený',()=>{extra.stores.splice(idx,0,st);moved.forEach(x=>x.s=st.id);saveExtra();renderShop()})};
+  }
+  function openFreeDet(){
+    shopDet={store:1};
+    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="sdh"><span class="si stbig">'+STORE_IC+'</span><div><b>Premenovať Kdekoľvek</b><span>Veci bez obchodu sa presunú do obchodu s týmto názvom</span></div></div>'+
+      '<div class="lbl">Názov obchodu</div><input class="sdn" id="stN" placeholder="napr. Billa 2, Trh" maxlength="24" value="" enterkeyhint="done">'+
+      '<div class="sdact"><button type="button" class="btn pri" id="stOk">Uložiť</button><button type="button" class="btn ghost" id="stCancel">Zrušiť</button></div>';
+    $('shDet').hidden=false; $('shDetBack').hidden=false; setTimeout(()=>$('stN').focus(),200);
+    const ok=()=>{const n=$('stN').value.trim(); if(!n) return toast('Napíš názov obchodu');
+      if(fold(n)===fold('Kdekoľvek')){closeShopDet();return}
+      const moved=extra.shop.filter(x=>!x.s); let st=extra.stores.find(z=>fold(z.n)===fold(n)), made=false;
+      if(!st){st={id:rid(),n};extra.stores.push(st);made=true}
+      st.closed=false; moved.forEach(x=>x.s=st.id); extra.freeClosed=false;
+      buzz(12); saveExtra(); closeShopDet(); renderShop();
+      toast(made?'Obchod '+st.n+' vytvorený':'Presunuté do '+st.n,()=>{moved.forEach(x=>delete x.s);if(made)extra.stores=extra.stores.filter(z=>z!==st);saveExtra();renderShop()})};
+    $('stOk').onclick=ok; $('stCancel').onclick=closeShopDet; $('stN').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();ok()}};
   }
   function closeShopDet(){$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null;$('shDet').style.transform='';$('shDet').style.transition='';$('shDetBack').style.opacity=''}
   {let y0=null,dy=0,pid=null;const sh=$('shDet'),bk=$('shDetBack');
