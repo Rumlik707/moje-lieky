@@ -336,6 +336,15 @@ button,input,select{font:inherit;color:inherit}
 .scb svg{width:28px;height:28px;padding:4px;box-sizing:border-box;border-radius:9px;border:2.5px solid #9DB0CC;stroke:transparent;transition:background .2s,border-color .2s}
 .srow.done .scb svg,.srow.going .scb svg{background:var(--ok);border-color:var(--ok);stroke:#fff}
 .srow.going{background:var(--ok-soft);opacity:.0;max-height:0;min-height:0}
+.sfin{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 24px);margin:10px 12px;border:0;border-radius:16px;padding:13px;background:var(--ok);color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer;transition:transform .15s}.sfin:active{transform:scale(.97)}
+:root[data-theme="dark"] .sfin{background:#1F8F6A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sfin{background:#1F8F6A}}
+.shist{display:flex;align-items:center;gap:8px;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:11px 14px;font:inherit;font-size:14px;font-weight:700;color:var(--muted);text-align:left;cursor:pointer}
+.shist .ht{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.shist b{color:var(--ink)}.shist i{flex:none;font-style:normal;color:var(--acc-deep);font-weight:800}
+.hsh{margin:4px 0 4px}.hsh b{display:block;font-size:21px}.hsh span{color:var(--muted);font-weight:600;font-size:13.5px}
+.hdate{font-weight:800;font-size:14px;margin:16px 2px 8px}.hdate span{color:var(--muted);font-weight:700}
+.hchip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:3px 12px 3px 5px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:38px}
+.hchip.in{background:var(--ok-soft);border-color:transparent;color:var(--muted)}.hchip i{font-style:normal;color:var(--ok);font-weight:900}
 .srm{flex:none;margin-right:12px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:5px 11px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .skos{background:var(--ok-soft);padding:10px 12px 12px;border-top:1px solid var(--line)}
 .skos>b{display:flex;align-items:center;gap:6px;color:var(--ok);font-size:14px;margin:0 0 8px 6px}
@@ -609,7 +618,7 @@ button,input,select{font:inherit;color:inherit}
 .step{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--line);background:var(--card2);font-size:22px;cursor:pointer;line-height:1}
 .err{color:var(--miss);font-size:14px;margin:0;font-weight:700}
 .backup{display:grid;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}
-.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:999px;padding:12px 18px;font-size:15px;font-weight:700;display:flex;gap:12px;align-items:center;z-index:40;max-width:calc(100% - 32px)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:999px;padding:12px 18px;font-size:15px;font-weight:700;display:flex;gap:12px;align-items:center;z-index:40;width:max-content;max-width:calc(100% - 32px)}
 .toast button{background:#fff;color:var(--acc-deep);border:0;border-radius:999px;font-weight:800;cursor:pointer;padding:4px 12px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 .hero.mini{margin-top:14px;border-radius:20px;padding:8px 8px 8px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 18px -12px rgba(45,107,228,.55)}
@@ -1199,7 +1208,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v41</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v42</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2539,7 +2548,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   function normExtra(o){
     o=o&&typeof o==='object'?o:{};
     const arr=a=>Array.isArray(a)?a.filter(x=>x&&typeof x==='object'&&x.id):[];
-    return {prn:arr(o.prn).slice(-400),fx:arr(o.fx).slice(-300),visits:arr(o.visits).slice(-100),sw:arr(o.sw).slice(-200),shop:arr(o.shop).filter(x=>typeof x.t==='string'&&x.t.trim()).slice(-300),shopRecent:(Array.isArray(o.shopRecent)?o.shopRecent:[]).filter(r=>r&&typeof r.t==='string').slice(0,24),stores:arr(o.stores).filter(z=>z&&z.id&&typeof z.n==='string'&&z.n.trim()).slice(0,20)};
+    return {prn:arr(o.prn).slice(-400),fx:arr(o.fx).slice(-300),visits:arr(o.visits).slice(-100),sw:arr(o.sw).slice(-200),shop:arr(o.shop).filter(x=>typeof x.t==='string'&&x.t.trim()).slice(-300),shopRecent:(Array.isArray(o.shopRecent)?o.shopRecent:[]).filter(r=>r&&typeof r.t==='string').slice(0,24),stores:arr(o.stores).filter(z=>z&&z.id&&typeof z.n==='string'&&z.n.trim()).slice(0,20),shopHist:arr(o.shopHist).filter(h=>Array.isArray(h.items)&&h.items.length&&typeof h.at==='number').slice(-200)};
   }
   function saveExtra(){ extra=normExtra(extra); if(db) queue('data/users/'+uid+'/extra',JSON.parse(JSON.stringify(extra))); lsSave(); }
   const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -2948,6 +2957,8 @@ function food(k,size,col){
     extra.shop=(extra.shop||[]).map(x=>{if(!x.a){const c=guessAisle(x.t);x.a=c?c[1]:'ine';if(c&&!catBy(x.t)){x.i=c[2];x.c=c[3]}}return x});
     extra.shopRecent=Array.isArray(extra.shopRecent)?extra.shopRecent.filter(r=>r&&r.t).slice(0,24):[];
     if(!Array.isArray(extra.stores)) extra.stores=[];
+    if(!Array.isArray(extra.shopHist)) extra.shopHist=[];
+    extra.shopHist=extra.shopHist.filter(h=>Date.now()-h.at<HIST_DAYS*864e5);
     const oldTrh=extra.shop.concat(extra.shopRecent).filter(x=>x.p==='trh');
     if(oldTrh.length){let st=extra.stores.find(z=>fold(z.n)==='trh');if(!st){st={id:'trh',n:'Trh'};extra.stores.push(st)}oldTrh.forEach(x=>{x.s=st.id;delete x.p});saveExtra()}
     extra.shop.concat(extra.shopRecent).forEach(x=>{if(x.p)delete x.p;if(x.s&&!extra.stores.some(z=>z.id===x.s))delete x.s});
@@ -2967,11 +2978,39 @@ function food(k,size,col){
   const byAisle=(p,q)=>((p.a in AIDX)?AIDX[p.a]:99)-((q.a in AIDX)?AIDX[q.a]:99)||p.ts-q.ts;
   const STORE_IC='<svg class="stic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0a2.7 2.7 0 0 0 5.4 0a2.7 2.7 0 0 0 5.3 0"/><path d="M5 11v9h14v-9M10 20v-5h4v5"/></svg>';
   const ROW_CB='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const HIST_DAYS=31, WD=['ne','po','ut','st','št','pi','so'], WDL=['Nedeľa','Pondelok','Utorok','Streda','Štvrtok','Piatok','Sobota'];
+  function histAdd(sid,at,list){const h={id:rid(),s:sid||'',at,items:list.map(x=>({t:x.t,a:x.a,q:x.q||'',note:x.note||'',i:x.i,c:x.c}))};extra.shopHist.push(h);return h}
+  function toRecent(list){list.forEach(x=>{extra.shopRecent=[{t:x.t,a:x.a,q:x.q,note:x.note,s:x.s}].concat(extra.shopRecent.filter(r=>fold(r.t)!==fold(x.t)))});extra.shopRecent=extra.shopRecent.slice(0,24)}
+  const histOf=sid=>(extra.shopHist||[]).filter(h=>h.s===(sid||'')).sort((a,b)=>b.at-a.at);
+  function whenH(at,long){const d=new Date(at),k=dk(d),hm=pad(d.getHours())+':'+pad(d.getMinutes());
+    if(k===today) return (long?'Dnes ':'dnes ')+hm; if(k===addDays(today,-1)) return (long?'Včera ':'včera ')+hm;
+    return (long?WDL[d.getDay()]:WD[d.getDay()])+' '+d.getDate()+'. '+(d.getMonth()+1)+'.'}
+  const cardName=sid=>sid?stName(sid):(extra.stores.length?'Kdekoľvek':'Nákup');
+  function finishStore(sid){
+    const got=extra.shop.filter(x=>x.done&&(x.s||'')===sid); if(!got.length) return;
+    const rec=extra.shopRecent.slice(), h=histAdd(sid,Date.now(),got); toRecent(got);
+    extra.shop=extra.shop.filter(x=>!got.includes(x));
+    const st=extra.stores.find(z=>z.id===sid), was=st?!!st.closed:false; if(st) st.closed=true;
+    buzz(20); saveExtra(); renderShop();
+    toast(sid?'Nákup v '+stName(sid)+' ukončený':'Nákup ukončený',()=>{extra.shop=extra.shop.concat(got);extra.shopHist=extra.shopHist.filter(z=>z.id!==h.id);extra.shopRecent=rec;const s2=extra.stores.find(z=>z.id===sid);if(s2)s2.closed=was;saveExtra();renderShop()});
+  }
+  function openHist(sid){
+    const hs=histOf(sid); if(!hs.length) return; shopDet=null;
+    const inList=t=>extra.shop.some(x=>!x.done&&fold(x.t)===fold(t));
+    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="hsh"><b>'+esc(cardName(sid))+' · história</b><span>Ťukni na vec a pridá sa späť do zoznamu</span></div>'+
+      hs.map((h,hi)=>'<div class="hdate">'+esc(whenH(h.at,true))+' <span>· '+vecN(h.items.length)+'</span></div><div class="chs">'+h.items.map((x,xi)=>{const on=inList(x.t);return '<button type="button" class="hchip'+(on?' in':'')+'" data-hadd="'+hi+':'+xi+'" aria-label="'+(on?esc(x.t)+' už je v zozname':'Pridať do zoznamu: '+esc(x.t))+'">'+shopIcon(x,24)+'<span>'+esc(x.t)+'</span>'+(on?'<i>✓</i>':'')+'</button>'}).join('')+'</div>').join('')+
+      '<div class="sdact"><button type="button" class="btn pri" id="hClose">✓ Hotovo</button></div>';
+    $('shDet').hidden=false; $('shDetBack').hidden=false;
+    $('shDet').querySelectorAll('[data-hadd]').forEach(b=>b.onclick=()=>{const [hi,xi]=b.dataset.hadd.split(':').map(Number);const x=hs[hi]&&hs[hi].items[xi];if(!x)return;if(inList(x.t)){toast(x.t+' už v zozname je');return}
+      const sc=$('shDet').scrollTop; shopPut({t:x.t,a:x.a,q:x.q,note:x.note,s:sid}); openHist(sid); $('shDet').scrollTop=sc});
+    $('hClose').onclick=closeShopDet;
+  }
   function rowHtml(x,done){
     const meta=[x.q,x.note].filter(Boolean).join(' · ');
     return '<div class="srow'+(done?' done':'')+'" data-id="'+x.id+'"><button type="button" class="scb" data-cb="'+x.id+'" aria-label="'+(done?'Vrátiť do zoznamu: ':'Mám v košíku: ')+esc(x.t)+'" aria-pressed="'+(!!done)+'">'+ROW_CB+'</button>'+
       '<button type="button" class="sbody" data-ed="'+x.id+'"><span class="si">'+shopIcon(x,30)+'</span><span class="sn">'+esc(x.t)+'</span>'+(meta?'<span class="sm">'+esc(meta)+'</span>':'')+'</button>'+(done?'':'<button type="button" class="srm" data-rm="'+x.id+'" aria-label="Odobrať zo zoznamu: '+esc(x.t)+'">Odobrať</button>')+'</div>';
   }
+  const FIN_IC='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const OKC='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   function kosHtml(list){
     if(!list.length) return '';
@@ -2981,7 +3020,7 @@ function food(k,size,col){
     normShop();
     // auto-archive items bought more than 24 h ago
     const old=extra.shop.filter(x=>x.done&&x.doneAt&&Date.now()-x.doneAt>864e5);
-    if(old.length){old.forEach(x=>{extra.shopRecent=[{t:x.t,a:x.a,q:x.q,note:x.note,s:x.s}].concat(extra.shopRecent.filter(r=>fold(r.t)!==fold(x.t)))});extra.shopRecent=extra.shopRecent.slice(0,24);extra.shop=extra.shop.filter(x=>!old.includes(x));saveExtra()}
+    if(old.length){const by={};old.forEach(x=>{(by[x.s||'']=by[x.s||'']||[]).push(x)});Object.keys(by).forEach(k=>histAdd(k,Math.max(...by[k].map(x=>x.doneAt)),by[k]));toRecent(old);extra.shop=extra.shop.filter(x=>!old.includes(x));saveExtra()}
     const sub=$('shopSub'); if(sub){const n=shopCount();sub.textContent=n?(n===1?'1 vec na kúpenie':n<5?n+' veci na kúpenie':n+' vecí na kúpenie'):'Čo treba kúpiť'}
     if($('shopSheet').hidden) return;
     if(shopTarget&&!stName(shopTarget)) shopTarget=null;
@@ -2990,7 +3029,7 @@ function food(k,size,col){
     const total=open.length+done.length+auto.length, got=done.length;
     $('shRing').style.background='conic-gradient(var(--ok) 0 '+(total?got*100/total:0)+'%,var(--line) 0 100%)';
     $('shRingT').textContent=(open.length+auto.length)||'✓';
-    $('shHint').textContent=total?(open.length+auto.length?'zaškrtni, čo máš v košíku':'Všetko kúpené ✓'):'Napíš, čo treba kúpiť';
+    $('shHint').textContent=total?(open.length+auto.length?'zaškrtni, čo máš v košíku':'Všetko kúpené\u00a0✓'):'Napíš, čo treba kúpiť';
     const B=$('shopBody');
     if(shopQ){B.innerHTML=renderSearch();bindSearch();return}
     let h='';
@@ -2998,10 +3037,11 @@ function food(k,size,col){
     const ST=extra.stores;
     const card=(st,name,list,got)=>{const id=st?st.id:'', cl=!!(st&&st.closed); got=got||[];
       return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(st?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(st?CHEV:'')+'</button>'+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Premenovať alebo odstrániť obchod '+esc(name)+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</div>'+
-        (cl?'':'<div class="scl">'+kosHtml(got)+list.sort(byAisle).map(x=>rowHtml(x)).join('')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+'</section>'};
+        (cl?'':'<div class="scl">'+kosHtml(got)+list.sort(byAisle).map(x=>rowHtml(x)).join('')+(got.length?'<button type="button" class="sfin" data-fin="'+id+'">'+FIN_IC+(st||ST.length?'Ukončiť nákup v '+esc(name):'Ukončiť nákup')+'</button>':'')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+histRow(id)+'</section>'};
+    const histRow=id=>{const hs=histOf(id);return hs.length?'<button type="button" class="shist" data-hist="'+id+'"><span aria-hidden="true">🕘</span><span class="ht">Naposledy <b>'+esc(whenH(hs[0].at))+'</b> · '+vecN(hs[0].items.length)+'</span><i>História ›</i></button>':''};
     ST.forEach(st=>{h+=card(st,st.n,open.filter(x=>x.s===st.id),done.filter(x=>x.s===st.id))});
     const free=open.filter(x=>!x.s), freeGot=done.filter(x=>!x.s);
-    if(free.length||freeGot.length||!ST.length) h+=(open.length||done.length||ST.length)?card(null,ST.length?'Kdekoľvek':'Nákup',free,freeGot):'';
+    if(free.length||freeGot.length||!ST.length||histOf('').length) h+=(open.length||done.length||ST.length||histOf('').length)?card(null,ST.length?'Kdekoľvek':'Nákup',free,freeGot):'';
     if(auto.length) h+=sec('🔒','Moje zásoby',auto.map(z=>'<div class="srow priv"><button type="button" class="scb" data-sa="'+z.m.id+'" aria-label="Kúpil som: '+esc(nm(z.m))+'">'+ROW_CB+'</button><span class="sbody"><span class="si">'+picM(z.m,30)+'</span><span class="sn">'+esc(nm(z.m))+'</span><span class="sm">'+esc(z.why)+'</span></span></div>'),'',' <span class="lock">len pre teba</span>');
     h+='<button type="button" class="newst" id="shNewSt">+ Nový obchod</button>';
     if(!open.length&&!done.length&&!auto.length&&!ST.length) h='<div class="shempty">'+food('vrecko',64)+'<b>Zoznam je prázdny</b><span>Napíš hore, čo treba kúpiť, alebo si vytvor obchod.</span></div>'+h;
@@ -3016,6 +3056,8 @@ function food(k,size,col){
         toast(x.t+' kúpené',()=>{x.done=false;x.doneAt=null;saveExtra();renderShop()});
       }else{x.done=false;x.doneAt=null;buzz(8);saveExtra();renderShop();toast(x.t+' vrátené do zoznamu')}
     });
+    B.querySelectorAll('[data-fin]').forEach(b=>b.onclick=()=>finishStore(b.dataset.fin));
+    B.querySelectorAll('[data-hist]').forEach(b=>b.onclick=()=>{buzz(8);openHist(b.dataset.hist)});
     B.querySelectorAll('[data-kb]').forEach(b=>b.onclick=()=>{const x=items.find(i=>i.id===b.dataset.kb);if(!x)return;const at=x.doneAt;x.done=false;x.doneAt=null;buzz(8);saveExtra();renderShop();toast(x.t+' vrátené do zoznamu',()=>{x.done=true;x.doneAt=at;saveExtra();renderShop()})});
     B.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const i=items.findIndex(z=>z.id===b.dataset.rm);if(i<0)return;const x=items[i];buzz(12);const row=b.closest('.srow');
       const go=()=>{const j=extra.shop.indexOf(x);if(j>=0)extra.shop.splice(j,1);saveExtra();renderShop();toast(x.t+' odobraté',()=>{extra.shop.splice(Math.min(i,extra.shop.length),0,x);saveExtra();renderShop()})};
@@ -3057,6 +3099,7 @@ function food(k,size,col){
     const t=String(o.t||'').trim(); if(!t) return;
     const ex=extra.shop.find(x=>fold(x.t)===fold(t));
     const st=(o.s!==undefined?o.s:shopTarget)||undefined;
+    {const so=st&&(extra.stores||[]).find(z=>z.id===st);if(so&&so.closed)so.closed=false}
     if(ex&&!ex.done){const mv=st&&ex.s!==st;Object.assign(ex,{q:o.q||ex.q,b:o.b||ex.b,note:o.note||ex.note,s:st||ex.s});toast(mv?t+' presunuté do '+stName(st):t+' už v zozname je');saveExtra();renderShop();return}
     if(ex){ex.done=false;ex.doneAt=null;Object.assign(ex,{q:o.q||ex.q,b:o.b||ex.b,note:o.note||ex.note,s:st,ts:Date.now()})}
     else{const g=catBy(t)?null:guessAisle(t);extra.shop.push({id:rid(),t,a:o.a||(g||[0,'ine'])[1],i:g&&fold(g[0]).split(' ')[0]===fold(t).split(' ').pop()?g[2]:undefined,c:g?g[3]:undefined,q:o.q||'',b:o.b||'',note:o.note||'',s:st,done:false,ts:Date.now()})}
