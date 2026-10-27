@@ -424,6 +424,7 @@ button,input,select{font:inherit;color:inherit}
 .plusc{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:2px dashed var(--acc);color:var(--acc);font-weight:900;font-size:20px}
 .shpriv{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);font-size:13px;font-weight:700;color:var(--muted)}
 .shpriv input{width:20px;height:20px;accent-color:var(--acc)}
+.shdet .grab{margin:-6px -18px -4px;padding:20px 0 20px}
 .shback2{position:fixed;inset:0;z-index:34;background:rgba(10,20,40,.35)}
 .shdet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:560px;z-index:35;background:var(--card);border-radius:28px 28px 0 0;padding:6px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -24px 50px -18px rgba(10,20,40,.55);animation:sh-up .32s cubic-bezier(.22,1,.36,1);max-height:88vh;overflow:auto}
 .shdet .sdh{display:flex;align-items:center;gap:14px;margin:4px 0 6px}.shdet .sdh b{display:block;font-size:21px}.shdet .sdh span{color:var(--muted);font-weight:600;font-size:13.5px}
@@ -1216,7 +1217,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v44</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v45</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3009,11 +3010,11 @@ function food(k,size,col){
     const hs=histF?all.filter(h=>(h.s||'_')===histF):all;
     const inList=t=>extra.shop.some(x=>!x.done&&fold(x.t)===fold(t));
     const nmS=id=>id&&id!=='_'&&stName(id)||'Kdekoľvek';
-    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="hsh"><b>História nákupov</b><span>'+(all.length?'Ťukni na vec a pridá sa späť do zoznamu':'Posledný mesiac')+'</span></div>'+
+    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="hsh"><b>História nákupov</b>'+(all.length?'':'<span>Posledný mesiac</span>')+'</div>'+
       (ids.length>1?'<div class="hfil">'+['',...ids].map(id=>'<button type="button" data-hf="'+id+'" class="'+(histF===id?'on':'')+'" aria-pressed="'+(histF===id)+'">'+esc(id===''?'Všetky':nmS(id))+'</button>').join('')+'</div>':'')+
       (hs.length?hs.map((h,hi)=>'<div class="hdate">'+esc(whenH(h.at,true))+' · <em>'+esc(nmS(h.s))+'</em> <span>· '+vecN(h.items.length)+'</span></div><div class="chs">'+h.items.map((x,xi)=>{const on=inList(x.t);return '<button type="button" class="hchip'+(on?' in':'')+'" data-hadd="'+hi+':'+xi+'" aria-label="'+(on?esc(x.t)+' už je v zozname':'Pridať do zoznamu: '+esc(x.t))+'">'+shopIcon(x,24)+'<span>'+esc(x.t)+'</span>'+(on?'<i>✓</i>':'')+'</button>'}).join('')+'</div>').join('')
         :'<p class="hempty">Zatiaľ tu nič nie je. Keď ukončíš nákup v obchode, kúpené veci sa sem zapíšu a ostanú tu mesiac.</p>')+
-      '<div class="sdact"><button type="button" class="btn pri" id="hClose">✓ Hotovo</button></div>';
+      '<div class="sdact"><button type="button" class="btn pri" id="hClose">Zavrieť</button></div>';
     $('shDet').hidden=false; $('shDetBack').hidden=false;
     $('shDet').querySelectorAll('[data-hf]').forEach(b=>b.onclick=()=>{buzz(8);openHist(b.dataset.hf);$('shDet').scrollTop=0});
     $('shDet').querySelectorAll('[data-hadd]').forEach(b=>b.onclick=()=>{const [hi,xi]=b.dataset.hadd.split(':').map(Number);const h=hs[hi],x=h&&h.items[xi];if(!x)return;if(inList(x.t)){toast(x.t+' už v zozname je');return}
