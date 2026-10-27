@@ -35,7 +35,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v43)
+## Nákup (stav pri v44)
 - Hlavička (návrh B, v43): pod nadpisom rad troch rovnakých tlačidiel **Poslať · História · Uložiť** (`.shtri`, `.shtb`, `#shopShare`, `#shopHist`, `#shopClose`).
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
 - Systémové Späť na Androide: zavrie detail veci, potom nákup; ak bol nákup otvorený z Rýchlo, vráti do Rýchlo (`history.pushState({ml:'shop'})`, `popstate`, `shopPop`, `shopFromQ`).
@@ -52,6 +52,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
   - Kúpené veci sa po 24 h samé presunú do histórie a do `shopRecent` („Kúpiť znova“). Globálna sekcia „Kúpené“ už nie je.
 - Ukončenie nákupu po obchodoch (v42): keď je v karte aspoň 1 vec v košíku, ukáže sa zelené „✓ Ukončiť nákup v X“ (`.sfin`, `data-fin`, `finishStore`). Kúpené veci idú do histórie a „Kúpiť znova“, nekúpené ostanú na zozname, karta sa zbalí. Toast so Späť. Keď sa do zbaleného obchodu niečo pridá, sám sa rozbalí (`shopPut`).
 - História: `extra.shopHist` = `[{id,s,at,items:[{t,a,q,note,i,c}]}]`, drží sa 31 dní (`HIST_DAYS`). Otvára sa tlačidlom História v hlavičke (v43; riadky „Naposledy…“ v kartách obchodov sú zrušené). Okno „História nákupov“ v `shDet` (`openHist`, filter `histF`): filtre Všetky · obchody v ich poradí · Kdekoľvek (`_`), nákupy podľa dátumu s názvom obchodu, ťuknutie na vec ju pridá späť do zoznamu toho obchodu. Prázdny stav má vysvetľujúci text. História je len pre mňa, k domácnosti cez Poslať nejde.
+- Okná v nákupe (detail veci, obchod, história, všetko v `shDet`) sa dajú zavrieť potiahnutím čiarky dole (návrh A, v44, ako karta lieku): okno ide za prstom, pozadie sa zosvetľuje, nad 90 px sa zavrie, inak sa vráti. Bez nápisov. Tlačidlo „✓ Hotovo“/Uložiť ostáva.
 - Odobrať (bez kúpenia, napr. rozmyslel som si to): pri každej veci tlačidlo „Odobrať“ (`.srm`, `data-rm`), toast „X odobraté · Späť“. V detaile je „Odobrať zo zoznamu“. Používať slovo **Odobrať**, nie „Nekúpim“ ani „Vyhodiť“.
 - Staré `p:'trh'` sa pri načítaní samo prevedie na obchod „Trh“.
 - Funkcie: `renderShop`, `rowHtml`, `shopPut`, `showShopDet` (Koľko / Kde kúpiť / Poznámka), `openStoreDet`, `openShop`, `shopAuto`, `food()`.

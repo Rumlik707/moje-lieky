@@ -1216,7 +1216,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v43</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v44</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3159,7 +3159,13 @@ function food(k,size,col){
       extra.stores=extra.stores.filter(z=>z!==st); moved.forEach(x=>delete x.s); if(shopTarget===st.id) shopTarget=null;
       saveExtra(); closeShopDet(); renderShop(); toast(st.n+' odstránený',()=>{extra.stores.splice(idx,0,st);moved.forEach(x=>x.s=st.id);saveExtra();renderShop()})};
   }
-  function closeShopDet(){$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null}
+  function closeShopDet(){$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null;$('shDet').style.transform='';$('shDet').style.transition='';$('shDetBack').style.opacity=''}
+  {let y0=null,dy=0,pid=null;const sh=$('shDet'),bk=$('shDetBack');
+    sh.addEventListener('pointerdown',e=>{const g=e.target.closest('.grab');if(!g)return;y0=e.clientY;dy=0;pid=e.pointerId;try{g.setPointerCapture(pid)}catch(_){}sh.style.transition='none';bk.style.transition='none'});
+    sh.addEventListener('pointermove',e=>{if(y0==null||e.pointerId!==pid)return;dy=Math.max(0,e.clientY-y0);sh.style.transform='translateY('+dy+'px)';bk.style.opacity=String(Math.max(.15,1-dy/(sh.offsetHeight||400)))});
+    const end=()=>{if(y0==null)return;y0=null;sh.style.transition='transform .22s ease';bk.style.transition='opacity .22s ease';
+      if(dy>90){buzz(8);sh.style.transform='translateY(100%)';bk.style.opacity='0';setTimeout(closeShopDet,200)}else{sh.style.transform='';bk.style.opacity=''}};
+    sh.addEventListener('pointerup',end);sh.addEventListener('pointercancel',end)}
   function openShop(focus,fromQ){shopFromQ=!!fromQ;document.documentElement.style.setProperty('--tbh',document.querySelector('.tabbar').offsetHeight+'px');document.body.classList.add('shop-on');if(!(history.state&&history.state.ml==='shop'))try{history.pushState({ml:'shop'},'')}catch(_){}shopTarget=null;$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();quickOpen(false);$('shopSheet').hidden=false;$('shopBack').hidden=false;document.body.style.overflow='hidden';shopQ='';$('shopIn').value='';renderShop();if(focus)setTimeout(()=>$('shopIn').focus(),250)}
   let shopFromQ=false;
   function shopLeave(back){if(!back)shopFromQ=false;if(history.state&&history.state.ml==='shop')history.back();else shopPop()}
