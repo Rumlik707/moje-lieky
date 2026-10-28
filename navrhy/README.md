@@ -67,3 +67,9 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **A – nákup na prvom mieste** – [rqA-svetly.jpg](11-rychlo/rqA-svetly.jpg), [rqA-tmavy.jpg](11-rychlo/rqA-tmavy.jpg)
 - **B – lieky a starostlivosť** – [rqB-svetly.jpg](11-rychlo/rqB-svetly.jpg), [rqB-tmavy.jpg](11-rychlo/rqB-tmavy.jpg)
 - **C – bez Pridať, len časté veci** – [rqC-svetly.jpg](11-rychlo/rqC-svetly.jpg), [rqC-tmavy.jpg](11-rychlo/rqC-tmavy.jpg)
+
+## 12-rychlo-4-bubliny – Rýchlo po pripomienkach: bez „Užil som“, Nákup vpravo dole (zatiaľ nevybrané)
+
+- **A – Pridať · Vedľajší účinok · Do nákupu · Nákup (4)** – [rq4A-svetly.jpg](12-rychlo-4-bubliny/rq4A-svetly.jpg), [rq4A-tmavy.jpg](12-rychlo-4-bubliny/rq4A-tmavy.jpg)
+- **B – Kúpil som balenie · Vedľajší účinok · Do nákupu · Nákup (4)** – [rq4B-svetly.jpg](12-rychlo-4-bubliny/rq4B-svetly.jpg), [rq4B-tmavy.jpg](12-rychlo-4-bubliny/rq4B-tmavy.jpg)
+- **C – Pridať · Kúpil som · Vedľajší účinok · Do nákupu · Nákup (5)** – [rq4C-svetly.jpg](12-rychlo-4-bubliny/rq4C-svetly.jpg), [rq4C-tmavy.jpg](12-rychlo-4-bubliny/rq4C-tmavy.jpg)
