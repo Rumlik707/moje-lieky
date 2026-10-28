@@ -479,7 +479,9 @@ button,input,select{font:inherit;color:inherit}
 @media (prefers-reduced-motion: reduce){.tfing{animation:none}.tring{transition:none}}
 .tall{display:flex;align-items:center;gap:14px;width:100%;border:0;border-radius:18px;background:var(--acc);color:#fff;padding:14px 16px;font:inherit;font-weight:800;font-size:16px;margin:10px 0 4px;text-align:left;cursor:pointer}
 .tall small{display:block;font-weight:600;opacity:.85;font-size:13px}
-.ttipl{display:flex;gap:12px;align-items:flex-start;padding:10px 2px;border-bottom:1px solid var(--line)}.ttipl:last-of-type{border-bottom:0}
+.ttipl{display:flex;gap:12px;align-items:center;width:100%;padding:10px 2px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}.ttipl:last-of-type{border-bottom:0}.ttipl>div{flex:1}.ttipl>i{font-style:normal;color:var(--muted);font-size:20px}
+.tourL.noel .tring{box-shadow:0 0 0 9999px rgba(8,16,32,.66);width:0!important;height:0!important;border:0;outline:0}.tourL.noel .tfing{display:none}
+.ttip .tnote{font-size:14px!important;margin-top:8px!important;opacity:.85}
 .ttipl>span{flex:none;width:36px;height:36px;border-radius:50%;background:var(--acc-soft);color:var(--acc-deep);display:grid;place-items:center;font-weight:900}
 .ttipl b{font-size:15.5px}.ttipl p{margin:2px 0 0;color:var(--muted);font-weight:600;font-size:14px;line-height:1.35}
 .intro{position:fixed;inset:0;z-index:40;background:rgba(10,20,40,.55);display:grid;place-items:end center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));animation:q-fade .25s ease-out}
@@ -1255,7 +1257,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v57</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v58</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2354,7 +2356,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);if(!$('shopSheet').hidden){saveExtra();shopLeave()}quickOpen(false);if(!$('infoSheet').hidden)closeCard();nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
   const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms||10)}catch(_){}};
   const QG=[{g:'add',l:'Pridať',d:'nový liek…',sh:'tab',c:'#4F7BF0',bd:'+'},{g:'fx',l:'Vedľajší',d:'účinok',sh:'drop',c:'#1FA3B8',bd:'!'},{g:'send',l:'Poslať',d:'nákup',bd:'↑'},{g:'shop',l:'Nákup',d:'potraviny'}];
-  var TK='lieky-tour', tourOn=false, tourEnding=false, tourSteps=[], tourI=0, tourPart='';
+  var helpIgnore=0, TK='lieky-tour', tourOn=false, tourEnding=false, tourSteps=[], tourI=0, tourPart='';
   function tourDone(){try{return JSON.parse(localStorage.getItem(TK)||'{}')}catch(e){return {}}}
   let qIgnorePop=0;
   window.addEventListener('popstate',()=>{if(tourOn||tourEnding)return;if(qIgnorePop){qIgnorePop--;return}if(!$('quick').hidden)quickOpen(false,true)});
@@ -3228,7 +3230,7 @@ function food(k,size,col){
       toast(made?'Obchod '+st.n+' vytvorený':'Presunuté do '+st.n,()=>{moved.forEach(x=>delete x.s);if(made)extra.stores=extra.stores.filter(z=>z!==st);saveExtra();renderShop()})};
     $('stOk').onclick=ok; $('stCancel').onclick=closeShopDet; $('stN').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();ok()}};
   }
-  function closeShopDet(){$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null;$('shDet').style.transform='';$('shDet').style.transition='';$('shDetBack').style.opacity=''}
+  function closeShopDet(){if(shopDet&&shopDet.help&&history.state&&history.state.ml==='help'){helpIgnore++;try{history.back()}catch(_){helpIgnore--}}$('shDet').hidden=true;$('shDetBack').hidden=true;shopDet=null;$('shDet').style.transform='';$('shDet').style.transition='';$('shDetBack').style.opacity=''}
   {let y0=null,dy=0,pid=null;const sh=$('shDet'),bk=$('shDetBack');
     sh.addEventListener('pointerdown',e=>{const g=e.target.closest('.grab');if(!g)return;y0=e.clientY;dy=0;pid=e.pointerId;try{g.setPointerCapture(pid)}catch(_){}sh.style.transition='none';bk.style.transition='none'});
     sh.addEventListener('pointermove',e=>{if(y0==null||e.pointerId!==pid)return;dy=Math.max(0,e.clientY-y0);sh.style.transform='translateY('+dy+'px)';bk.style.opacity=String(Math.max(.15,1-dy/(sh.offsetHeight||400)))});
@@ -3370,14 +3372,25 @@ function food(k,size,col){
     {g:()=>closeAll(),s:'#plusTab',ic:'<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z"/></svg>',t:'Rýchlo',p:'Pridať liek a nákup na jedno ťuknutie.'},
     {g:()=>{if(!$('quick').hidden)return false;closeAll();quickOpen(true)},w:900,s:'[data-qg=shop] .o',r:1,ic:'🛒',t:'Nákup',p:'Zoznam na nákup po obchodoch.'},
     {g:()=>closeAll(),s:'.tab[data-tab=more]',ic:'•••',t:'Viac',p:'Tu si prehliadku pustíš znova.'}]}};
-  const TIPS=[['🛒','Košík','Zaškrtnutá vec skočí hore do zeleného košíka.'],['✓','Ukončiť nákup','Kúpené ide do histórie, zvyšok ostane na zozname.'],['−','Odobrať','Vec, ktorú už netreba, odoberieš bez kúpenia.'],['📰','Leták','Pri obchode otvorí jeho akciový leták.'],['↑','Poslať','Vyberieš obchody a pošleš zoznam domácnosti.'],['🕘','História','Čo si kúpil za posledný mesiac.'],['✎','Ceruzka','Premenuje alebo odstráni obchod.'],['🕐','Hodinky pri lieku','Keď si liek užil skôr, zadáš čas.']];
-  function closeAll(){if(!$('quick').hidden)quickOpen(false,true);if(!$('shDet').hidden)closeShopDet();if(!$('shopSheet').hidden)closeShop();if(!$('infoSheet').hidden)closeCard()}
+  const toShop=()=>{if(!$('shopSheet').hidden)return false;closeAll();openShop(false)};
+  const toToday=()=>{closeAll();setTab('today')};
+  const TIPS=[
+    {ic:'🛒',t:'Košík',p:'Zaškrtnutá vec skočí hore do zeleného košíka. Ťuknutím na ikonku ju vrátiš.',g:toShop,w:500,s:'.skos,.scard .scb'},
+    {ic:'✓',t:'Ukončiť nákup',p:'Kúpené ide do histórie, zvyšok ostane na zozname.',g:toShop,w:500,s:'.sfin'},
+    {ic:'−',t:'Odobrať',p:'Vec, ktorú už netreba, odoberieš bez kúpenia.',g:toShop,w:500,s:'.scard .srm'},
+    {ic:'📰',t:'Leták',p:'Pri obchode otvorí jeho akciový leták.',g:toShop,w:500,s:'.scard .slf',r:1},
+    {ic:'↑',t:'Poslať',p:'Vyberieš obchody a pošleš zoznam domácnosti.',g:toShop,w:500,s:'#shopShare'},
+    {ic:'🕘',t:'História',p:'Čo si kúpil za posledný mesiac.',g:toShop,w:500,s:'#shopHist'},
+    {ic:'✎',t:'Ceruzka',p:'Premenuje alebo odstráni obchod.',g:toShop,w:500,s:'.scard .scedit',r:1},
+    {ic:'🕐',t:'Hodinky pri lieku',p:'Keď si liek užil skôr, ťukni na hodinky a zadaj čas.',g:()=>{toToday();setTimeout(()=>{if(vis(document.querySelector('#day .rowx .tbtn')))return;const h=[...document.querySelectorAll('#day .block.closed')].find(b=>b.querySelector('.tbtn'));if(h)h.querySelector('.block-h').click()},120)},w:900,s:'#day .rowx .tbtn',nn:'Hodinky uvidíš pri lieku, ktorý ešte nemáš odkliknutý.'}];
+  let tourHelp=false;
+  function closeAll(){if(!$('quick').hidden)quickOpen(false,true);if(!$('shDet').hidden){if(shopDet&&shopDet.help)shopDet={};closeShopDet()}if(!$('shopSheet').hidden)closeShop();if(!$('infoSheet').hidden)closeCard()}
   function tourMaybe(p){if(p!=='base'||tourOn||tourDone().base)return;tourStart()}
-  function tourStart(){
-    tourSteps=TP.base.steps.slice();tourPart='base';tourI=0;tourOn=true;
+  function tourStart(steps){
+    tourHelp=!!steps;tourSteps=steps||TP.base.steps.slice();tourPart='base';tourI=0;tourOn=true;
     if(!$('tourL')){document.body.insertAdjacentHTML('beforeend','<div id="tourL" class="tourL" hidden><div class="tring" id="tRing"></div><div class="tfing" id="tFing" aria-hidden="true">👆</div><div class="ttip" id="tTip" role="dialog" aria-live="polite"></div></div>');
       addEventListener('resize',()=>{if(tourOn)tourPlace()});addEventListener('scroll',()=>{if(tourOn)tourPlace()},true)}
-    try{history.pushState({ml:'tour'},'')}catch(_){}
+    try{if(history.state&&history.state.ml==='help')history.replaceState({ml:'tour'},'');else history.pushState({ml:'tour'},'')}catch(_){}
     $('tourL').hidden=false;tourShow(0);
   }
   function tourEl(st){for(const q of st.s.split(',')){const el=document.querySelector(q.trim());if(vis(el))return el}return null}
@@ -3385,12 +3398,18 @@ function food(k,size,col){
     dir=dir||1;tourI=i;const st=tourSteps[i];if(!st)return tourEnd();
     $('tTip').querySelectorAll('button').forEach(b=>b.disabled=true);
     const acted=!!st.g&&st.g()!==false;
-    setTimeout(()=>{const el=tourEl(st);if(!el){return (i+dir>=0&&i+dir<tourSteps.length)?tourShow(i+dir,dir):tourEnd()}
-      el.scrollIntoView({block:'center',behavior:'auto'});
+    setTimeout(()=>{const el=tourEl(st);
+      if(!el&&!tourHelp){return (i+dir>=0&&i+dir<tourSteps.length)?tourShow(i+dir,dir):tourEnd()}
+      if(el)el.scrollIntoView({block:'center',behavior:'auto'});
+      $('tourL').classList.toggle('noel',!el);
       const n=tourSteps.length, last=i===n-1;
-      $('tTip').innerHTML='<span class="tic" aria-hidden="true">'+st.ic+'</span><b>'+esc(st.t)+'</b><p>'+esc(st.p)+'</p><div class="trow"><button type="button" class="tsk" id="tSkip">✕ Zavrieť</button><span class="tdots" aria-label="Krok '+(i+1)+' z '+n+'">'+tourSteps.map((_,k)=>'<i class="'+(k===i?'on':'')+'"></i>').join('')+'</span><button type="button" class="tnx" id="tNext">'+(last?'Hotovo':'Ďalej')+'</button></div>';
-      $('tSkip').onclick=()=>{buzz(8);tourEnd()};$('tNext').onclick=()=>{buzz(8);if(last)tourEnd();else tourShow(i+1,1)};
-      tourPlace();[80,350,800].forEach(ms=>setTimeout(()=>{if(tourOn&&tourI===i)tourPlace()},ms))},acted?(st.w||380):60);
+      $('tTip').innerHTML='<span class="tic" aria-hidden="true">'+st.ic+'</span><b>'+esc(st.t)+'</b><p>'+esc(st.p)+'</p>'+(el?'':'<p class="tnote">'+esc(st.nn||'Teraz to tu nie je vidieť – ukáže sa, keď budeš mať v nákupe veci.')+'</p>')+
+        (tourHelp?'<div class="trow"><button type="button" class="tsk" id="tSkip">✕ Zavrieť</button><button type="button" class="tnx" id="tNext">‹ Späť na tipy</button></div>'
+        :'<div class="trow"><button type="button" class="tsk" id="tSkip">✕ Zavrieť</button><span class="tdots" aria-label="Krok '+(i+1)+' z '+n+'">'+tourSteps.map((_,k)=>'<i class="'+(k===i?'on':'')+'"></i>').join('')+'</span><button type="button" class="tnx" id="tNext">'+(last?'Hotovo':'Ďalej')+'</button></div>');
+      if(tourHelp){$('tSkip').onclick=()=>{buzz(8);tourEnd()};$('tNext').onclick=()=>{buzz(8);tourBackToHelp(false)}}
+      else{$('tSkip').onclick=()=>{buzz(8);tourEnd()};$('tNext').onclick=()=>{buzz(8);if(last)tourEnd();else tourShow(i+1,1)}}
+      if(el){tourPlace();[80,350,800].forEach(ms=>setTimeout(()=>{if(tourOn&&tourI===i)tourPlace()},ms))}
+      else{const t=$('tTip');t.style.top='';t.style.bottom='34%'}},acted?(st.w||380):60);
   }
   function tourPlace(){
     const st=tourSteps[tourI];if(!st)return;const el=tourEl(st);if(!el)return;
@@ -3408,26 +3427,36 @@ function food(k,size,col){
     tip.style.top=above?'':Math.min(H-300,bot+62)+'px';
     tip.style.bottom=above?(H-top+62)+'px':'';
   }
+  function tourHide(){tourOn=false;$('tourL').hidden=true;$('tourL').classList.remove('noel');if(!$('quick').hidden)quickOpen(false,true)}
+  function tourBackToHelp(fromPop){
+    tourHide();closeAll();if(tab!=='more')setTab('more');
+    try{if(!fromPop&&history.state&&history.state.ml==='tour')history.replaceState({ml:'help'},'')}catch(_){}
+    openHelp();
+  }
   function tourEnd(){
-    if(!tourOn)return;tourMark('base');try{localStorage.setItem('lieky-intro','1')}catch(e){}
-    tourOn=false;$('tourL').hidden=true;
-    if(!$('quick').hidden)quickOpen(false,true);
+    if(!tourOn)return;if(!tourHelp){tourMark('base');try{localStorage.setItem('lieky-intro','1')}catch(e){}}
+    const h=tourHelp;tourHide();if(h){closeAll();if(tab!=='more')setTab('more')}
     if(history.state&&history.state.ml==='tour'){tourEnding=true;try{history.back()}catch(_){tourEnding=false}}
   }
   window.addEventListener('popstate',()=>{
     if(tourEnding){tourEnding=false;return}
-    if(!tourOn)return;
-    try{history.pushState({ml:'tour'},'')}catch(_){}
-    if(tourI>0)tourShow(tourI-1,-1);else tourEnd();
+    if(helpIgnore){helpIgnore--;return}
+    if(tourOn){
+      if(tourHelp){tourBackToHelp(true);return}
+      try{history.pushState({ml:'tour'},'')}catch(_){}
+      if(tourI>0)tourShow(tourI-1,-1);else tourEnd();return}
+    if(!$('shDet').hidden&&shopDet&&shopDet.help){shopDet={};closeShopDet()}
   });
   function openHelp(){
+    try{if(!(history.state&&history.state.ml==='help'))history.pushState({ml:'help'},'')}catch(_){}
     shopDet={help:1};
     $('shDet').innerHTML='<div class="grab"><i></i></div><div class="hsh"><b>Ako appka funguje</b></div>'+
       '<button type="button" class="tall" id="tAll">▶<span>Prehliadka<small>6 krokov priamo v appke</small></span></button>'+
-      '<div class="lbl">Tipy</div>'+TIPS.map(t=>'<div class="ttipl"><span aria-hidden="true">'+t[0]+'</span><div><b>'+esc(t[1])+'</b><p>'+esc(t[2])+'</p></div></div>').join('')+
+      '<div class="lbl">Tipy · ťukni a ukážem ti to</div>'+TIPS.map((t,k)=>'<button type="button" class="ttipl" data-tip="'+k+'"><span aria-hidden="true">'+t.ic+'</span><div><b>'+esc(t.t)+'</b><p>'+esc(t.p)+'</p></div><i aria-hidden="true">›</i></button>').join('')+
       '<div class="sdact"><button type="button" class="btn ghost" id="tHClose">Zavrieť</button></div>';
     $('shDet').hidden=false;$('shDetBack').hidden=false;
-    $('tAll').onclick=()=>{closeShopDet();tourStart()};
+    $('tAll').onclick=()=>{shopDet={};closeShopDet();tourStart()};
+    $('shDet').querySelectorAll('[data-tip]').forEach(b=>b.onclick=()=>{buzz(8);const t=TIPS[+b.dataset.tip];shopDet={};closeShopDet();tourStart([t])});
     $('tHClose').onclick=closeShopDet;
   }
 
