@@ -295,6 +295,10 @@ button,input,select{font:inherit;color:inherit}
 .qb{position:absolute;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;font:inherit;color:var(--ink);cursor:pointer;width:96px;opacity:0;animation:qb-in .5s cubic-bezier(.34,1.56,.64,1) forwards}
 .qb .o{width:68px;height:68px;border-radius:50%;background:var(--card);display:grid;place-items:center;box-shadow:0 0 0 1.5px var(--line),0 14px 26px -14px rgba(15,37,71,.6);margin-bottom:4px;transition:transform .2s}
 .qb:active .o{transform:scale(.9)}
+.qb .o{position:relative}.qbd{position:absolute;right:-3px;bottom:-1px;width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;font-style:normal;font-weight:900;font-size:15px;line-height:1;display:grid;place-items:center;border:2px solid var(--card);z-index:2}
+.qbd.w{background:#D98A1E}
+:root[data-theme=dark] .qbd.w{background:#B9781F}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .qbd.w{background:#B9781F}}
 .qb b{font-size:14px;font-weight:800}.qb small{font-size:11.5px;font-weight:700;color:var(--muted)}
 .qb.hot .o{background:radial-gradient(circle at 35% 30%,#FFF8EC,#FFE0B0);box-shadow:0 0 0 3px #FFB547,0 16px 30px -12px rgba(233,140,20,.6)}
 :root[data-theme=dark] .qb.hot .o{background:var(--card);box-shadow:0 0 0 2px rgba(255,181,71,.55),0 14px 26px -14px rgba(0,0,0,.6)}
@@ -1221,7 +1225,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v51</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v52</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2319,15 +2323,15 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);if(!$('shopSheet').hidden){saveExtra();shopLeave()}quickOpen(false);if(!$('infoSheet').hidden)closeCard();nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
   const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms||10)}catch(_){}};
-  const QG=[{g:'med',l:'Liek',d:'tablety',sh:'tab',c:'#4F7BF0'},{g:'care',l:'Kvapky',d:'a masti',sh:'drop',c:'#1FA3B8'},{g:'cosm',l:'Kozmetika',d:'',sh:'pump',c:'#D9658C'},{g:'swap',l:'Výmena',d:'kefky',sh:'ebrush',c:'#2D6BE4'},{g:'shop',l:'Nákup',d:'potraviny'}];
+  const QG=[{g:'add',l:'Pridať',d:'nový liek…',sh:'tab',c:'#4F7BF0',bd:'+'},{g:'fx',l:'Vedľajší',d:'účinok',sh:'drop',c:'#1FA3B8',bd:'!'},{g:'shopadd',l:'Do nákupu',d:'pripísať',bd:'+'},{g:'shop',l:'Nákup',d:'potraviny'}];
   function quickOpen(on){
     const q=$('quick');
     if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
-    const POS=[[13,64],[31,30],[50,3],[69,30],[87,64]];
-    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span><i class="fshine"></i></span>':pillSvg(x.sh,x.c,52))+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
+    const POS=[[13,64],[37,22],[63,22],[87,64]];
+    $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'||x.g==='shopadd'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span><i class="fshine"></i></span>':pillSvg(x.sh,x.c,52))+(x.bd?'<i class="qbd'+(x.bd==='!'?' w':'')+'" aria-hidden="true">'+x.bd+'</i>':'')+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
-    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);if(b.dataset.qg==='shop'){quickOpen(false);openShop(false,true);return}quickOpen(false);openAdd();const r=document.querySelector('input[name=fKind][value='+b.dataset.qg+']');if(r){r.checked=true;r.dispatchEvent(new Event('change'))}$('fName').focus()});
+    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);const g=b.dataset.qg;quickOpen(false);if(g==='shop'){openShop(false,true);return}if(g==='shopadd'){openShop(true,true);return}if(g==='fx'){openFx('');return}openAdd();$('fName').focus()});
     const f=$('qMenu').querySelector('.qb'); if(f) f.focus({preventScroll:true});
   }
   $('plusTab').onclick=()=>{buzz(12);if(!$('shopSheet').hidden){saveExtra();shopLeave();quickOpen(true);return}if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
