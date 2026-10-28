@@ -80,3 +80,9 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **A – vybrať obchody + náhľad správy ✅ vybraný (v53)** – [snA-svetly.jpg](13-poslat-nakup/snA-svetly.jpg), [snA-tmavy.jpg](13-poslat-nakup/snA-tmavy.jpg)
 - **B – vybrať aplikáciu (WhatsApp, Viber, Messenger, SMS) + náhľad** – [snB-svetly.jpg](13-poslat-nakup/snB-svetly.jpg), [snB-tmavy.jpg](13-poslat-nakup/snB-tmavy.jpg)
 - **C – poslať všetko alebo len jeden obchod** – [snC-svetly.jpg](13-poslat-nakup/snC-svetly.jpg), [snC-tmavy.jpg](13-poslat-nakup/snC-tmavy.jpg)
+
+## 14-sprievodca – „Ako appka funguje“ (zatiaľ nevybrané)
+
+- **A – aktuálny sprievodca s viac obrazovkami (ukážka: Nákup po obchodoch)** – [gA-svetly.jpg](14-sprievodca/gA-svetly.jpg), [gA-tmavy.jpg](14-sprievodca/gA-tmavy.jpg)
+- **B – pomocník podľa tém vo Viac + prehliadka od začiatku** – [gB-svetly.jpg](14-sprievodca/gB-svetly.jpg), [gB-tmavy.jpg](14-sprievodca/gB-tmavy.jpg)
+- **C – tipy priamo na mieste (ukážka: košík)** – [gC-svetly.jpg](14-sprievodca/gC-svetly.jpg), [gC-tmavy.jpg](14-sprievodca/gC-tmavy.jpg)
