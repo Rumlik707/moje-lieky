@@ -86,3 +86,9 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **A – aktuálny sprievodca s viac obrazovkami (ukážka: Nákup po obchodoch)** – [gA-svetly.jpg](14-sprievodca/gA-svetly.jpg), [gA-tmavy.jpg](14-sprievodca/gA-tmavy.jpg)
 - **B – pomocník podľa tém vo Viac + prehliadka od začiatku** – [gB-svetly.jpg](14-sprievodca/gB-svetly.jpg), [gB-tmavy.jpg](14-sprievodca/gB-tmavy.jpg)
 - **C – tipy priamo na mieste (ukážka: košík)** – [gC-svetly.jpg](14-sprievodca/gC-svetly.jpg), [gC-tmavy.jpg](14-sprievodca/gC-tmavy.jpg)
+
+## 15-prehliadka-v-appke – Prehliadka priamo v appke (zvýraznenie + bublina); dohodnuté: krátka základná pri prvom spustení, časti pri prvom otvorení, Viac → celá aj po častiach (zatiaľ nevybrané)
+
+- **A – stmavená obrazovka, biely rámik, biela bublina so šípkou** – [cmA-svetly.jpg](15-prehliadka-v-appke/cmA-svetly.jpg), [cmA-tmavy.jpg](15-prehliadka-v-appke/cmA-tmavy.jpg)
+- **B – jemné stmavenie, modrý svietiaci rámik, bublina vo farbách appky** – [cmB-svetly.jpg](15-prehliadka-v-appke/cmB-svetly.jpg), [cmB-tmavy.jpg](15-prehliadka-v-appke/cmB-tmavy.jpg)
+- **C – karta hore s ukazovateľom priebehu, prst 👇 ukazuje na tlačidlo** – [cmC-svetly.jpg](15-prehliadka-v-appke/cmC-svetly.jpg), [cmC-tmavy.jpg](15-prehliadka-v-appke/cmC-tmavy.jpg)
