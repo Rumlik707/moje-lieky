@@ -38,6 +38,8 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
   - Tipy (v58): každý tip v „Ako appka funguje“ je tlačidlo – ťuknutie prepne na to miesto v appke (nákup / Dnes), zvýrazní ho a ukáže popis (`TIPS` s `g`, `s`, `r`, `nn`; `tourStart([tip])`, `tourHelp`). Tlačidlá „✕ Zavrieť“ a „‹ Späť na tipy“; systémové Späť tiež vráti do zoznamu tipov (`tourBackToHelp`). Okno pomoci má vlastný záznam v histórii `{ml:'help'}` (`helpIgnore`). Keď tlačidlo na obrazovke nie je, bublina je v strede s vysvetlením (trieda `noel`).
   - Nepridávať do prehliadky ďalšie kroky ani dlhé texty bez opýtania – menej je viac.
   - V testoch nastav `lieky-tour` na hotové, inak prehliadka prekryje obrazovku.
+- Vedľajší účinok (v59): v okne je namiesto rozbaľovacieho zoznamu výber lieku čipmi s ikonkou („Po ktorom lieku?“, `#fxMeds`, `name=fxM`, skrytý `#fxMed` pre kompatibilitu). Z Rýchlo/Viac nie je predvybraný žiadny liek – čipy jemne zablikajú a bez výberu sa nedá uložiť („Vyber, po ktorom lieku sa to deje.“). Z karty lieku je liek predvybraný. Po výbere lieku sa okno posunie na príznaky.
+- Tipy (v59): ťuknutý tip sa na chvíľu zvýrazní (`.press`), po návrate do zoznamu je posledný tip zvýraznený žltým rámikom a zoznam je posunutý k nemu (`tipLast`, `.was`).
 - Skupiny položiek: `med` (Lieky), `care` (Kvapky a ošetrenie), `cosm` (Kozmetika), `swap` (Výmena, napr. hlavice zubnej kefky). Skupinu vracia funkcia `grpOf(m)`.
 - Ikonky sú realistické a animované 3D (`pillSvg`, `picM`, `iconState`, `goIcon`). Animácie sa spúšťajú triedou `.go`. Spoločné gradienty sú v globálnom svg H3D.
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
