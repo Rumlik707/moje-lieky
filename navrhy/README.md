@@ -92,3 +92,9 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **A – stmavená obrazovka, biely rámik, biela bublina so šípkou** – [cmA-svetly.jpg](15-prehliadka-v-appke/cmA-svetly.jpg), [cmA-tmavy.jpg](15-prehliadka-v-appke/cmA-tmavy.jpg)
 - **B – jemné stmavenie, modrý svietiaci rámik, bublina vo farbách appky ✅ vybraný (v55)** – [cmB-svetly.jpg](15-prehliadka-v-appke/cmB-svetly.jpg), [cmB-tmavy.jpg](15-prehliadka-v-appke/cmB-tmavy.jpg)
 - **C – karta hore s ukazovateľom priebehu, prst 👇 ukazuje na tlačidlo** – [cmC-svetly.jpg](15-prehliadka-v-appke/cmC-svetly.jpg), [cmC-tmavy.jpg](15-prehliadka-v-appke/cmC-tmavy.jpg)
+
+## 16-prehliadka-jednoduchsia – 6 krokov, jedna veta, väčšie písmo (zatiaľ nevybrané)
+
+- **1 – jemné: stredné stmavenie, modrý rámik, veľká biela bublina** – [c2v1-svetly.jpg](16-prehliadka-jednoduchsia/c2v1-svetly.jpg), [c2v1-tmavy.jpg](16-prehliadka-jednoduchsia/c2v1-tmavy.jpg)
+- **2 – výraznejšie: tmavšie pozadie, biely rámik s modrou žiarou** – [c2v2-svetly.jpg](16-prehliadka-jednoduchsia/c2v2-svetly.jpg), [c2v2-tmavy.jpg](16-prehliadka-jednoduchsia/c2v2-tmavy.jpg)
+- **3 – najvýraznejšie: tmavé pozadie, žltý rámik, ukazovák 👆, krémová bublina** – [c2v3-svetly.jpg](16-prehliadka-jednoduchsia/c2v3-svetly.jpg), [c2v3-tmavy.jpg](16-prehliadka-jednoduchsia/c2v3-tmavy.jpg)
