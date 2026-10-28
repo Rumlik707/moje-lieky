@@ -320,8 +320,11 @@ button,input,select{font:inherit;color:inherit}
 .sctog{flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:0;background:none;font:inherit;color:var(--ink);padding:12px 8px 10px 14px;cursor:pointer;text-align:left}
 .sctog:disabled{cursor:default;opacity:1}
 .sctog .stic{flex:none;color:var(--muted)}
-.sctog b{font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sctog span{color:var(--muted);font-weight:700;font-size:13px;white-space:nowrap}
+.sctog .nmw{display:flex;flex-direction:column;min-width:0;gap:1px;color:var(--ink);white-space:normal}.sctog .nmw>span{color:var(--muted)}.sctog b{font-size:18px;line-height:1.15;overflow-wrap:anywhere}.sctog span{color:var(--muted);font-weight:700;font-size:13px;white-space:nowrap}
 .sctog .chev{margin-left:auto;margin-right:4px;color:var(--muted);transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.scchev{flex:none;width:36px;height:44px;border:0;background:none;color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}.scchev .chev{transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.slf{flex:none;width:44px;height:44px;margin-right:2px;border-radius:50%;background:var(--acc-soft);color:var(--acc-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;line-height:1;text-decoration:none;transition:transform .15s}
+.slf:active{transform:scale(.92)}.slf svg{width:18px;height:18px}
 .scedit{flex:none;width:40px;height:40px;margin-right:8px;border:0;background:var(--acc-soft);border-radius:50%;color:var(--acc-deep);display:grid;place-items:center;cursor:pointer;transition:transform .15s}.scedit:active{transform:scale(.92)}
 .scl .srow:first-child{border-top:1px solid var(--line)}
 .scadd{display:block;width:100%;border:0;border-top:1px dashed var(--line);background:none;text-align:left;padding:12px 14px;font:inherit;font-weight:800;font-size:14px;color:var(--acc-deep);cursor:pointer}
@@ -1218,7 +1221,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v50</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v51</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3028,6 +3031,10 @@ function food(k,size,col){
       '<button type="button" class="sbody" data-ed="'+x.id+'"><span class="si">'+shopIcon(x,30)+'</span><span class="sn">'+esc(x.t)+'</span>'+(meta?'<span class="sm">'+esc(meta)+'</span>':'')+'</button>'+(done?'':'<button type="button" class="srm" data-rm="'+x.id+'" aria-label="Odobrať zo zoznamu: '+esc(x.t)+'">Odobrať</button>')+'</div>';
   }
   const FIN_IC='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const LF_IC='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h12v14H6a2 2 0 0 1-2-2z"/><path d="M16 9h3a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2"/><path d="M7 9h6M7 12.5h6M7 16h4"/></svg>';
+  const CHAINS=[['lidl','https://www.lidl.sk'],['kaufland','https://www.kaufland.sk'],['billa','https://www.billa.sk'],['tesco','https://tesco.sk'],['jednota','https://www.coop.sk'],['coop','https://www.coop.sk'],['terno','https://www.terno.sk'],['dm ','https://www.mojadm.sk'],['dm','https://www.mojadm.sk']];
+  const chainUrl=n=>{const f=fold(n||'')+' ';const c=CHAINS.find(([k])=>k.endsWith(' ')?f.startsWith(k):f.split(/[^a-z0-9]+/).includes(k));return c?c[1]:''};
+  const lfUrl=st=>st?(st.lf||chainUrl(st.n)):'';
   const OKC='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   function kosHtml(list){
     if(!list.length) return '';
@@ -3053,7 +3060,7 @@ function food(k,size,col){
     const sec=(ic,title,rows,cls,extraH)=>'<div class="shaisle'+(cls?' '+cls:'')+'"><span class="ai">'+ic+'</span>'+title+(extraH||'')+'<span class="c">'+rows.length+'</span></div><div class="slist">'+rows.join('')+'</div>';
     const ST=extra.stores;
     const card=(st,name,list,got)=>{const id=st?st.id:'', tg=!!st||ST.length>0, cl=st?!!st.closed:(tg&&!!extra.freeClosed); got=got||[];
-      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(tg?'':' disabled')+'>'+STORE_IC+'<b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span>'+(tg?CHEV:'')+'</button>'+(st?'':tg?'<button type="button" class="scedit" data-sfree="1" aria-label="Premenovať Kdekoľvek na obchod"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Premenovať alebo odstrániť obchod '+esc(name)+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</div>'+
+      return '<section class="scard'+(cl?' closed':'')+'"><div class="schd"><button type="button" class="sctog" data-stog="'+id+'" aria-expanded="'+!cl+'"'+(tg?'':' disabled')+'>'+STORE_IC+'<span class="nmw"><b>'+esc(name)+'</b><span>'+(got.length?got.length+' z '+(got.length+list.length)+' v košíku':list.length?vecN(list.length):'prázdne')+'</span></span></button>'+(lfUrl(st)?'<a class="slf" href="'+esc(lfUrl(st))+'" target="_blank" rel="noopener" aria-label="Akciový leták '+esc(name)+' (otvorí web obchodu)">'+LF_IC+'<span>Leták</span></a>':'')+(tg?'<button type="button" class="scchev" data-stog="'+id+'" aria-expanded="'+!cl+'" tabindex="-1" aria-hidden="true">'+CHEV+'</button>':'')+(st?'':tg?'<button type="button" class="scedit" data-sfree="1" aria-label="Premenovať Kdekoľvek na obchod"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+(st?'<button type="button" class="scedit" data-sted="'+id+'" aria-label="Premenovať alebo odstrániť obchod '+esc(name)+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</div>'+
         (cl?'':'<div class="scl">'+kosHtml(got)+list.sort(byAisle).map(x=>rowHtml(x)).join('')+(got.length?'<button type="button" class="sfin" data-fin="'+id+'">'+FIN_IC+(st||ST.length?'Ukončiť nákup v '+esc(name):'Ukončiť nákup')+'</button>':'')+'<button type="button" class="scadd" data-sadd="'+id+'">+ pridať do '+esc(name)+'</button></div>')+'</section>'};
     ST.forEach(st=>{h+=card(st,st.n,open.filter(x=>x.s===st.id),done.filter(x=>x.s===st.id))});
     const free=open.filter(x=>!x.s), freeGot=done.filter(x=>!x.s);
@@ -3078,7 +3085,7 @@ function food(k,size,col){
       const go=()=>{const j=extra.shop.indexOf(x);if(j>=0)extra.shop.splice(j,1);saveExtra();renderShop();toast(x.t+' odobraté',()=>{extra.shop.splice(Math.min(i,extra.shop.length),0,x);saveExtra();renderShop()})};
       if(row&&!reduce()){row.classList.add('going');setTimeout(go,380)}else go()});
     B.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>openShopDet(b.dataset.ed));
-    B.querySelectorAll('[data-stog]').forEach(b=>b.onclick=()=>{if(b.disabled)return;if(!b.dataset.stog){extra.freeClosed=!extra.freeClosed;buzz(8);saveExtra();renderShop();return}const st=ST.find(z=>z.id===b.dataset.stog);if(!st)return;st.closed=!st.closed;buzz(8);saveExtra();renderShop()});
+    B.querySelectorAll('[data-stog]').forEach(b=>b.onclick=()=>{if(b.disabled)return;if(!b.dataset.stog&&!(ST.length))return;if(!b.dataset.stog){extra.freeClosed=!extra.freeClosed;buzz(8);saveExtra();renderShop();return}const st=ST.find(z=>z.id===b.dataset.stog);if(!st)return;st.closed=!st.closed;buzz(8);saveExtra();renderShop()});
     B.querySelectorAll('[data-sted]').forEach(b=>b.onclick=()=>openStoreDet(b.dataset.sted));
     B.querySelectorAll('[data-sadd]').forEach(b=>b.onclick=()=>{shopTarget=b.dataset.sadd||null;buzz(8);renderShop();$('shopIn').focus()});
     if($('shNewSt')) $('shNewSt').onclick=()=>openStoreDet(null);
@@ -3151,12 +3158,15 @@ function food(k,size,col){
     const st=id?extra.stores.find(z=>z.id===id):null; shopDet={store:1};
     $('shDet').innerHTML='<div class="grab"><i></i></div><div class="sdh"><span class="si stbig">'+STORE_IC+'</span><div><b>'+(st?'Upraviť obchod':'Nový obchod')+'</b><span>Veci z jedného obchodu budú spolu</span></div></div>'+
       '<div class="lbl">Názov obchodu</div><input class="sdn" id="stN" placeholder="napr. Trh, Billa, Lidl" maxlength="24" value="'+esc(st?st.n:'')+'" enterkeyhint="done">'+
+      '<div class="lbl">Odkaz na leták · nepovinné</div><input class="sdn" id="stL" type="url" inputmode="url" placeholder="'+esc(chainUrl(st?st.n:'')||'https://…')+'" value="'+esc(st&&st.lf||'')+'" enterkeyhint="done">'+
+      '<p class="stnote">Pri Lidl, Kaufland, Billa, Tesco, Coop Jednota, Terno a dm sa web obchodu doplní sám. Sem môžeš vložiť presný odkaz na stránku s letákom.</p>'+
       '<div class="sdact"><button type="button" class="btn pri" id="stOk">'+(st?'Uložiť':'Vytvoriť obchod')+'</button>'+(st?'<button type="button" class="btn ghost" id="stDel">Odstrániť</button>':'')+'</div>'+
       (st?'<p class="stnote">Keď obchod odstrániš, jeho veci ostanú v nákupe, len bez obchodu.</p>':'');
     $('shDet').hidden=false; $('shDetBack').hidden=false; setTimeout(()=>$('stN').focus(),200);
     const ok=()=>{const n=$('stN').value.trim(); if(!n) return toast('Napíš názov obchodu');
       if(extra.stores.some(z=>z!==st&&fold(z.n)===fold(n))) return toast(n+' už máš');
-      if(st){st.n=n}else{const z={id:rid(),n};extra.stores.push(z);shopTarget=z.id}
+      let lf=($('stL').value||'').trim(); if(lf&&!/^https?:\/\//i.test(lf)) lf='https://'+lf;
+      if(st){st.n=n;if(lf)st.lf=lf;else delete st.lf}else{const z={id:rid(),n};if(lf)z.lf=lf;extra.stores.push(z);shopTarget=z.id}
       buzz(12); saveExtra(); closeShopDet(); renderShop(); toast(st?'Obchod uložený':'Obchod '+n+' vytvorený'); if(!st) $('shopIn').focus()};
     $('stOk').onclick=ok; $('stN').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();ok()}};
     if($('stDel')) $('stDel').onclick=()=>{const moved=extra.shop.filter(x=>x.s===st.id), idx=extra.stores.indexOf(st);

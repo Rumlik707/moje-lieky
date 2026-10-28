@@ -35,7 +35,9 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v50)
+## Nákup (stav pri v51)
+- Hlavička obchodu (v51): názov na celý riadok (neskracuje sa), pod ním počet vecí (`.nmw`). Vpravo okrúhle tlačidlo **Leták** (`.slf`, návrh A) → kváčka (samostatné tlačidlo `.scchev`, tiež `data-stog`) → ceruzka.
+- Leták (v51): otvorí web reťazca v prehliadači (`lfUrl`, `chainUrl`, `CHAINS`): Lidl, Kaufland, Billa, Tesco, Coop Jednota, Terno, dm – rozpozná sa podľa slova v názve (Billa 2, Billa Bajkalská → Billa). Vlastný presný odkaz sa dá zadať pri ceruzke v políčku „Odkaz na leták“ (`st.lf`); prázdne = späť na web reťazca. Obchod bez známeho reťazca a bez odkazu tlačidlo nemá. Appka leták nečíta, len otvára.
 - Po otvorení nákupu (aj z Rýchlo) sa klávesnica sama neotvorí; až po ťuknutí na riadok „Čo treba kúpiť?“ alebo na „+ pridať do X“ (v49).
 - Hlavička (v48): pod nadpisom dve rovnaké tlačidlá **Poslať · História** (`.shtri`, `.shtb`, `#shopShare`, `#shopHist`). Tlačidlo Uložiť je zrušené – každá zmena sa ukladá hneď sama, nákup sa zavrie spodnou lištou alebo systémovým Späť.
 - Nákup je cez celú obrazovku (trieda `shop-on` na body) a dole je vidieť spodnú lištu. Ťuknutie na záložku alebo Rýchlo nákup uloží a zavrie (`shopLeave`).
