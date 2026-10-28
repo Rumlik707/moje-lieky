@@ -63,6 +63,11 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Funkcie: `renderShop`, `rowHtml`, `shopPut`, `showShopDet` (Koľko / Kde kúpiť / Poznámka), `openStoreDet`, `openShop`, `shopAuto`, `food()`.
 - Súkromie: tlačidlo Poslať posiela domácnosti nákup po obchodoch. Moje lieky a kozmetika idú iba vtedy, keď zaškrtnem „pridať aj moje lieky a kozmetiku“.
 
+## Otvorené veci (stav 28. 10. 2026, v51)
+- **Chýbajúci čas užitia:** druhému používateľovi sa pri niektorých liekoch v Kalendári zobrazil čas užitia len pri jednom lieku. V testoch (veľká fajka naraz, po jednom, oznámenie „Užil som“, dodatočne) som to nezopakoval – všetky cesty čas zapisujú. Čakám od používateľa: screenshot z Kalendára (rozbalené Ráno), verziu appky z Viac a ako bol liek odkliknutý. Nič neopravovať naslepo.
+- **Presné odkazy na letáky:** `CHAINS` zatiaľ otvára úvodné stránky reťazcov (nevedel som overiť presné adresy letákov). Keď mi používateľ pošle presné odkazy (napr. leták Kauflandu), nastaviť ich v `CHAINS`.
+- Možné ďalšie kroky, o ktorých sme hovorili, ale neboli schválené: „je v akcii?“ pri jednotlivej veci (odkaz na vyhľadávanie akcií), ručné označenie akcie s termínom, rýchly presun všetkých vecí z jedného obchodu do druhého.
+
 ## Moje rozhodnutia (nemeniť bez opýtania)
 - Pri ikonkách nepoužívať pozadie dlaždice (vyzeralo ako zaváraninový pohár). Jamky blistra sú svetlé.
 - Ráno/Obed/Večer majú jemný rámik, aktuálna časť dňa má hrubší.
