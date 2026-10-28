@@ -24,6 +24,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
   - okraje a zarovnanie sedia s ostatnými obrazovkami;
   - prejdi celú cestu tam aj späť (otvoriť, prepnúť záložku, systémové Späť, Uložiť) a over, že sa dáta nestratili.
 - Keď si nie som istý, čo myslíš, opýtam sa jednou vetou pred robením, nie po vydaní.
+- Návrhy (mockupy) ukladaj do priečinka `navrhy/` – podpriečinok s číslom a témou, obrázky zmenšené na polovicu ako JPG (kvalita ~82), svetlý aj tmavý. Do `navrhy/README.md` dopíš popis a označ vybraný návrh ✅. Priečinok nie je v `FILES` v `sw.js`, do telefónu sa nesťahuje.
 - Commit podpisuj `-c user.name="Rumlik707" -c user.email="rumlik@gmail.com"`. Potom spusti `git fetch origin main && git rebase origin/main && git push origin HEAD:main`.
 - Pri úpravách cez Python skripty použi zámenu presného reťazca a kontrolu počtu výskytov (assert).
 
