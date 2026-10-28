@@ -97,4 +97,4 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 
 - **1 – jemné: stredné stmavenie, modrý rámik, veľká biela bublina** – [c2v1-svetly.jpg](16-prehliadka-jednoduchsia/c2v1-svetly.jpg), [c2v1-tmavy.jpg](16-prehliadka-jednoduchsia/c2v1-tmavy.jpg)
 - **2 – výraznejšie: tmavšie pozadie, biely rámik s modrou žiarou** – [c2v2-svetly.jpg](16-prehliadka-jednoduchsia/c2v2-svetly.jpg), [c2v2-tmavy.jpg](16-prehliadka-jednoduchsia/c2v2-tmavy.jpg)
-- **3 – najvýraznejšie: tmavé pozadie, žltý rámik, ukazovák 👆, krémová bublina** – [c2v3-svetly.jpg](16-prehliadka-jednoduchsia/c2v3-svetly.jpg), [c2v3-tmavy.jpg](16-prehliadka-jednoduchsia/c2v3-tmavy.jpg)
+- **3 – najvýraznejšie: tmavé pozadie, žltý rámik, ukazovák 👆, krémová bublina ✅ vybraný (v56; v tmavom režime tmavá bublina so žltými prvkami)** – [c2v3-svetly.jpg](16-prehliadka-jednoduchsia/c2v3-svetly.jpg), [c2v3-tmavy.jpg](16-prehliadka-jednoduchsia/c2v3-tmavy.jpg)

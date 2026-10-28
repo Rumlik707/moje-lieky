@@ -455,23 +455,33 @@ button,input,select{font:inherit;color:inherit}
 .pk.done .t b,.pk.done .q{text-decoration:line-through;opacity:.55}
 .pkh{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 4px 2px}
 .tourL{position:fixed;inset:0;z-index:80;pointer-events:none}.tourL[hidden]{display:none}
-.tshade{position:absolute;inset:0;background:rgba(8,16,32,.22)}
-.tring{position:absolute;border-radius:20px;border:3px solid var(--acc);box-shadow:0 0 0 7px color-mix(in srgb,var(--acc) 26%,transparent),0 0 0 15px color-mix(in srgb,var(--acc) 10%,transparent);transition:all .3s cubic-bezier(.16,1,.3,1);animation:tpulse 1.8s ease-in-out infinite}
-@keyframes tpulse{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--acc) 20%,transparent),0 0 0 20px color-mix(in srgb,var(--acc) 6%,transparent)}}
-@media (prefers-reduced-motion: reduce){.tring{animation:none;transition:none}}
-.ttip{position:absolute;left:14px;right:14px;max-width:520px;margin:0 auto;pointer-events:auto;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:20px;padding:14px 16px;box-shadow:0 18px 40px -14px rgba(0,0,0,.45);animation:sh-up .3s cubic-bezier(.22,1,.36,1)}
-.ttip:after{content:'';position:absolute;bottom:-10px;left:var(--ax,40px);width:18px;height:18px;background:var(--card);border-right:1.5px solid var(--line);border-bottom:1.5px solid var(--line);transform:rotate(45deg)}
-.ttip.up:after{bottom:auto;top:-10px;transform:rotate(-135deg)}.ttip.noarr:after{display:none}
-.ttip .thd{display:flex;align-items:center;gap:10px}.ttip .tic{width:40px;height:40px;border-radius:50%;background:var(--acc-soft);color:var(--acc-deep);display:grid;place-items:center;font-size:19px;font-weight:900;flex:none}
-.ttip b{font-size:18px}.ttip p{margin:8px 0 0;font-size:15px;font-weight:600;line-height:1.45;color:var(--muted)}
-.ttip .trow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
-.ttip .tsk{border:0;background:none;font:inherit;font-weight:800;color:var(--muted);font-size:14px;padding:8px 0;cursor:pointer}
-.ttip .tst{font-size:13px;font-weight:800;color:var(--muted)}
-.ttip .tnx{border:0;border-radius:999px;background:var(--acc);color:#fff;font:inherit;font-weight:800;font-size:15px;padding:9px 18px;cursor:pointer}
+.tring{position:absolute;border-radius:22px;border:4px solid #FFC23D;outline:8px solid rgba(255,194,61,.35);outline-offset:2px;box-shadow:0 0 0 9999px rgba(8,16,32,.66);transition:left .3s cubic-bezier(.16,1,.3,1),top .3s cubic-bezier(.16,1,.3,1),width .3s,height .3s}
+.tfing{position:absolute;font-size:44px;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));animation:tfb 1.1s ease-in-out infinite}
+.tfing.dn{animation-name:tfd}
+@keyframes tfb{50%{transform:translateY(-8px)}}@keyframes tfd{50%{transform:translateY(8px)}}
+.ttip{position:absolute;left:16px;right:16px;max-width:520px;margin:0 auto;pointer-events:auto;background:#FFF8E6;color:#2A1E05;border-radius:24px;padding:18px 18px 14px;box-shadow:0 22px 50px -12px rgba(0,0,0,.55);animation:sh-up .3s cubic-bezier(.22,1,.36,1)}
+.ttip .tic{width:56px;height:56px;border-radius:50%;background:#FFC23D;color:#2A1E05;display:grid;place-items:center;font-size:26px;font-weight:900;margin-bottom:8px}
+.ttip b{display:block;font-size:22px;margin-bottom:2px}.ttip p{margin:0;font-size:18px;font-weight:600;line-height:1.35;color:#5A4A22}
+.ttip .trow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:16px}
+.ttip .tsk{border:0;background:none;font:inherit;font-weight:800;color:#7A6838;font-size:15px;padding:10px 4px 10px 0;cursor:pointer;white-space:nowrap}
+.ttip .tdots{display:flex;gap:6px}.ttip .tdots i{width:8px;height:8px;border-radius:50%;background:#E6D7A8}.ttip .tdots i.on{width:22px;border-radius:9px;background:#1F2B45}
+.ttip .tnx{border:0;border-radius:999px;background:#1F2B45;color:#fff;font:inherit;font-weight:800;font-size:17px;padding:12px 24px;cursor:pointer;white-space:nowrap}
+:root[data-theme=dark] .tring{box-shadow:0 0 0 9999px rgba(4,8,16,.78);border-color:#E9B23A;outline-color:rgba(233,178,58,.28)}
+:root[data-theme=dark] .ttip{background:#1B2638;color:#F1F4FA;border:1.5px solid rgba(233,178,58,.45)}
+:root[data-theme=dark] .ttip p{color:#B9C4D6}:root[data-theme=dark] .ttip .tic{background:#E9B23A;color:#1B2638}
+:root[data-theme=dark] .ttip .tsk{color:#B9C4D6}:root[data-theme=dark] .ttip .tdots i{background:#3A4A64}:root[data-theme=dark] .ttip .tdots i.on{background:#E9B23A}
+:root[data-theme=dark] .ttip .tnx{background:#E9B23A;color:#1B2638}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .tring{box-shadow:0 0 0 9999px rgba(4,8,16,.78);border-color:#E9B23A;outline-color:rgba(233,178,58,.28)}
+:root:not([data-theme=light]) .ttip{background:#1B2638;color:#F1F4FA;border:1.5px solid rgba(233,178,58,.45)}
+:root:not([data-theme=light]) .ttip p{color:#B9C4D6}:root:not([data-theme=light]) .ttip .tic{background:#E9B23A;color:#1B2638}
+:root:not([data-theme=light]) .ttip .tsk{color:#B9C4D6}:root:not([data-theme=light]) .ttip .tdots i{background:#3A4A64}:root:not([data-theme=light]) .ttip .tdots i.on{background:#E9B23A}
+:root:not([data-theme=light]) .ttip .tnx{background:#E9B23A;color:#1B2638}}
+@media (prefers-reduced-motion: reduce){.tfing{animation:none}.tring{transition:none}}
 .tall{display:flex;align-items:center;gap:14px;width:100%;border:0;border-radius:18px;background:var(--acc);color:#fff;padding:14px 16px;font:inherit;font-weight:800;font-size:16px;margin:10px 0 4px;text-align:left;cursor:pointer}
 .tall small{display:block;font-weight:600;opacity:.85;font-size:13px}
-.tpart{display:flex;align-items:center;gap:10px;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:12px 14px;margin-bottom:8px;font:inherit;text-align:left;cursor:pointer}
-.tpart b{font-size:16px}.tpart span{flex:1;color:var(--muted);font-weight:700;font-size:13px;text-align:right}.tpart i{font-style:normal;color:var(--muted);font-size:20px}
+.ttipl{display:flex;gap:12px;align-items:flex-start;padding:10px 2px;border-bottom:1px solid var(--line)}.ttipl:last-of-type{border-bottom:0}
+.ttipl>span{flex:none;width:36px;height:36px;border-radius:50%;background:var(--acc-soft);color:var(--acc-deep);display:grid;place-items:center;font-weight:900}
+.ttipl b{font-size:15.5px}.ttipl p{margin:2px 0 0;color:var(--muted);font-weight:600;font-size:14px;line-height:1.35}
 .intro{position:fixed;inset:0;z-index:40;background:rgba(10,20,40,.55);display:grid;place-items:end center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));animation:q-fade .25s ease-out}
 .icard{width:min(420px,100%);background:var(--card);border-radius:28px;padding:22px 20px 18px;box-shadow:0 20px 50px -20px rgba(0,0,0,.5);animation:i-up .45s cubic-bezier(.22,1,.36,1)}
 .icard h2{margin:6px 0 6px;font-family:var(--f-display);font-size:24px;line-height:1.2}
@@ -1245,7 +1255,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v55</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v56</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2333,7 +2343,6 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     if(t==='today'){sel=today} confirmId=null; timeKey=null; prnWarn=null;
     $('day').innerHTML=''; $('dayW').innerHTML='';
     render(); window.scrollTo(0,0);
-    if(t!=='today') setTimeout(()=>tourMaybe(t),350);
   }
   const NB_OF={today:'nbToday',week:'nbWeek',meds:'nbStock',more:'nbMore'}, NBH='lieky-nb-hide';
   const nbHid=()=>{try{return JSON.parse(localStorage.getItem(NBH)||'{}')}catch(e){return {}}};
@@ -2357,7 +2366,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const POS=[[13,64],[37,22],[63,22],[87,64]];
     $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'||x.g==='send'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span><i class="fshine"></i></span>':pillSvg(x.sh,x.c,52))+(x.bd?'<i class="qbd'+(x.bd==='!'?' w':'')+'" aria-hidden="true">'+(x.bd==='↑'?'<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>':x.bd)+'</i>':'')+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
-    $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); setTimeout(()=>tourMaybe('quick'),850); $('plusTab').setAttribute('aria-expanded','true');
+    $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
     $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);const g=b.dataset.qg;if(g==='shop'||g==='send'){$('quick').hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');try{history.replaceState({ml:'shop'},'')}catch(_){}}else quickOpen(false);if(g==='shop'||g==='send'){openShop(false,true);if(g==='send')openSend();return}if(g==='fx'){openFx('');return}openAdd();$('fName').focus()});
     const f=$('qMenu').querySelector('.qb'); if(f) f.focus({preventScroll:true});
   }
@@ -3226,7 +3235,7 @@ function food(k,size,col){
     const end=()=>{if(y0==null)return;y0=null;sh.style.transition='transform .22s ease';bk.style.transition='opacity .22s ease';
       if(dy>90){buzz(8);sh.style.transform='translateY(100%)';bk.style.opacity='0';setTimeout(closeShopDet,200)}else{sh.style.transform='';bk.style.opacity=''}};
     sh.addEventListener('pointerup',end);sh.addEventListener('pointercancel',end)}
-  function openShop(focus,fromQ){shopFromQ=!!fromQ;document.documentElement.style.setProperty('--tbh',document.querySelector('.tabbar').offsetHeight+'px');document.body.classList.add('shop-on');if(!tourOn&&!(history.state&&history.state.ml==='shop'))try{history.pushState({ml:'shop'},'')}catch(_){}shopTarget=null;$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();quickOpen(false);$('shopSheet').hidden=false;$('shopBack').hidden=false;document.body.style.overflow='hidden';shopQ='';$('shopIn').value='';renderShop();if(focus)setTimeout(()=>$('shopIn').focus(),250);setTimeout(()=>tourMaybe('shop'),450)}
+  function openShop(focus,fromQ){shopFromQ=!!fromQ;document.documentElement.style.setProperty('--tbh',document.querySelector('.tabbar').offsetHeight+'px');document.body.classList.add('shop-on');if(!tourOn&&!(history.state&&history.state.ml==='shop'))try{history.pushState({ml:'shop'},'')}catch(_){}shopTarget=null;$('fxSheet').hidden=true;$('repSheet').hidden=true;$('packSheet').hidden=true;closeCard();quickOpen(false);$('shopSheet').hidden=false;$('shopBack').hidden=false;document.body.style.overflow='hidden';shopQ='';$('shopIn').value='';renderShop();if(focus)setTimeout(()=>$('shopIn').focus(),250)}
   let shopFromQ=false;
   function shopLeave(back){if(!back)shopFromQ=false;if(history.state&&history.state.ml==='shop')history.back();else shopPop()}
   function shopPop(){if($('shopSheet').hidden)return;const q=shopFromQ;shopFromQ=false;closeShop();if(q)quickOpen(true)}
@@ -3354,46 +3363,19 @@ function food(k,size,col){
   /* ---------- prehliadka v appke (návrh B, v55) ---------- */
   function tourMark(p){const d=tourDone();d[p]=1;try{localStorage.setItem(TK,JSON.stringify(d))}catch(e){}}
   const vis=el=>!!el&&el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden';
-  const TP={
-    base:{n:'Základy',steps:[
-      {g:()=>{closeAll();setTab('today')},s:'.tab.home',ic:'🏠',t:'Dnes',p:'Tvoj deň. Tu odklikávaš lieky. Krúžok okolo domčeka ukazuje, koľko máš dnes za sebou.'},
-      {s:'#hero .hall,#hero',ic:'✓',t:'Odklikni, keď užiješ',p:'Ťukni na liek alebo na veľkú fajku a zapíše sa aj čas. Keď si ho užil skôr, ťukni na hodinky pri lieku.'},
-      {s:'.tab[data-tab=week]',ic:'📅',t:'Kalendár',p:'Celý týždeň naraz – čo si užil, čo vynechal a čo ťa čaká.'},
-      {s:'.tab[data-tab=meds]',ic:'📦',t:'Zásoby',p:'Koľko ti čoho ostáva a kedy treba dokúpiť. Tu pridáš aj nový liek.'},
-      {s:'#plusTab',ic:'⚡',t:'Rýchlo',p:'Najčastejšie veci na jedno ťuknutie: pridať liek, vedľajší účinok, poslať nákup a nákup potravín.'},
-      {s:'.tab[data-tab=more]',ic:'•••',t:'Viac',p:'Upozornenia, vzhľad, záloha. Tu nájdeš aj túto prehliadku – celú alebo po častiach.'}]},
-    quick:{n:'Rýchlo',steps:[
-      {g:()=>{if(!$('quick').hidden)return false;closeAll();quickOpen(true)},w:1000,s:'[data-qg=add]',ic:'＋',t:'Pridať',p:'Nový liek, kvapky, kozmetika alebo vec na výmenu. Čo to je, vyberieš vo formulári.'},
-      {s:'[data-qg=fx]',ic:'!',t:'Vedľajší účinok',p:'Zapíš, čo sa po lieku dialo. Pri návšteve lekára to nájdeš v prehľade.'},
-      {s:'[data-qg=send]',ic:'↑',t:'Poslať nákup',p:'Vyberieš obchody a pošleš zoznam domácnosti cez WhatsApp, SMS a podobne.'},
-      {s:'[data-qg=shop]',ic:'🛒',t:'Nákup',p:'Nákup potravín po obchodoch.'}]},
-    shop:{n:'Nákup',steps:[
-      {g:()=>{if(!$('shopSheet').hidden)return false;closeAll();openShop(false)},w:500,s:'#shopForm',ic:'🔍',t:'Čo treba kúpiť?',p:'Napíš, čo chceš kúpiť. Appka ponúkne vec s ikonkou a zaradí ju podľa oddelení.'},
-      {s:'.scard .sctog',ic:'🏪',t:'Obchody',p:'Veci sú v obchodoch, ktoré si pomenuješ sám. Ťuknutím na názov obchod zbalíš alebo rozbalíš.'},
-      {s:'.scard .scb',ic:'✓',t:'Zaškrtni, čo máš v košíku',p:'Vec skočí hore do zeleného košíka. Ťuknutím na ikonku v košíku ju vrátiš späť.'},
-      {s:'.scard .srm',ic:'−',t:'Odobrať',p:'Rozmyslel si sa? Vec odoberieš bez kúpenia.'},
-      {s:'.scard .sfin',ic:'✓',t:'Ukončiť nákup',p:'Kúpené ide do histórie, čo nemali, ostane na zozname na budúce.'},
-      {s:'.scard .slf',ic:'📰',t:'Leták',p:'Otvorí akciový leták obchodu. Odkaz si vieš zmeniť cez ceruzku.'},
-      {s:'.scard .scedit',ic:'✎',t:'Ceruzka',p:'Premenuješ alebo odstrániš obchod.'},
-      {s:'#shopShare',ic:'↑',t:'Poslať',p:'Vyberieš obchody, uvidíš náhľad správy a pošleš ju domácnosti.'},
-      {s:'#shopHist',ic:'🕘',t:'História',p:'Čo si kúpil za posledný mesiac. Ťuknutím vec vrátiš do zoznamu.'}]},
-    meds:{n:'Zásoby',steps:[
-      {g:()=>{closeAll();setTab('meds')},s:'#addBtn',ic:'＋',t:'Pridať',p:'Nový liek, kvapky, kozmetika alebo vec na výmenu.'},
-      {s:'#v-meds .mgb',ic:'📦',t:'Skupiny',p:'Lieky, kvapky, kozmetika a výmena sú oddelené. Ťukni na skupinu a rozbalí sa.'}]},
-    week:{n:'Kalendár',steps:[
-      {g:()=>{closeAll();setTab('week')},s:'#grid',ic:'📅',t:'Týždeň',p:'Ťukni na deň a uvidíš, čo si v ten deň užil. Užitie vieš doplniť aj dodatočne.'}]},
-    more:{n:'Viac',steps:[
-      {g:()=>{closeAll();setTab('more')},s:'#v-more .tiles',ic:'•••',t:'Ďalšie možnosti',p:'Vedľajší účinok, prehľad pre lekára, nákup, balenie na cestu a zdieľanie týždňa.'},
-      {s:'#notifPanel',ic:'🔔',t:'Upozornenia',p:'Zapni si upozornenie, keď je čas na lieky.'},
-      {s:'#introAgain',ic:'?',t:'Ako appka funguje',p:'Tu si prehliadku kedykoľvek pustíš znova – celú alebo len jednu časť.'}]}
-  };
-  const TORDER=['base','quick','shop','meds','week','more'];
+  const TP={base:{n:'Prehliadka',steps:[
+    {g:()=>{closeAll();setTab('today')},s:'.tab.home',ic:'🏠',t:'Dnes',p:'Tu sú tvoje dnešné lieky.'},
+    {g:()=>{closeAll();if(tab!=='today')setTab('today')},s:'#hero .hall,#hero,.tab.home',ic:'✓',t:'Odklikni',p:'Ťukni, keď liek užiješ.'},
+    {g:()=>closeAll(),s:'.tab[data-tab=meds]',ic:'📦',t:'Zásoby',p:'Appka ti povie, kedy dokúpiť.'},
+    {g:()=>closeAll(),s:'#plusTab',ic:'<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z"/></svg>',t:'Rýchlo',p:'Pridať liek a nákup na jedno ťuknutie.'},
+    {g:()=>{if(!$('quick').hidden)return false;closeAll();quickOpen(true)},w:900,s:'[data-qg=shop]',ic:'🛒',t:'Nákup',p:'Zoznam na nákup po obchodoch.'},
+    {g:()=>closeAll(),s:'.tab[data-tab=more]',ic:'•••',t:'Viac',p:'Tu si prehliadku pustíš znova.'}]}};
+  const TIPS=[['🛒','Košík','Zaškrtnutá vec skočí hore do zeleného košíka.'],['✓','Ukončiť nákup','Kúpené ide do histórie, zvyšok ostane na zozname.'],['−','Odobrať','Vec, ktorú už netreba, odoberieš bez kúpenia.'],['📰','Leták','Pri obchode otvorí jeho akciový leták.'],['↑','Poslať','Vyberieš obchody a pošleš zoznam domácnosti.'],['🕘','História','Čo si kúpil za posledný mesiac.'],['✎','Ceruzka','Premenuje alebo odstráni obchod.'],['🕐','Hodinky pri lieku','Keď si liek užil skôr, zadáš čas.']];
   function closeAll(){if(!$('quick').hidden)quickOpen(false,true);if(!$('shDet').hidden)closeShopDet();if(!$('shopSheet').hidden)closeShop();if(!$('infoSheet').hidden)closeCard()}
-  function tourMaybe(p){if(tourOn||!TP[p]||tourDone()[p])return;if(p!=='base'&&!tourDone().base)return;tourStart([p],false)}
-  function tourStart(parts,all){
-    tourSteps=[];parts.forEach(p=>TP[p].steps.forEach((st,i)=>tourSteps.push(Object.assign({part:p,first:i===0},st))));
-    tourPart=parts.join(',');tourI=0;tourOn=true;
-    if(!$('tourL')){document.body.insertAdjacentHTML('beforeend','<div id="tourL" class="tourL" hidden><div class="tshade"></div><div class="tring" id="tRing"></div><div class="ttip" id="tTip" role="dialog" aria-live="polite"></div></div>');
+  function tourMaybe(p){if(p!=='base'||tourOn||tourDone().base)return;tourStart()}
+  function tourStart(){
+    tourSteps=TP.base.steps.slice();tourPart='base';tourI=0;tourOn=true;
+    if(!$('tourL')){document.body.insertAdjacentHTML('beforeend','<div id="tourL" class="tourL" hidden><div class="tring" id="tRing"></div><div class="tfing" id="tFing" aria-hidden="true">👆</div><div class="ttip" id="tTip" role="dialog" aria-live="polite"></div></div>');
       addEventListener('resize',()=>{if(tourOn)tourPlace()});addEventListener('scroll',()=>{if(tourOn)tourPlace()},true)}
     try{history.pushState({ml:'tour'},'')}catch(_){}
     $('tourL').hidden=false;tourShow(0);
@@ -3402,33 +3384,31 @@ function food(k,size,col){
   function tourShow(i,dir){
     dir=dir||1;tourI=i;const st=tourSteps[i];if(!st)return tourEnd();
     $('tTip').querySelectorAll('button').forEach(b=>b.disabled=true);
-    const acted=!!(st.g&&(dir>0||st.first))&&st.g()!==false;
+    const acted=!!st.g&&st.g()!==false;
     setTimeout(()=>{const el=tourEl(st);if(!el){return (i+dir>=0&&i+dir<tourSteps.length)?tourShow(i+dir,dir):tourEnd()}
       el.scrollIntoView({block:'center',behavior:'auto'});
       const n=tourSteps.length, last=i===n-1;
-      $('tTip').innerHTML='<div class="thd"><span class="tic" aria-hidden="true">'+st.ic+'</span><b>'+esc(st.t)+'</b></div><p>'+esc(st.p)+'</p><div class="trow"><button type="button" class="tsk" id="tSkip">Preskočiť prehliadku</button><span class="tst">'+(i+1)+' / '+n+'</span><button type="button" class="tnx" id="tNext">'+(last?'Hotovo':'Ďalej →')+'</button></div>';
+      $('tTip').innerHTML='<span class="tic" aria-hidden="true">'+st.ic+'</span><b>'+esc(st.t)+'</b><p>'+esc(st.p)+'</p><div class="trow"><button type="button" class="tsk" id="tSkip">✕ Zavrieť</button><span class="tdots" aria-label="Krok '+(i+1)+' z '+n+'">'+tourSteps.map((_,k)=>'<i class="'+(k===i?'on':'')+'"></i>').join('')+'</span><button type="button" class="tnx" id="tNext">'+(last?'Hotovo':'Ďalej')+'</button></div>';
       $('tSkip').onclick=()=>{buzz(8);tourEnd()};$('tNext').onclick=()=>{buzz(8);if(last)tourEnd();else tourShow(i+1,1)};
       tourPlace();[80,350,800].forEach(ms=>setTimeout(()=>{if(tourOn&&tourI===i)tourPlace()},ms))},acted?(st.w||380):60);
   }
   function tourPlace(){
     const st=tourSteps[tourI];if(!st)return;const el=tourEl(st);if(!el)return;
-    const r=el.getBoundingClientRect(),pad=6,ring=$('tRing'),tip=$('tTip'),H=innerHeight,W=innerWidth;
-    const big=r.height>H*0.45;
-    const top=Math.max(4,r.top-pad),bot=Math.min(H-4,r.bottom+pad);
-    Object.assign(ring.style,{left:Math.max(4,r.left-pad)+'px',top:top+'px',width:Math.min(W-8,r.width+pad*2)+'px',height:(bot-top)+'px'});
-    const cx=r.left+r.width/2, above=big?false:(r.top+r.height/2>H/2);
-    tip.classList.toggle('up',!above);
-    tip.style.top=above?'':(big?Math.min(H-260,r.top+40):Math.min(H-240,bot+16))+'px';
-    tip.style.bottom=above?(H-top+16)+'px':'';
-    tip.style.setProperty('--ax',Math.max(22,Math.min(W-54,cx-16-9))+'px');
-    tip.classList.toggle('noarr',big);
+    const r=el.getBoundingClientRect(),pad=8,ring=$('tRing'),tip=$('tTip'),f=$('tFing'),H=innerHeight,W=innerWidth;
+    const top=Math.max(4,r.top-pad),bot=Math.min(H-4,r.bottom+pad),left=Math.max(4,r.left-pad);
+    Object.assign(ring.style,{left:left+'px',top:top+'px',width:Math.min(W-8-left,r.width+pad*2)+'px',height:(bot-top)+'px'});
+    const cx=r.left+r.width/2, above=r.top+r.height/2>H/2;
+    f.textContent=above?'👇':'👆'; f.classList.toggle('dn',above);
+    f.style.left=Math.max(6,Math.min(W-50,cx-20))+'px';
+    f.style.top=(above?top-54:bot+6)+'px';
+    tip.style.top=above?'':Math.min(H-300,bot+62)+'px';
+    tip.style.bottom=above?(H-top+62)+'px':'';
   }
   function tourEnd(){
-    if(!tourOn)return;const parts=tourPart.split(',');parts.forEach(tourMark);
-    if(tourPart.includes('base'))try{localStorage.setItem('lieky-intro','1')}catch(e){}
+    if(!tourOn)return;tourMark('base');try{localStorage.setItem('lieky-intro','1')}catch(e){}
     tourOn=false;$('tourL').hidden=true;
+    if(!$('quick').hidden)quickOpen(false,true);
     if(history.state&&history.state.ml==='tour'){tourEnding=true;try{history.back()}catch(_){tourEnding=false}}
-    if(parts.length>1)closeAll();
   }
   window.addEventListener('popstate',()=>{
     if(tourEnding){tourEnding=false;return}
@@ -3438,15 +3418,12 @@ function food(k,size,col){
   });
   function openHelp(){
     shopDet={help:1};
-    const d=tourDone();
-    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="hsh"><b>Ako appka funguje</b><span>Appka ti ukáže, na čo slúžia jednotlivé tlačidlá</span></div>'+
-      '<button type="button" class="tall" id="tAll">▶<span>Celá prehliadka<small>Všetko od začiatku, priamo v appke</small></span></button>'+
-      '<div class="lbl">Alebo len jedna časť</div>'+
-      TORDER.map(p=>'<button type="button" class="tpart" data-tp="'+p+'"><b>'+TP[p].n+'</b><span>'+TP[p].steps.length+(TP[p].steps.length===1?' krok':TP[p].steps.length<5?' kroky':' krokov')+(d[p]?' · videné ✓':'')+'</span><i aria-hidden="true">›</i></button>').join('')+
+    $('shDet').innerHTML='<div class="grab"><i></i></div><div class="hsh"><b>Ako appka funguje</b></div>'+
+      '<button type="button" class="tall" id="tAll">▶<span>Prehliadka<small>6 krokov priamo v appke</small></span></button>'+
+      '<div class="lbl">Tipy</div>'+TIPS.map(t=>'<div class="ttipl"><span aria-hidden="true">'+t[0]+'</span><div><b>'+esc(t[1])+'</b><p>'+esc(t[2])+'</p></div></div>').join('')+
       '<div class="sdact"><button type="button" class="btn ghost" id="tHClose">Zavrieť</button></div>';
     $('shDet').hidden=false;$('shDetBack').hidden=false;
-    $('tAll').onclick=()=>{closeShopDet();tourStart(TORDER,true)};
-    $('shDet').querySelectorAll('[data-tp]').forEach(b=>b.onclick=()=>{const p=b.dataset.tp;closeShopDet();tourStart([p],false)});
+    $('tAll').onclick=()=>{closeShopDet();tourStart()};
     $('tHClose').onclick=closeShopDet;
   }
 
