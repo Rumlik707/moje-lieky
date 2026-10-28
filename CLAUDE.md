@@ -34,6 +34,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Prehliadka priamo v appke (v56, zjednodušená po spätnej väzbe – „v55 bola neprehľadná, nového používateľa by odradila“): **len 6 krokov, každý jedna krátka veta**: Dnes · Odklikni · Zásoby · Rýchlo · Nákup (bublina v Rýchlo) · Viac. Žiadne ďalšie časti samy nevyskakujú. Kód: `TP.base.steps`, `TIPS`, `tourStart`, `tourShow`, `tourPlace`, `tourEnd`, `tourMaybe` (len base), `openHelp`; stav `lieky-tour` (`{base:1}`).
   - Vzhľad (návrh 3): tmavé pozadie, žltý rámik okolo tlačidla, poskakujúci prst 👆/👇, veľká bublina (ikonka v žltom krúžku, nadpis 22 px, veta 18 px, bodky, „✕ Zavrieť“, „Ďalej“/„Hotovo“). Svetlý režim: krémová bublina, tmavé tlačidlo Ďalej. Tmavý režim: tmavá bublina so žltými prvkami (nie krikľavá).
   - Pri prvom spustení nový používateľ (bez `lieky-intro`). Viac → „Ako appka funguje“: „▶ Prehliadka“ (6 krokov) + krátky zoznam Tipy (košík, ukončiť, odobrať, leták, poslať, história, ceruzka, hodinky). Systémové Späť = krok späť.
+  - Rámik (v57): pri okrúhlych tlačidlách (domček `.tab.home .hb`, fajka `#hero .hall`, bublina Nákup `[data-qg=shop] .o`) je kruh (`r:1` v kroku), pri tlačidlách v lište tesný obdĺžnik (pad 3, radius 18).
   - Nepridávať do prehliadky ďalšie kroky ani dlhé texty bez opýtania – menej je viac.
   - V testoch nastav `lieky-tour` na hotové, inak prehliadka prekryje obrazovku.
 - Skupiny položiek: `med` (Lieky), `care` (Kvapky a ošetrenie), `cosm` (Kozmetika), `swap` (Výmena, napr. hlavice zubnej kefky). Skupinu vracia funkcia `grpOf(m)`.

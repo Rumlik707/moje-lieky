@@ -1255,7 +1255,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v56</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v57</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3364,11 +3364,11 @@ function food(k,size,col){
   function tourMark(p){const d=tourDone();d[p]=1;try{localStorage.setItem(TK,JSON.stringify(d))}catch(e){}}
   const vis=el=>!!el&&el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden';
   const TP={base:{n:'Prehliadka',steps:[
-    {g:()=>{closeAll();setTab('today')},s:'.tab.home',ic:'🏠',t:'Dnes',p:'Tu sú tvoje dnešné lieky.'},
-    {g:()=>{closeAll();if(tab!=='today')setTab('today')},s:'#hero .hall,#hero,.tab.home',ic:'✓',t:'Odklikni',p:'Ťukni, keď liek užiješ.'},
+    {g:()=>{closeAll();setTab('today')},s:'.tab.home .hb',r:1,ic:'🏠',t:'Dnes',p:'Tu sú tvoje dnešné lieky.'},
+    {g:()=>{closeAll();if(tab!=='today')setTab('today')},s:'#hero .hall,#hero',ic:'✓',r:1,t:'Odklikni',p:'Ťukni, keď liek užiješ.'},
     {g:()=>closeAll(),s:'.tab[data-tab=meds]',ic:'📦',t:'Zásoby',p:'Appka ti povie, kedy dokúpiť.'},
     {g:()=>closeAll(),s:'#plusTab',ic:'<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z"/></svg>',t:'Rýchlo',p:'Pridať liek a nákup na jedno ťuknutie.'},
-    {g:()=>{if(!$('quick').hidden)return false;closeAll();quickOpen(true)},w:900,s:'[data-qg=shop]',ic:'🛒',t:'Nákup',p:'Zoznam na nákup po obchodoch.'},
+    {g:()=>{if(!$('quick').hidden)return false;closeAll();quickOpen(true)},w:900,s:'[data-qg=shop] .o',r:1,ic:'🛒',t:'Nákup',p:'Zoznam na nákup po obchodoch.'},
     {g:()=>closeAll(),s:'.tab[data-tab=more]',ic:'•••',t:'Viac',p:'Tu si prehliadku pustíš znova.'}]}};
   const TIPS=[['🛒','Košík','Zaškrtnutá vec skočí hore do zeleného košíka.'],['✓','Ukončiť nákup','Kúpené ide do histórie, zvyšok ostane na zozname.'],['−','Odobrať','Vec, ktorú už netreba, odoberieš bez kúpenia.'],['📰','Leták','Pri obchode otvorí jeho akciový leták.'],['↑','Poslať','Vyberieš obchody a pošleš zoznam domácnosti.'],['🕘','História','Čo si kúpil za posledný mesiac.'],['✎','Ceruzka','Premenuje alebo odstráni obchod.'],['🕐','Hodinky pri lieku','Keď si liek užil skôr, zadáš čas.']];
   function closeAll(){if(!$('quick').hidden)quickOpen(false,true);if(!$('shDet').hidden)closeShopDet();if(!$('shopSheet').hidden)closeShop();if(!$('infoSheet').hidden)closeCard()}
@@ -3394,9 +3394,13 @@ function food(k,size,col){
   }
   function tourPlace(){
     const st=tourSteps[tourI];if(!st)return;const el=tourEl(st);if(!el)return;
-    const r=el.getBoundingClientRect(),pad=8,ring=$('tRing'),tip=$('tTip'),f=$('tFing'),H=innerHeight,W=innerWidth;
-    const top=Math.max(4,r.top-pad),bot=Math.min(H-4,r.bottom+pad),left=Math.max(4,r.left-pad);
-    Object.assign(ring.style,{left:left+'px',top:top+'px',width:Math.min(W-8-left,r.width+pad*2)+'px',height:(bot-top)+'px'});
+    const r0=el.getBoundingClientRect(),ring=$('tRing'),tip=$('tTip'),f=$('tFing'),H=innerHeight,W=innerWidth;
+    const round=!!st.r&&el.matches(st.s.split(',')[0].trim()), inTab=!!el.closest('.tabbar');
+    let r={left:r0.left,top:r0.top,right:r0.right,bottom:r0.bottom,width:r0.width,height:r0.height};
+    const pad=round?7:inTab?3:8;
+    if(round){const d=Math.max(r.width,r.height),cx0=r.left+r.width/2,cy0=r.top+r.height/2;r={left:cx0-d/2,top:cy0-d/2,right:cx0+d/2,bottom:cy0+d/2,width:d,height:d}}
+    const top=Math.max(6,r.top-pad),bot=Math.min(H-6,r.bottom+pad),left=Math.max(6,r.left-pad),wid=Math.min(W-6-left,r.width+pad*2);
+    Object.assign(ring.style,{left:left+'px',top:top+'px',width:wid+'px',height:(bot-top)+'px',borderRadius:round?'50%':inTab?'18px':'22px'});
     const cx=r.left+r.width/2, above=r.top+r.height/2>H/2;
     f.textContent=above?'👇':'👆'; f.classList.toggle('dn',above);
     f.style.left=Math.max(6,Math.min(W-50,cx-20))+'px';
