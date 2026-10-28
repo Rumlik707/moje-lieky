@@ -30,13 +30,14 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 
 ## Rozloženie appky
 - Spodná lišta: Kalendár · Zásoby · **Dnes** (v strede, domček) · **Rýchlo ⚡** · Viac.
-- Rýchlo otvorí vejár 4 bublín (pole `QG`, funkcia `quickOpen`, v52, návrh A): **Pridať** (nový liek/kozmetika – skupina sa vyberie vo formulári, `openAdd`) vľavo dole · **Vedľajší účinok** (`openFx`) · **Do nákupu** (otvorí nákup rovno s klávesnicou, `openShop(true,true)`) · **Nákup** vpravo dole (zvyk, nemeniť pozíciu). Malé odznaky `+`/`!` (`.qbd`). „Užil som“ v Rýchlo nechcem.
+- Rýchlo otvorí vejár 4 bublín (pole `QG`, funkcia `quickOpen`, v52, návrh A): **Pridať** (nový liek/kozmetika – skupina sa vyberie vo formulári, `openAdd`) vľavo dole · **Vedľajší účinok** (`openFx`) · **Poslať nákup** (v53: otvorí nákup a hneď okno Poslať, `openSend`) · **Nákup** vpravo dole (zvyk, nemeniť pozíciu). Malé odznaky `+`/`!` (`.qbd`). „Užil som“ v Rýchlo nechcem.
 - Skupiny položiek: `med` (Lieky), `care` (Kvapky a ošetrenie), `cosm` (Kozmetika), `swap` (Výmena, napr. hlavice zubnej kefky). Skupinu vracia funkcia `grpOf(m)`.
 - Ikonky sú realistické a animované 3D (`pillSvg`, `picM`, `iconState`, `goIcon`). Animácie sa spúšťajú triedou `.go`. Spoločné gradienty sú v globálnom svg H3D.
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
 - Zásoby a stav zásob počítajú funkcie `stockInfo`, `supplyInfo`, `needsOrder`, `itemState`, `refill`.
 
-## Nákup (stav pri v51)
+## Nákup (stav pri v53)
+- Poslať (v53, návrh A): tlačidlo Poslať v hlavičke aj bublina v Rýchlo otvorí okno „Poslať nákup“ (`openSend`, `sendGroups`, `sendText`) v `shDet`: zaškrtnuté obchody (len tie, kde niečo treba kúpiť; odškrtnutie si appka pamätá počas behu – `sendOff`), čip „🔒 Moje lieky a kozmetika“ (vypnutý, `sendMine`), náhľad „Takto to príde“ a tlačidlo „Poslať · N vecí“ → systémové zdieľanie. Veci v košíku sa neposielajú. Spodná lišta „Pri posielaní pridať aj moje lieky…“ je zrušená (presunutá do okna).
 - Hlavička obchodu (v51): názov na celý riadok (neskracuje sa), pod ním počet vecí (`.nmw`). Vpravo okrúhle tlačidlo **Leták** (`.slf`, návrh A) → kváčka (samostatné tlačidlo `.scchev`, tiež `data-stog`) → ceruzka.
 - Leták (v51): otvorí web reťazca v prehliadači (`lfUrl`, `chainUrl`, `CHAINS`): Lidl, Kaufland, Billa, Tesco, Coop Jednota, Terno, dm – rozpozná sa podľa slova v názve (Billa 2, Billa Bajkalská → Billa). Vlastný presný odkaz sa dá zadať pri ceruzke v políčku „Odkaz na leták“ (`st.lf`); prázdne = späť na web reťazca. Obchod bez známeho reťazca a bez odkazu tlačidlo nemá. Appka leták nečíta, len otvára.
 - Po otvorení nákupu (aj z Rýchlo) sa klávesnica sama neotvorí; až po ťuknutí na riadok „Čo treba kúpiť?“ alebo na „+ pridať do X“ (v49).
@@ -62,7 +63,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Odobrať (bez kúpenia, napr. rozmyslel som si to): pri každej veci tlačidlo „Odobrať“ (`.srm`, `data-rm`), toast „X odobraté · Späť“. V detaile je „Odobrať zo zoznamu“. Používať slovo **Odobrať**, nie „Nekúpim“ ani „Vyhodiť“.
 - Staré `p:'trh'` sa pri načítaní samo prevedie na obchod „Trh“.
 - Funkcie: `renderShop`, `rowHtml`, `shopPut`, `showShopDet` (Koľko / Kde kúpiť / Poznámka), `openStoreDet`, `openShop`, `shopAuto`, `food()`.
-- Súkromie: tlačidlo Poslať posiela domácnosti nákup po obchodoch. Moje lieky a kozmetika idú iba vtedy, keď zaškrtnem „pridať aj moje lieky a kozmetiku“.
+- Súkromie: Poslať posiela domácnosti nákup po obchodoch. Moje lieky a kozmetika idú iba vtedy, keď v okne Poslať zapnem čip „🔒 Moje lieky a kozmetika“.
 
 ## Otvorené veci (stav 28. 10. 2026, v51)
 - **Chýbajúci čas užitia:** druhému používateľovi sa pri niektorých liekoch v Kalendári zobrazil čas užitia len pri jednom lieku. V testoch (veľká fajka naraz, po jednom, oznámenie „Užil som“, dodatočne) som to nezopakoval – všetky cesty čas zapisujú. Čakám od používateľa: screenshot z Kalendára (rozbalené Ráno), verziu appky z Viac a ako bol liek odkliknutý. Nič neopravovať naslepo.

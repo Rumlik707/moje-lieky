@@ -76,7 +76,7 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 
 ## 13-poslat-nakup – Poslať nákup z Rýchlo a vylepšené posielanie (zatiaľ nevybrané)
 
-- **bublina „Poslať nákup“ v Rýchlo namiesto „Do nákupu“** – [snq-svetly.jpg](13-poslat-nakup/snq-svetly.jpg), [snq-tmavy.jpg](13-poslat-nakup/snq-tmavy.jpg)
-- **A – vybrať obchody + náhľad správy** – [snA-svetly.jpg](13-poslat-nakup/snA-svetly.jpg), [snA-tmavy.jpg](13-poslat-nakup/snA-tmavy.jpg)
+- **bublina „Poslať nákup“ v Rýchlo namiesto „Do nákupu“ ✅ (v53)** – [snq-svetly.jpg](13-poslat-nakup/snq-svetly.jpg), [snq-tmavy.jpg](13-poslat-nakup/snq-tmavy.jpg)
+- **A – vybrať obchody + náhľad správy ✅ vybraný (v53)** – [snA-svetly.jpg](13-poslat-nakup/snA-svetly.jpg), [snA-tmavy.jpg](13-poslat-nakup/snA-tmavy.jpg)
 - **B – vybrať aplikáciu (WhatsApp, Viber, Messenger, SMS) + náhľad** – [snB-svetly.jpg](13-poslat-nakup/snB-svetly.jpg), [snB-tmavy.jpg](13-poslat-nakup/snB-tmavy.jpg)
 - **C – poslať všetko alebo len jeden obchod** – [snC-svetly.jpg](13-poslat-nakup/snC-svetly.jpg), [snC-tmavy.jpg](13-poslat-nakup/snC-tmavy.jpg)
