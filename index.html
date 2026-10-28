@@ -1227,7 +1227,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v53</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v54</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2326,17 +2326,21 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>{buzz(8);if(!$('shopSheet').hidden){saveExtra();shopLeave()}quickOpen(false);if(!$('infoSheet').hidden)closeCard();nbDismiss(b.dataset.tab);setTab(b.dataset.tab)});
   const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms||10)}catch(_){}};
   const QG=[{g:'add',l:'Pridať',d:'nový liek…',sh:'tab',c:'#4F7BF0',bd:'+'},{g:'fx',l:'Vedľajší',d:'účinok',sh:'drop',c:'#1FA3B8',bd:'!'},{g:'send',l:'Poslať',d:'nákup',bd:'↑'},{g:'shop',l:'Nákup',d:'potraviny'}];
-  function quickOpen(on){
+  let qIgnorePop=0;
+  window.addEventListener('popstate',()=>{if(qIgnorePop){qIgnorePop--;return}if(!$('quick').hidden)quickOpen(false,true)});
+  function quickOpen(on,fromPop){
     const q=$('quick');
-    if(!on){q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');return}
+    if(!on){const was=!q.hidden;q.hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');
+      if(was&&!fromPop&&history.state&&history.state.ml==='quick'){qIgnorePop++;try{history.back()}catch(_){qIgnorePop--}}return}
+    if(!(history.state&&history.state.ml==='quick'))try{history.pushState({ml:'quick'},'')}catch(_){}
     const POS=[[13,64],[37,22],[63,22],[87,64]];
     $('qMenu').innerHTML=QG.map((x,i)=>'<button type="button" class="qb" role="menuitem" data-qg="'+x.g+'" style="left:'+POS[i][0]+'%;top:'+POS[i][1]+'%;animation-delay:'+(i*60)+'ms"><span class="pillbox o">'+(x.g==='shop'||x.g==='send'?'<span class="fpair">'+food('paprika',44)+'<span>'+food('mlieko',28)+'</span><i class="fshine"></i></span>':pillSvg(x.sh,x.c,52))+(x.bd?'<i class="qbd'+(x.bd==='!'?' w':'')+'" aria-hidden="true">'+(x.bd==='↑'?'<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>':x.bd)+'</i>':'')+'</span><b>'+x.l+'</b>'+(x.d?'<small>'+x.d+'</small>':'')+'</button>').join('');
     q.hidden=false; $('plusTab').classList.add('on');
     $('qMenu').querySelectorAll('.pillbox').forEach((p,i)=>setTimeout(()=>goIcon(p),200+i*90)); $('plusTab').setAttribute('aria-expanded','true');
-    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);const g=b.dataset.qg;quickOpen(false);if(g==='shop'){openShop(false,true);return}if(g==='send'){openShop(false,true);openSend();return}if(g==='fx'){openFx('');return}openAdd();$('fName').focus()});
+    $('qMenu').querySelectorAll('[data-qg]').forEach(b=>b.onclick=()=>{buzz(12);const g=b.dataset.qg;if(g==='shop'||g==='send'){$('quick').hidden=true;$('plusTab').classList.remove('on');$('plusTab').setAttribute('aria-expanded','false');try{history.replaceState({ml:'shop'},'')}catch(_){}}else quickOpen(false);if(g==='shop'||g==='send'){openShop(false,true);if(g==='send')openSend();return}if(g==='fx'){openFx('');return}openAdd();$('fName').focus()});
     const f=$('qMenu').querySelector('.qb'); if(f) f.focus({preventScroll:true});
   }
-  $('plusTab').onclick=()=>{buzz(12);if(!$('shopSheet').hidden){saveExtra();shopLeave();quickOpen(true);return}if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
+  $('plusTab').onclick=()=>{buzz(12);if(!$('shopSheet').hidden){saveExtra();shopFromQ=false;closeShop();try{if(history.state&&history.state.ml==='shop')history.replaceState({ml:'quick'},'')}catch(_){}quickOpen(true);return}if(!$('infoSheet').hidden)closeCard();quickOpen($('quick').hidden)};
   $('qBack').onclick=()=>quickOpen(false);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('quick').hidden)quickOpen(false)});
   function moveInd(){

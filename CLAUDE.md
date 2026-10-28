@@ -30,7 +30,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 
 ## Rozloženie appky
 - Spodná lišta: Kalendár · Zásoby · **Dnes** (v strede, domček) · **Rýchlo ⚡** · Viac.
-- Rýchlo otvorí vejár 4 bublín (pole `QG`, funkcia `quickOpen`, v52, návrh A): **Pridať** (nový liek/kozmetika – skupina sa vyberie vo formulári, `openAdd`) vľavo dole · **Vedľajší účinok** (`openFx`) · **Poslať nákup** (v53: otvorí nákup a hneď okno Poslať, `openSend`) · **Nákup** vpravo dole (zvyk, nemeniť pozíciu). Malé odznaky `+`/`!` (`.qbd`). „Užil som“ v Rýchlo nechcem.
+- Rýchlo otvorí vejár 4 bublín (pole `QG`, funkcia `quickOpen`, v52, návrh A): **Pridať** (nový liek/kozmetika – skupina sa vyberie vo formulári, `openAdd`) vľavo dole · **Vedľajší účinok** (`openFx`) · **Poslať nákup** (v53: otvorí nákup a hneď okno Poslať, `openSend`) · **Nákup** vpravo dole (zvyk, nemeniť pozíciu). Malé odznaky `+`/`!` (`.qbd`). Systémové Späť pri otvorenom Rýchlo len zavrie bubliny a ostane sa na poslednej obrazovke (v54: `history.pushState({ml:'quick'})`, `qIgnorePop`; pri otvorení Nákupu/Poslať z Rýchlo sa záznam `quick` nahradí `shop` cez `replaceState`). „Užil som“ v Rýchlo nechcem.
 - Skupiny položiek: `med` (Lieky), `care` (Kvapky a ošetrenie), `cosm` (Kozmetika), `swap` (Výmena, napr. hlavice zubnej kefky). Skupinu vracia funkcia `grpOf(m)`.
 - Ikonky sú realistické a animované 3D (`pillSvg`, `picM`, `iconState`, `goIcon`). Animácie sa spúšťajú triedou `.go`. Spoločné gradienty sú v globálnom svg H3D.
 - Jedna karta položky sa otvára cez `showInfo`/`openCard`.
