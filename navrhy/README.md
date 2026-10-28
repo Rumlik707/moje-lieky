@@ -60,3 +60,10 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **A – okrúhle tlačidlo Leták ✅ vybraný** – [ltA-svetly.jpg](10-letak-cely-nazov/ltA-svetly.jpg), [ltA-tmavy.jpg](10-letak-cely-nazov/ltA-tmavy.jpg)
 - **B – podlhovasté tlačidlo vpravo** – [ltB-svetly.jpg](10-letak-cely-nazov/ltB-svetly.jpg), [ltB-tmavy.jpg](10-letak-cely-nazov/ltB-tmavy.jpg)
 - **C – leták pod názvom** – [ltC-svetly.jpg](10-letak-cely-nazov/ltC-svetly.jpg), [ltC-tmavy.jpg](10-letak-cely-nazov/ltC-tmavy.jpg)
+
+## 11-rychlo – Čo bude v ponuke Rýchlo (návrhy, zatiaľ nevybrané)
+
+- **pôvodný stav (Liek, Kvapky, Kozmetika, Výmena, Nákup)** – [rqcur-svetly.jpg](11-rychlo/rqcur-svetly.jpg)
+- **A – nákup na prvom mieste** – [rqA-svetly.jpg](11-rychlo/rqA-svetly.jpg), [rqA-tmavy.jpg](11-rychlo/rqA-tmavy.jpg)
+- **B – lieky a starostlivosť** – [rqB-svetly.jpg](11-rychlo/rqB-svetly.jpg), [rqB-tmavy.jpg](11-rychlo/rqB-tmavy.jpg)
+- **C – bez Pridať, len časté veci** – [rqC-svetly.jpg](11-rychlo/rqC-svetly.jpg), [rqC-tmavy.jpg](11-rychlo/rqC-tmavy.jpg)
