@@ -459,7 +459,7 @@ button,input,select{font:inherit;color:inherit}
 .tring{position:absolute;border-radius:22px;border:4px solid #FFC23D;outline:8px solid rgba(255,194,61,.35);outline-offset:2px;box-shadow:0 0 0 9999px rgba(8,16,32,.66);transition:left .3s cubic-bezier(.16,1,.3,1),top .3s cubic-bezier(.16,1,.3,1),width .3s,height .3s}
 .tfing{position:absolute;font-size:44px;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));animation:tfb 1.1s ease-in-out infinite}
 .tfing.dn{animation-name:tfd}
-@keyframes tfb{50%{transform:translateY(-8px)}}@keyframes tfd{50%{transform:translateY(8px)}}
+@keyframes tfb{50%{transform:translateY(-8px)}}.tfing.lf{animation-name:tfl}@keyframes tfl{50%{transform:translateX(8px)}}@keyframes tfd{50%{transform:translateY(8px)}}
 .ttip{position:absolute;left:16px;right:16px;max-width:520px;margin:0 auto;pointer-events:auto;background:#FFF8E6;color:#2A1E05;border-radius:24px;padding:18px 18px 14px;box-shadow:0 22px 50px -12px rgba(0,0,0,.55);animation:sh-up .3s cubic-bezier(.22,1,.36,1)}
 .ttip .tic{width:56px;height:56px;border-radius:50%;background:#FFC23D;color:#2A1E05;display:grid;place-items:center;font-size:26px;font-weight:900;margin-bottom:8px}
 .ttip b{display:block;font-size:22px;margin-bottom:2px}.ttip p{margin:0;font-size:18px;font-weight:600;line-height:1.35;color:#5A4A22}
@@ -1262,7 +1262,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v62</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v63</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3089,7 +3089,7 @@ function food(k,size,col){
   const OKC='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   function kosHtml(list){
     if(!list.length) return '';
-    return '<div class="skos"><b>🛒 V košíku · '+list.length+'</b><div class="kchips">'+list.map(x=>'<button type="button" class="kchip'+(x.doneAt&&Date.now()-x.doneAt<1500?' new':'')+'" data-kb="'+x.id+'" aria-label="Vrátiť do zoznamu: '+esc(x.t)+'"><span class="ci">'+shopIcon(x,34)+'</span><i class="ok">'+OKC+'</i><span class="kn">'+esc(x.t)+'</span></button>').join('')+'</div></div>';
+    return '<div class="skos"><b>🛒 V košíku · '+list.length+'</b><div class="kchips">'+list.map(x=>'<button type="button" class="kchip'+(x.doneAt&&Date.now()-x.doneAt<1500?' new':'')+'" data-kb="'+x.id+'" aria-label="Vrátiť do zoznamu: '+esc(x.t)+'"><span class="ci">'+shopIcon(x,34)+'</span><i class="ok">'+OKC+'</i><span class="kn">'+esc(x.demo?'Ukážka':x.t)+'</span></button>').join('')+'</div></div>';
   }
   function renderShop(){
     normShop();
@@ -3403,7 +3403,7 @@ function food(k,size,col){
   }
   const toToday=()=>{closeAll();setTab('today')};
   const TIPS=[
-    {ic:'🛒',t:'Košík',p:'Zaškrtnutá vec skočí hore do zeleného košíka. Ťuknutím na ikonku ju vrátiš.',g:()=>tipDemo(1,'.skos,.scard .scb'),w:500,s:'.skos,.scard .scb'},
+    {ic:'🛒',t:'Košík',p:'Zaškrtnutá vec skočí hore do zeleného košíka. Ťuknutím na ikonku ju vrátiš.',g:()=>tipDemo(1,'.skos'),f:'.skos .kchip .ci',pad:4,w:500,s:'.skos,.scard .scb'},
     {ic:'✓',t:'Ukončiť nákup',p:'Kúpené ide do histórie, zvyšok ostane na zozname.',g:()=>tipDemo(1,'.sfin'),w:500,s:'.sfin'},
     {ic:'−',t:'Odobrať',p:'Vec, ktorú už netreba, odoberieš bez kúpenia.',g:()=>tipDemo(0,'.scard .srm'),w:500,s:'.scard .srm'},
     {ic:'📰',t:'Leták',p:'Pri obchode otvorí jeho akciový leták.',g:toShop,w:500,s:'.scard .slf',r:1},
@@ -3444,7 +3444,7 @@ function food(k,size,col){
     const r0=el.getBoundingClientRect(),ring=$('tRing'),tip=$('tTip'),f=$('tFing'),H=innerHeight,W=innerWidth;
     const round=!!st.r&&el.matches(st.s.split(',')[0].trim()), inTab=!!el.closest('.tabbar');
     let r={left:r0.left,top:r0.top,right:r0.right,bottom:r0.bottom,width:r0.width,height:r0.height};
-    const pad=round?7:inTab?3:8;
+    const pad=st.pad!=null?st.pad:round?7:inTab?3:8;
     if(round){const d=Math.max(r.width,r.height),cx0=r.left+r.width/2,cy0=r.top+r.height/2;r={left:cx0-d/2,top:cy0-d/2,right:cx0+d/2,bottom:cy0+d/2,width:d,height:d}}
     const top=Math.max(6,r.top-pad),bot=Math.min(H-6,r.bottom+pad),left=Math.max(6,r.left-pad),wid=Math.min(W-6-left,r.width+pad*2);
     Object.assign(ring.style,{left:left+'px',top:top+'px',width:wid+'px',height:(bot-top)+'px',borderRadius:round?'50%':inTab?'18px':'22px'});
@@ -3452,6 +3452,8 @@ function food(k,size,col){
     f.textContent=above?'👇':'👆'; f.classList.toggle('dn',above);
     f.style.left=Math.max(6,Math.min(W-50,cx-20))+'px';
     f.style.top=(above?top-54:bot+6)+'px';
+    const fe=st.f&&el.querySelector(st.f.replace(/^\S+\s+/,''))||null; f.classList.toggle('lf',!!fe);
+    if(fe){const q=fe.getBoundingClientRect();f.textContent='👈';f.classList.remove('dn');f.style.left=(q.right+10)+'px';f.style.top=(q.top+q.height/2-24)+'px'}
     tip.style.top=above?'':Math.min(H-300,bot+62)+'px';
     tip.style.bottom=above?(H-top+62)+'px':'';
   }
