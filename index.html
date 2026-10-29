@@ -656,12 +656,7 @@ button,input,select{font:inherit;color:inherit}
 .chip input{position:absolute;opacity:0;width:1px;height:1px}
 .chip span{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;transition:background .15s,border-color .15s}
 .chip input:checked + span{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
-.fxm span{display:inline-flex;align-items:center;gap:6px}.fxmi{display:inline-grid;place-items:center;width:26px;height:26px;font-style:normal}
-.fxmfs.ask legend::after{content:' – ťukni na liek';font-weight:700;color:var(--muted)}
-.fxmfs.ask .fxm span{animation:fxpulse 1.6s ease-in-out 2}
-@keyframes fxpulse{50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 30%,transparent)}}
-.fxmfs.bad .fxm span{border-color:var(--miss)}
-@media (prefers-reduced-motion: reduce){.fxmfs.ask .fxm span{animation:none}}
+.fxmfs.ask .sel{box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}.fxmfs.bad .sel{box-shadow:0 0 0 3px color-mix(in srgb,var(--miss) 45%,transparent)}
 .chip input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
 .chip.shape span{padding:8px 14px}
 .chip.shape svg{width:24px;height:24px}
@@ -984,11 +979,9 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
 <main class="wrap">
   <section class="sheet" id="fxSheet" hidden aria-labelledby="fxTitle">
     <div class="sheet-h"><h2 id="fxTitle">Vedľajší účinok</h2><button type="button" class="x" id="fxClose" aria-label="Zavrieť">×</button></div>
-    <fieldset class="fs fxmfs" id="fxMfs">
-      <legend>Po ktorom lieku?</legend>
-      <div class="chips" id="fxMeds"></div>
-      <select id="fxMed" class="sel" hidden aria-hidden="true"></select>
-    </fieldset>
+    <label class="fld fxmfs" for="fxMed" id="fxMfs">Po ktorom lieku
+      <select id="fxMed" class="sel"></select>
+    </label>
     <fieldset class="fs">
       <legend>Čo sa deje</legend>
       <div class="chips" id="fxSyms"></div>
@@ -1268,7 +1261,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v59</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v60</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2735,19 +2728,14 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   $('fxSyms').innerHTML=SYMS.map((s,i)=>'<label class="chip"><input type="checkbox" id="fxs-'+i+'" value="'+s+'"><span>'+s+'</span></label>').join('');
   function openFx(medId){
     const opts=meds.filter(m=>m.kind!=='swap');
-    $('fxMed').innerHTML=opts.map(m=>'<option value="'+m.id+'">'+esc(nm(m))+'</option>').join('')+'<option value="">Neviem / iný liek</option>';
     const pre=medId&&opts.some(m=>m.id===medId)?medId:null;
-    $('fxMeds').innerHTML=opts.map(m=>'<label class="chip fxm"><input type="radio" name="fxM" value="'+m.id+'"'+(pre===m.id?' checked':'')+'><span><i class="fxmi" aria-hidden="true">'+picM(m,26)+'</i>'+esc(nm(m))+'</span></label>').join('')+'<label class="chip fxm"><input type="radio" name="fxM" value="_"><span>Neviem / iný liek</span></label>';
-    $('fxMed').value=pre||'';
-    $('fxMfs').classList.toggle('ask',!pre);
-    $('fxMeds').querySelectorAll('input').forEach(i=>i.onchange=()=>{$('fxMed').value=i.value==='_'?'':i.value;$('fxMfs').classList.remove('ask','bad');$('fxErr').hidden=true;buzz(8);
-      const n=$('fxSyms');if(n&&!pre)setTimeout(()=>n.closest('fieldset').scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'}),120)});
+    $('fxMed').innerHTML='<option value="?" disabled'+(pre?'':' selected')+'>Vyber liek…</option>'+opts.map(m=>'<option value="'+m.id+'"'+(pre===m.id?' selected':'')+'>'+esc(nm(m))+'</option>').join('')+'<option value="">Neviem / iný liek</option>';
+    $('fxMfs').classList.toggle('ask',!pre);$('fxMfs').classList.remove('bad');
     document.querySelectorAll('#fxSyms input').forEach(i=>i.checked=false);
     $('fxOther').value=''; $('fxNote').value=''; $('fxDate').value=today; $('fxTime').value=nowHM();
     document.getElementById('fxL2').checked=true; $('fxErr').hidden=true; updFxSafety();
     $('repSheet').hidden=true; $('fxSheet').hidden=false;
     $('fxSheet').scrollIntoView({block:'start',behavior:reduce()?'auto':'smooth'});
-    if(!pre) setTimeout(()=>{const f=$('fxMeds').querySelector('input');if(f)f.focus({preventScroll:true})},350);
   }
   function updFxSafety(){
     const opuch=document.getElementById('fxs-'+SYMS.indexOf('Opuch')).checked;
@@ -2757,12 +2745,13 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   document.querySelectorAll('#fxSyms input,input[name=fxLvl]').forEach(i=>i.addEventListener('change',()=>{$('fxErr').hidden=true;updFxSafety()}));
   $('fxOther').addEventListener('input',()=>{$('fxErr').hidden=true});
+  $('fxMed').addEventListener('change',()=>{$('fxMfs').classList.remove('ask','bad');$('fxErr').hidden=true});
   const closeFx=()=>{$('fxSheet').hidden=true};
   $('fxClose').onclick=closeFx; $('fxCancel').onclick=closeFx;
   $('fxSave').onclick=()=>{
     const sym=[...document.querySelectorAll('#fxSyms input:checked')].map(i=>i.value);
     const other=$('fxOther').value.trim();
-    if(!document.querySelector('input[name=fxM]:checked')){$('fxErr').textContent='Vyber, po ktorom lieku sa to deje.';$('fxErr').hidden=false;$('fxMfs').classList.add('bad');$('fxMfs').scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'});return}
+    if($('fxMed').value==='?'){$('fxErr').textContent='Vyber, po ktorom lieku sa to deje.';$('fxErr').hidden=false;$('fxMfs').classList.add('bad');$('fxMfs').scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'});return}
     if(!sym.length&&!other){$('fxErr').textContent='Vyber aspoň jeden príznak alebo ho napíš.';$('fxErr').hidden=false;return}
     const d=$('fxDate').value||today, t=$('fxTime').value||nowHM();
     if(d>today||(d===today&&t>nowHM())){$('fxErr').textContent='Čas nemôže byť v budúcnosti.';$('fxErr').hidden=false;return}
