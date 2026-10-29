@@ -1262,7 +1262,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v61</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v62</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1730,7 +1730,8 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   /* ---------- storage ---------- */
   const LS='lieky-v1';
   function lsLoad(){try{const o=JSON.parse(localStorage.getItem(LS)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
-  function lsSave(){try{localStorage.setItem(LS,JSON.stringify({meds:cleanForSave(),months,extra}))}catch(e){}}
+  const noDemo=e=>(e&&Array.isArray(e.shop)&&e.shop.some(x=>x.demo))?Object.assign({},e,{shop:e.shop.filter(x=>!x.demo)}):e;
+  function lsSave(){try{localStorage.setItem(LS,JSON.stringify({meds:cleanForSave(),months,extra:noDemo(extra)}))}catch(e){}}
   let db=null, uid=null; const chains={};
   function queue(path,body){
     chains[path]=(chains[path]||Promise.resolve()).then(()=>db.doc(path).set(body)).catch(e=>{
@@ -2609,7 +2610,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     const arr=a=>Array.isArray(a)?a.filter(x=>x&&typeof x==='object'&&x.id):[];
     return {prn:arr(o.prn).slice(-400),fx:arr(o.fx).slice(-300),visits:arr(o.visits).slice(-100),sw:arr(o.sw).slice(-200),shop:arr(o.shop).filter(x=>typeof x.t==='string'&&x.t.trim()).slice(-300),shopRecent:(Array.isArray(o.shopRecent)?o.shopRecent:[]).filter(r=>r&&typeof r.t==='string').slice(0,24),stores:arr(o.stores).filter(z=>z&&z.id&&typeof z.n==='string'&&z.n.trim()).slice(0,20),freeClosed:!!o.freeClosed,shopHist:arr(o.shopHist).filter(h=>Array.isArray(h.items)&&h.items.length&&typeof h.at==='number').slice(-200)};
   }
-  function saveExtra(){ extra=normExtra(extra); if(db) queue('data/users/'+uid+'/extra',JSON.parse(JSON.stringify(extra))); lsSave(); }
+  function saveExtra(){ extra=normExtra(extra); if(db) queue('data/users/'+uid+'/extra',JSON.parse(JSON.stringify(noDemo(extra)))); lsSave(); }
   const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const nowISO=()=>today+'T'+nowHM();
   const isoDate=s=>{const [d,t]=s.split('T');const [y,m,dd]=d.split('-').map(Number);const [h,mi]=(t||'00:00').split(':').map(Number);return new Date(y,m-1,dd,h,mi)};
@@ -3381,11 +3382,30 @@ function food(k,size,col){
     {g:()=>{if(!$('quick').hidden)return false;closeAll();quickOpen(true)},w:900,s:'[data-qg=shop] .o',r:1,ic:'🛒',t:'Nákup',p:'Zoznam na nákup po obchodoch.'},
     {g:()=>closeAll(),s:'.tab[data-tab=more]',ic:'•••',t:'Viac',p:'Tu si prehliadku pustíš znova.'}]}};
   const toShop=()=>{if(!$('shopSheet').hidden)return false;closeAll();openShop(false)};
+  // v62: pri prázdnom nákupe ukážková vec, aby tip mal čo ukázať; nikdy sa neuloží (noDemo) a po tipe zmizne
+  let demoUndo=null;
+  function tipDemo(done,sel){
+    const a=toShop();
+    if([...document.querySelectorAll(sel)].some(vis))return a;
+    const st=extra.stores[0], sid=st?st.id:'';
+    demoUndo={st:st&&st.closed?st:null,free:!st&&!!extra.freeClosed};
+    if(st)st.closed=false;else extra.freeClosed=false;
+    const now=Date.now();
+    extra.shop.push({id:'demo-'+now,t:'Mlieko (ukážka)',s:sid||undefined,demo:1,done:!!done,doneAt:done?now:0});
+    if(done)extra.shop.push({id:'demo2-'+now,t:'Chlieb (ukážka)',s:sid||undefined,demo:1});
+    renderShop();return a;
+  }
+  function demoClear(){
+    if(!extra.shop.some(x=>x.demo))return;
+    extra.shop=extra.shop.filter(x=>!x.demo);
+    if(demoUndo){if(demoUndo.st)demoUndo.st.closed=true;if(demoUndo.free)extra.freeClosed=true}
+    demoUndo=null;renderShop();
+  }
   const toToday=()=>{closeAll();setTab('today')};
   const TIPS=[
-    {ic:'🛒',t:'Košík',p:'Zaškrtnutá vec skočí hore do zeleného košíka. Ťuknutím na ikonku ju vrátiš.',g:toShop,w:500,s:'.skos,.scard .scb'},
-    {ic:'✓',t:'Ukončiť nákup',p:'Kúpené ide do histórie, zvyšok ostane na zozname.',g:toShop,w:500,s:'.sfin'},
-    {ic:'−',t:'Odobrať',p:'Vec, ktorú už netreba, odoberieš bez kúpenia.',g:toShop,w:500,s:'.scard .srm'},
+    {ic:'🛒',t:'Košík',p:'Zaškrtnutá vec skočí hore do zeleného košíka. Ťuknutím na ikonku ju vrátiš.',g:()=>tipDemo(1,'.skos,.scard .scb'),w:500,s:'.skos,.scard .scb'},
+    {ic:'✓',t:'Ukončiť nákup',p:'Kúpené ide do histórie, zvyšok ostane na zozname.',g:()=>tipDemo(1,'.sfin'),w:500,s:'.sfin'},
+    {ic:'−',t:'Odobrať',p:'Vec, ktorú už netreba, odoberieš bez kúpenia.',g:()=>tipDemo(0,'.scard .srm'),w:500,s:'.scard .srm'},
     {ic:'📰',t:'Leták',p:'Pri obchode otvorí jeho akciový leták.',g:toShop,w:500,s:'.scard .slf',r:1},
     {ic:'↑',t:'Poslať',p:'Vyberieš obchody a pošleš zoznam domácnosti.',g:toShop,w:500,s:'#shopShare'},
     {ic:'🕘',t:'História',p:'Čo si kúpil za posledný mesiac.',g:toShop,w:500,s:'#shopHist'},
@@ -3435,7 +3455,7 @@ function food(k,size,col){
     tip.style.top=above?'':Math.min(H-300,bot+62)+'px';
     tip.style.bottom=above?(H-top+62)+'px':'';
   }
-  function tourHide(){tourOn=false;$('tourL').hidden=true;$('tourL').classList.remove('noel');if(!$('quick').hidden)quickOpen(false,true)}
+  function tourHide(){tourOn=false;demoClear();$('tourL').hidden=true;$('tourL').classList.remove('noel');if(!$('quick').hidden)quickOpen(false,true)}
   function tourBackToHelp(fromPop){
     tourHide();closeAll();if(tab!=='more')setTab('more');
     try{if(!fromPop&&history.state&&history.state.ml==='tour')history.replaceState({ml:'help'},'')}catch(_){}
