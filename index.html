@@ -1262,7 +1262,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v63</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v64</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -3411,7 +3411,7 @@ function food(k,size,col){
     {ic:'🕘',t:'História',p:'Čo si kúpil za posledný mesiac.',g:toShop,w:500,s:'#shopHist'},
     {ic:'✎',t:'Ceruzka',p:'Premenuje alebo odstráni obchod.',g:toShop,w:500,s:'.scard .scedit',r:1},
     {ic:'🕐',t:'Hodinky pri lieku',p:'Keď si liek užil skôr, ťukni na hodinky a zadaj čas.',g:()=>{toToday();setTimeout(()=>{if(vis(document.querySelector('#day .rowx .tbtn')))return;const h=[...document.querySelectorAll('#day .block.closed')].find(b=>b.querySelector('.tbtn'));if(h)h.querySelector('.block-h').click()},120)},w:900,s:'#day .rowx .tbtn',nn:'Hodinky uvidíš pri lieku, ktorý ešte nemáš odkliknutý.'}];
-  let tourHelp=false, tipLast=null;
+  let tourHelp=false, tipLast=null; var tourScrolled=false;
   function closeAll(){if(!$('quick').hidden)quickOpen(false,true);if(!$('shDet').hidden){if(shopDet&&shopDet.help)shopDet={};closeShopDet()}if(!$('shopSheet').hidden)closeShop();if(!$('infoSheet').hidden)closeCard()}
   function tourMaybe(p){if(p!=='base'||tourOn||tourDone().base)return;tourStart()}
   function tourStart(steps){
@@ -3423,7 +3423,7 @@ function food(k,size,col){
   }
   function tourEl(st){for(const q of st.s.split(',')){const el=document.querySelector(q.trim());if(vis(el))return el}return null}
   function tourShow(i,dir){
-    dir=dir||1;tourI=i;const st=tourSteps[i];if(!st)return tourEnd();
+    dir=dir||1;tourI=i;tourScrolled=false;const st=tourSteps[i];if(!st)return tourEnd();
     $('tTip').querySelectorAll('button').forEach(b=>b.disabled=true);
     const acted=!!st.g&&st.g()!==false;
     setTimeout(()=>{const el=tourEl(st);
@@ -3448,14 +3448,19 @@ function food(k,size,col){
     if(round){const d=Math.max(r.width,r.height),cx0=r.left+r.width/2,cy0=r.top+r.height/2;r={left:cx0-d/2,top:cy0-d/2,right:cx0+d/2,bottom:cy0+d/2,width:d,height:d}}
     const top=Math.max(6,r.top-pad),bot=Math.min(H-6,r.bottom+pad),left=Math.max(6,r.left-pad),wid=Math.min(W-6-left,r.width+pad*2);
     Object.assign(ring.style,{left:left+'px',top:top+'px',width:wid+'px',height:(bot-top)+'px',borderRadius:round?'50%':inTab?'18px':'22px'});
-    const cx=r.left+r.width/2, above=r.top+r.height/2>H/2;
+    // v64: bublina nesmie prekryť zvýraznené miesto – vyber stranu, kde sa zmestí, inak posuň obsah
+    const th=tip.offsetHeight||260, gap=st.f?16:62, fitsB=bot+gap+th<=H-8, fitsA=top-gap-th>=8;
+    let above=(fitsA&&fitsB)?r.top+r.height/2>H/2:fitsA&&!fitsB;
+    if(!fitsA&&!fitsB&&!tourScrolled){tourScrolled=true;let sc=el.parentElement;while(sc&&!(sc.scrollHeight>sc.clientHeight+2&&/(auto|scroll)/.test(getComputedStyle(sc).overflowY)))sc=sc.parentElement;sc=sc||document.scrollingElement;
+      const scTop=sc===document.scrollingElement?0:sc.getBoundingClientRect().top, need=Math.min((bot+gap+th)-(H-8),top-scTop-4), b0=sc.scrollTop;if(need>0){sc.scrollTop=b0+need;if(sc.scrollTop!==b0)return tourPlace()}}
+    const cx=r.left+r.width/2;
     f.textContent=above?'👇':'👆'; f.classList.toggle('dn',above);
     f.style.left=Math.max(6,Math.min(W-50,cx-20))+'px';
     f.style.top=(above?top-54:bot+6)+'px';
     const fe=st.f&&el.querySelector(st.f.replace(/^\S+\s+/,''))||null; f.classList.toggle('lf',!!fe);
     if(fe){const q=fe.getBoundingClientRect();f.textContent='👈';f.classList.remove('dn');f.style.left=(q.right+10)+'px';f.style.top=(q.top+q.height/2-24)+'px'}
-    tip.style.top=above?'':Math.min(H-300,bot+62)+'px';
-    tip.style.bottom=above?(H-top+62)+'px':'';
+    tip.style.top=above?'':Math.max(8,Math.min(H-th-8,bot+gap))+'px';
+    tip.style.bottom=above?(H-top+gap)+'px':'';
   }
   function tourHide(){tourOn=false;demoClear();$('tourL').hidden=true;$('tourL').classList.remove('noel');if(!$('quick').hidden)quickOpen(false,true)}
   function tourBackToHelp(fromPop){
