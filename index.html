@@ -237,6 +237,7 @@ button,input,select{font:inherit;color:inherit}
 .stock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .stock-grid input{text-align:center;font-variant-numeric:tabular-nums}
 .form input[type=number]{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:10px 8px;width:100%}
+.stock-grid .tinput{box-sizing:border-box;min-width:0;max-width:100%}
 .tinput{min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:8px 12px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
 .orders{margin-top:16px;background:var(--warn-soft);border-radius:24px;padding:12px 14px;display:grid;gap:6px}
 .orders-h{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--warn-ink);font-size:14px;letter-spacing:.04em;text-transform:uppercase}
@@ -1261,7 +1262,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v60</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v61</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
