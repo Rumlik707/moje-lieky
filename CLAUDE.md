@@ -64,6 +64,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Ceruzka (návrh A, v41): modrá SVG ceruzka v jemnom modrom krúžku (`.scedit`). Ňou sa obchod premenuje alebo odstráni; veci z odstráneného obchodu ostanú, len bez obchodu.
 - Na konci zoznamu je „+ Nový obchod“.
 - V karte sa veci radia automaticky podľa oddelení (`AISLES`, `AIDX`, `CAT`, `guessAisle`).
+- Databáza potravín (v65): `CAT` má ~660 položiek (69 pôvodných + 593 nových) – formát `[názov, oddelenie, ikonka, farba, množstvá, druhy, kľúčové slová]`; množstvá zo spoločných predvolieb `Q` (napr. `Q.GR5`, `Q.MLI`). Nové používajú len existujúce ikonky z `food()` (nové ikonky = dizajn, najprv sa opýtať). Rýchle hľadanie cez `CATM` (mapa názvov) a `CATH` (text na hľadanie); hľadá sa od začiatku slova; poradie: názov začína → slovo v názve → zvyšok, kratšie skôr. `guessAisle` porovnáva celé slová (krátke kľúčové slová len presne). Zdroj zoznamu: kľúčové slová bez diakritiky, aspoň 4 znaky.
 - Košík (návrh C, v40): zaškrtnutá vec sa presunie do zeleného pásu „🛒 V košíku · N“ hore v karte svojho obchodu ako okrúhla ikonka s fajočkou (`kosHtml`, trieda `.kchip`, `data-kb`). Hlavička obchodu ukazuje „3 z 7 v košíku“.
   - Ťuknutie na ikonku v košíku vráti vec do zoznamu (toast so Späť).
   - Kúpené veci sa po 24 h samé presunú do histórie a do `shopRecent` („Naposledy kúpené“, v50). Globálna sekcia „Kúpené“ už nie je.
