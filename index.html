@@ -726,7 +726,7 @@ button.block-h{font-size:13px}
 .opened-h{display:flex;align-items:center;gap:8px;padding:2px 0}
 .opened.closed{padding:6px 14px}
 .olist{display:grid;gap:6px}
-.hright{display:flex;align-items:center;gap:8px;flex:none}
+.hright{display:flex;align-items:center;gap:8px;flex:0 1 auto;min-width:0;flex-wrap:wrap;justify-content:flex-end}.head>div:first-child{flex:1 1 0}
 .disc{border:2px solid var(--acc);color:var(--acc-deep);background:var(--card);border-radius:999px;padding:5px 11px;font-weight:800;font-size:12px;min-height:36px;display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-family:inherit}
 .disc[aria-pressed=true]{background:var(--acc);color:#fff}
 .discnote{margin:8px 2px 0}
@@ -1262,7 +1262,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v66</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v67</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -1824,7 +1824,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     document.documentElement.style.setProperty('--sel',SEL_COL[nowSlot()]||'#2D6BE4');
     const d=parse(sel); const isToday=sel===today;
     $('date').textContent='Dnes';
-    $('hello').textContent=DAYS[d.getDay()]+', '+d.getDate()+'. '+MON[d.getMonth()];
+    $('hello').textContent=DAYS[d.getDay()]+', '+d.getDate()+'.\u00a0'+MON[d.getMonth()];
     const course=meds.filter(m=>m.kind!=='swap'&&m.days&&activeOn(m,today)).sort((a,b)=>endKey(a)<endKey(b)?-1:1)[0];
     $('streak').hidden=!course;
     if(course){const dn=diffDays(course.start,today)+1;
