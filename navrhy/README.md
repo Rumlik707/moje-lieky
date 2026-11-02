@@ -98,3 +98,9 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **1 – jemné: stredné stmavenie, modrý rámik, veľká biela bublina** – [c2v1-svetly.jpg](16-prehliadka-jednoduchsia/c2v1-svetly.jpg), [c2v1-tmavy.jpg](16-prehliadka-jednoduchsia/c2v1-tmavy.jpg)
 - **2 – výraznejšie: tmavšie pozadie, biely rámik s modrou žiarou** – [c2v2-svetly.jpg](16-prehliadka-jednoduchsia/c2v2-svetly.jpg), [c2v2-tmavy.jpg](16-prehliadka-jednoduchsia/c2v2-tmavy.jpg)
 - **3 – najvýraznejšie: tmavé pozadie, žltý rámik, ukazovák 👆, krémová bublina ✅ vybraný (v56; v tmavom režime tmavá bublina so žltými prvkami)** – [c2v3-svetly.jpg](16-prehliadka-jednoduchsia/c2v3-svetly.jpg), [c2v3-tmavy.jpg](16-prehliadka-jednoduchsia/c2v3-tmavy.jpg)
+
+## 17-terminy – oddeliť lekára od podujatí (zatiaľ nevybrané)
+
+- **A – dve samostatné karty vo Viac: 🩺 Lekár a recepty (modrá) · 🎫 Podujatia (fialová); na Dnes dva farebne odlíšené čipy** – [tA-svetly.jpg](17-terminy/tA-svetly.jpg), [tA-tmavy.jpg](17-terminy/tA-tmavy.jpg)
+- **B – jedna karta Termíny s prepínačom 🩺 Zdravie / 🎫 Voľný čas; na Dnes upozornenia v dvoch skupinách** – [tB-svetly.jpg](17-terminy/tB-svetly.jpg), [tB-tmavy.jpg](17-terminy/tB-tmavy.jpg)
+- **C – lekár ostáva vo Viac, podujatia sa presunú do Kalendára (🎫 pod dňom + zoznam tento týždeň)** – [tC-svetly.jpg](17-terminy/tC-svetly.jpg), [tC-tmavy.jpg](17-terminy/tC-tmavy.jpg)
