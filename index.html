@@ -1262,7 +1262,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v65</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v66</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
@@ -2489,7 +2489,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   function renderChips(){
     const c=[];
     meds.filter(m=>m.kind!=='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Objednať: '+m.name,'meds']));
-    visitsSorted().forEach(v=>{const d=diffDays(today,v.date);if(v.type==='rx'?d<=7:d<=2)c.push([d<0?'bad':'',(v.type==='rx'?'Recept: ':'')+v.title+' · '+(d===0?'dnes':d===1?'zajtra':d<0?'prešlo':nice(v.date)),'more'])});
+    visitsSorted().forEach(v=>{const d=diffDays(today,v.date);if(v.type==='rx'?d<=7:d<=2)c.push([d<0?'bad':'',(v.type==='rx'?'Recept: ':v.type==='event'?'🎫 ':'')+v.title+' · '+(d===0?'dnes':d===1?'zajtra':d<0?'prešlo':nice(v.date)),'more'])});
     meds.forEach(m=>{const o=openInfo(m);if(!o||o.state==='ok')return;c.push([o.state==='exp'?'bad':'warn',(m.kind==='swap'&&!isCos(m)?'Vymeniť: ':'Spotrebovať čoskoro: ')+nm(m),m.kind==='swap'||m.mode!=='need'?'opened':'prn'])});
     meds.filter(m=>m.kind==='swap'&&needsOrder(m)).forEach(m=>c.push(['warn','Kúpiť: '+m.name,'opened']));
     $('chips').innerHTML=c.map(x=>'<button type="button" class="achip '+x[0]+'" data-go="'+x[2]+'">'+esc(hideNames(x[1]))+'</button>').join('');
@@ -2685,7 +2685,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
 
   /* visits and prescriptions */
-  const VTYPES={visit:'Kontrola',rx:'Recept',other:'Iné'};
+  const VTYPES={visit:'Kontrola',rx:'Recept',event:'Podujatie',other:'Iné'};
   function visitWhen(v){const d=diffDays(today,v.date);return nice(v.date)+(v.time?' o '+v.time:'')+(d===0?' (dnes)':d===1?' (zajtra)':d>1?' (o '+d+' '+dni(d)+')':' (prešlo)')}
   const visitsSorted=()=>extra.visits.slice().sort((a,b)=>(a.date+(a.time||''))<(b.date+(b.time||''))?-1:1);
   function renderSoon(){
@@ -2695,14 +2695,14 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
   }
   function renderVisits(){
     const list=visitsSorted();
-    let h='<section class="opened visits"><div class="opened-h">'+CAL+'<span>Kontroly a recepty</span></div>';
+    let h='<section class="opened visits"><div class="opened-h">'+CAL+'<span>Termíny</span></div>';
     h+=list.map(v=>'<div class="ord'+(diffDays(today,v.date)<0?' op-exp':diffDays(today,v.date)<=(v.type==='rx'?7:2)?' op-soon':'')+'"><span class="vt">'+esc(VTYPES[v.type]||'Iné')+'</span><div class="t"><div>'+esc(v.title)+'</div><div>'+esc((v.type==='rx'?'platí do ':'')+visitWhen(v))+'</div></div><button class="btn ghost sm" type="button" data-vdone="'+v.id+'">Hotovo</button></div>').join('');
     if(visitForm){
-      h+='<div class="vform"><div class="chips"><label class="chip"><input type="radio" name="vType" id="vt-visit" value="visit" checked><span>Kontrola</span></label><label class="chip"><input type="radio" name="vType" id="vt-rx" value="rx"><span>Recept platí do</span></label><label class="chip"><input type="radio" name="vType" id="vt-other" value="other"><span>Iné</span></label></div>'+
+      h+='<div class="vform"><div class="chips"><label class="chip"><input type="radio" name="vType" id="vt-visit" value="visit" checked><span>Kontrola</span></label><label class="chip"><input type="radio" name="vType" id="vt-rx" value="rx"><span>Recept platí do</span></label><label class="chip"><input type="radio" name="vType" id="vt-event" value="event"><span>🎫 Podujatie</span></label><label class="chip"><input type="radio" name="vType" id="vt-other" value="other"><span>Iné</span></label></div>'+
         '<label class="fld" for="vTitle">Čo<input id="vTitle" class="txt" autocomplete="off" placeholder="Kontrola u kardiológa"></label>'+
         '<div class="stock-grid"><label class="fld" for="vDate">Dátum<input id="vDate" type="date" class="tinput" style="font-size:16px;width:100%"></label><label class="fld" for="vTime">Čas <span class="note">(nepovinné)</span><input id="vTime" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm" class="tinput tm" style="width:100%"></label></div>'+
         '<p class="err" id="vErr" hidden></p><div class="actions"><button class="btn pri sm" type="button" id="vSave">Uložiť termín</button><button class="btn ghost sm" type="button" id="vCancel">Zrušiť</button></div></div>';
-    } else h+=(list.length?'':'<p class="note" style="margin:2px 4px">Pridaj si kontrolu u lekára alebo dokedy platí recept. Upozorním ťa vopred.</p>')+'<div><button class="btn ghost sm" type="button" id="vAdd">Pridať termín</button></div>';
+    } else h+=(list.length?'':'<p class="note" style="margin:2px 4px">Pridaj si kontrolu u lekára, dokedy platí recept alebo koncert či iné podujatie. Upozorním ťa vopred.</p>')+'<div><button class="btn ghost sm" type="button" id="vAdd">Pridať termín</button></div>';
     $('visits').innerHTML=h+'</section>';
     $('visits').querySelectorAll('[data-vdone]').forEach(b=>b.onclick=()=>{
       const v=extra.visits.find(x=>x.id===b.dataset.vdone); extra.visits=extra.visits.filter(x=>x.id!==b.dataset.vdone); saveExtra(); render();
@@ -2711,7 +2711,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     if($('vAdd')) $('vAdd').onclick=()=>{visitForm=true;render();$('vTitle').focus()};
     if($('vSave')){
       $('vCancel').onclick=()=>{visitForm=false;render()};
-      document.querySelectorAll('input[name=vType]').forEach(r=>r.onchange=()=>{$('vTitle').placeholder=r.value==='rx'?'Recept na Euthyrox':r.value==='visit'?'Kontrola u kardiológa':'Odber krvi'});
+      document.querySelectorAll('input[name=vType]').forEach(r=>r.onchange=()=>{$('vTitle').placeholder=r.value==='rx'?'Recept na Euthyrox':r.value==='visit'?'Kontrola u kardiológa':r.value==='event'?'Koncert, divadlo, zápas…':'Odber krvi'});
       $('vSave').onclick=()=>{
         const type=(document.querySelector('input[name=vType]:checked')||{}).value||'visit';
         const title=$('vTitle').value.trim(), date=$('vDate').value, time=$('vTime').value;
@@ -2815,7 +2815,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     L.push('VEDĽAJŠIE ÚČINKY');
     if(fx.length) fx.forEach(f=>L.push('• '+nice(f.t.slice(0,10))+' '+f.t.slice(11)+' – po: '+(f.m?medName(f.m):'neznámy liek')+' – '+fxText(f)+' ('+LVL[f.lvl]+')'+(f.note?' – '+f.note:'')));
     else L.push('• žiadne záznamy');
-    const up=visitsSorted().filter(v=>v.date>=today);
+    const up=visitsSorted().filter(v=>v.date>=today&&v.type!=='event');
     if(up.length){ L.push(''); L.push('NAJBLIŽŠIE TERMÍNY'); up.forEach(v=>L.push('• '+nice(v.date)+(v.time?' '+v.time:'')+' – '+(v.type==='rx'?'recept platí do: ':'')+v.title)); }
     return L.join('\n');
   }
