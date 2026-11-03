@@ -2,7 +2,7 @@
 // Appka sa uloží do telefónu, takže funguje aj bez internetu.
 // Pri pripojení si vždy najprv skúsi stiahnuť najnovšiu verziu.
 // Ak zmeníš ikonky alebo tento súbor, zvýš číslo verzie nižšie.
-const VERSION = 'v67';
+const VERSION = 'v68';
 const APP = 'moje-lieky-app-' + VERSION;
 const FONTS = 'moje-lieky-fonts';
 const FILES = [
