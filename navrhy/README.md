@@ -104,3 +104,9 @@ Obrázky návrhov, ktoré sme spolu prebrali. Zmenšené na polovicu (JPG). Appk
 - **A – dve samostatné karty vo Viac: 🩺 Lekár a recepty (modrá) · 🎫 Podujatia (fialová); na Dnes dva farebne odlíšené čipy** – [tA-svetly.jpg](17-terminy/tA-svetly.jpg), [tA-tmavy.jpg](17-terminy/tA-tmavy.jpg)
 - **B – jedna karta Termíny s prepínačom 🩺 Zdravie / 🎫 Voľný čas; na Dnes upozornenia v dvoch skupinách** – [tB-svetly.jpg](17-terminy/tB-svetly.jpg), [tB-tmavy.jpg](17-terminy/tB-tmavy.jpg)
 - **C – lekár ostáva vo Viac, podujatia sa presunú do Kalendára (🎫 pod dňom + zoznam tento týždeň)** – [tC-svetly.jpg](17-terminy/tC-svetly.jpg), [tC-tmavy.jpg](17-terminy/tC-tmavy.jpg)
+
+## 18-3d – modernejší „mäkký 3D“ vzhľad (zatiaľ nevybrané)
+Zadanie: mäkké 3D, modrá ako teraz, výrazné písmo (Bricolage Grotesque), jeden silný moment pri otvorení. Pre porovnanie [teraz-svetly.jpg](18-3d/teraz-svetly.jpg).
+- **A – Mäkká hmota:** všetky karty ako z mäkkej hmoty (jemný vnútorný lesk a hlboký tieň), plávajúca spodná lišta, 3D ikonky s tieňom – [nA-svetly.jpg](18-3d/nA-svetly.jpg), [nA-tmavy.jpg](18-3d/nA-tmavy.jpg)
+- **B – Vankúš:** ako A, ale hlavná karta Dnes je veľký lesklý „vankúš“ mierne naklonený dozadu, ikonky v nej trochu natočené; zvyšok pokojnejší – [nB-svetly.jpg](18-3d/nB-svetly.jpg), [nB-tmavy.jpg](18-3d/nB-tmavy.jpg)
+- **C – Klávesy s hranou:** karty a tlačidlá majú viditeľnú spodnú hranu ako klávesy, po ťuknutí sa „stlačia“; plávajúca lišta – [nC-svetly.jpg](18-3d/nC-svetly.jpg), [nC-tmavy.jpg](18-3d/nC-tmavy.jpg)
