@@ -2,7 +2,7 @@
 // Appka sa uloží do telefónu, takže funguje aj bez internetu.
 // Pri pripojení si vždy najprv skúsi stiahnuť najnovšiu verziu.
 // Ak zmeníš ikonky alebo tento súbor, zvýš číslo verzie nižšie.
-const VERSION = 'v68';
+const VERSION = 'v69';
 const APP = 'moje-lieky-app-' + VERSION;
 const FONTS = 'moje-lieky-fonts';
 const FILES = [
@@ -11,7 +11,8 @@ const FILES = [
   'manifest.json',
   'icon-192.png',
   'icon-512.png',
-  'maskable-512.png'
+  'maskable-512.png',
+  'fonts/bricolage-bold.woff'
 ];
 
 self.addEventListener('install', e => {

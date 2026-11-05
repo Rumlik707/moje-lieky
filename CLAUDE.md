@@ -84,6 +84,7 @@ Najprv si prečítaj tento súbor. **Nečítaj celý `index.html`** (má viac ne
 - Možné ďalšie kroky, o ktorých sme hovorili, ale neboli schválené: „je v akcii?“ pri jednotlivej veci (odkaz na vyhľadávanie akcií), ručné označenie akcie s termínom, rýchly presun všetkých vecí z jedného obchodu do druhého.
 
 ## Moje rozhodnutia (nemeniť bez opýtania)
+- **Vzhľad v69 = mäkké 3D „Vankúš“ (návrh 18 B):** nadpisy písmom Bricolage Grotesque (lokálne `fonts/bricolage-bold.woff`, podmnožina latin + latin-ext, je v `FILES` v sw.js), telo ostáva Atkinson Hyperlegible Next. Karty s mäkkým tieňom cez premenné `--clay`, `--clay-sm`, `--clay-chip`, `--clay-bar` (svetlý aj tmavý režim). Hlavná karta Dnes (`.hero`) je lesklý vankúš mierne naklonený dozadu (rotateX 4°), ikonky v nej natočené. Spodná lišta pláva (12 px od okrajov, pod ňou prechod do pozadia `.tabbar::before`), v nákupe ide panel až dole. Jediný efekt pri otvorení: trieda `intro3d` na 1,8 s – karta Dnes sa vynorí v 3D a ikonky raz poskočia. Pri „obmedziť pohyb“ bez animácií a bez naklonenia. Nepridávať ďalšie efekty bez opýtania.
 - Pri ikonkách nepoužívať pozadie dlaždice (vyzeralo ako zaváraninový pohár). Jamky blistra sú svetlé.
 - Ráno/Obed/Večer majú jemný rámik, aktuálna časť dňa má hrubší.
 - Ikonky sa pri nečinnosti hýbu každých 6 s, striedavo. Po rozbalení sekcie s 4 s oneskorením. Pokojne, aby to nerušilo.

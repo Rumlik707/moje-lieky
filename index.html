@@ -6,7 +6,51 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><script>document.documentElement.classList.add('intro3d');setTimeout(function(){document.documentElement.classList.remove('intro3d')},1800)</script>
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* ===== v69: mäkký 3D vzhľad (návrh 18 B „Vankúš“) ===== */
+@font-face{font-family:'Bricolage';src:url('fonts/bricolage-bold.woff') format('woff');font-weight:600 800;font-display:swap}
+:root{--f-display:'Bricolage','Atkinson Hyperlegible Next',system-ui,sans-serif;
+ --clay:0 18px 32px -18px rgba(30,70,150,.42),0 2px 4px rgba(30,70,150,.05),inset 0 -5px 10px rgba(45,107,228,.06),inset 0 3px 6px rgba(255,255,255,.95);
+ --clay-sm:0 8px 14px -10px rgba(30,70,150,.42),inset 0 2px 3px rgba(255,255,255,.9);
+ --clay-chip:0 6px 12px -8px rgba(30,70,150,.45),inset 0 2px 3px rgba(255,255,255,.8);
+ --clay-bar:0 20px 36px -16px rgba(30,70,150,.5),inset 0 3px 6px rgba(255,255,255,.95),inset 0 -4px 8px rgba(45,107,228,.07);
+ --pg-glow:#F6FAFF;--hero-floor:rgba(34,87,200,.35)}
+:root[data-theme=dark]{--clay:0 18px 32px -16px rgba(0,0,0,.7),inset 0 -5px 10px rgba(0,0,0,.22),inset 0 2px 4px rgba(255,255,255,.06);--clay-sm:0 8px 14px -8px rgba(0,0,0,.7),inset 0 1px 2px rgba(255,255,255,.06);--clay-chip:0 6px 12px -8px rgba(0,0,0,.8),inset 0 1px 2px rgba(255,255,255,.07);--clay-bar:0 20px 36px -12px rgba(0,0,0,.8),inset 0 2px 4px rgba(255,255,255,.06);--pg-glow:#1A2A47;--hero-floor:rgba(20,60,160,.45)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--clay:0 18px 32px -16px rgba(0,0,0,.7),inset 0 -5px 10px rgba(0,0,0,.22),inset 0 2px 4px rgba(255,255,255,.06);--clay-sm:0 8px 14px -8px rgba(0,0,0,.7),inset 0 1px 2px rgba(255,255,255,.06);--clay-chip:0 6px 12px -8px rgba(0,0,0,.8),inset 0 1px 2px rgba(255,255,255,.07);--clay-bar:0 20px 36px -12px rgba(0,0,0,.8),inset 0 2px 4px rgba(255,255,255,.06);--pg-glow:#1A2A47;--hero-floor:rgba(20,60,160,.45)}}
+body{background:radial-gradient(120% 50% at 50% -8%,var(--pg-glow) 0,var(--bg) 62%) fixed var(--bg)}
+.hello{font-weight:800;letter-spacing:-.01em}
+.block,.panel,.streak,.icard{border-radius:28px;box-shadow:var(--clay)}
+.block .med:not(.taken){box-shadow:var(--clay-sm)}
+.med{border-radius:20px}
+.achip,.disc,.mfc{box-shadow:var(--clay-chip);border-color:transparent}
+.ipill svg,.pillbox svg,.htile svg,.med .pill svg{filter:drop-shadow(0 5px 5px rgba(20,50,120,.25))}
+/* hlavná karta Dnes = vankúš */
+.hero{position:relative;border-radius:32px;background:linear-gradient(165deg,#7DB0FF 0,#3D7CF0 42%,#2257C8 100%);
+ box-shadow:0 26px 40px -20px rgba(34,87,200,.8),inset 0 -8px 16px rgba(10,40,120,.35),inset 0 6px 10px rgba(255,255,255,.35);
+ transform:perspective(900px) rotateX(4deg);transform-origin:50% 100%}
+.hero.done{background:linear-gradient(165deg,#5FD3A8 0,#22A87A 50%,#16855F 100%);box-shadow:0 22px 36px -20px rgba(22,133,95,.8),inset 0 -8px 16px rgba(5,70,45,.3),inset 0 6px 10px rgba(255,255,255,.3)}
+.hero::before{content:'';position:absolute;left:16px;right:16px;top:7px;height:36%;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.32),rgba(255,255,255,0));pointer-events:none}
+.hero::after{content:'';position:absolute;left:10%;right:10%;bottom:-16px;height:20px;border-radius:50%;background:var(--hero-floor);filter:blur(14px);z-index:-1;pointer-events:none}
+.hero.mini{transform:none}.hero.mini::before{top:4px;height:40%}
+.thero .htile{box-shadow:0 10px 16px -8px rgba(10,40,120,.6),inset 0 -4px 6px rgba(45,107,228,.15),inset 0 3px 4px #fff}
+.thero .htile:nth-child(odd){rotate:-4deg}.thero .htile:nth-child(even){rotate:3deg}
+.thero .hall{box-shadow:0 10px 18px -8px rgba(10,40,120,.6),inset 0 3px 5px rgba(255,255,255,.4)}
+/* plávajúca spodná lišta */
+.tabbar{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-bottom:8px;border-radius:30px;border-top:0;box-shadow:var(--clay-bar)}
+.tabbar::before{content:'';position:absolute;left:-12px;right:-12px;top:-26px;bottom:calc(-12px - env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,transparent,var(--bg) 46%);z-index:-1;pointer-events:none}
+.tab.home .hb{box-shadow:0 0 0 5px var(--card),0 14px 22px -8px rgba(34,87,200,.8),inset 0 -5px 8px rgba(10,40,120,.35),inset 0 4px 6px rgba(255,255,255,.4)}
+.tab.home:not([aria-current]) .hb{box-shadow:0 0 0 5px var(--card),inset 0 0 0 2px var(--acc-soft),0 10px 20px -10px rgba(15,37,71,.45)}
+.wrap{padding-bottom:calc(116px + env(safe-area-inset-bottom,0px))}
+.shop-on .shpanel{bottom:0;padding-bottom:calc(var(--tbh,72px) + 12px + env(safe-area-inset-bottom,0px))}
+/* jeden moment pri otvorení: karta Dnes sa vynorí v 3D, ikonky sa raz pohnú */
+.intro3d .hero:not(.mini){animation:h3in .9s cubic-bezier(.2,.9,.25,1) both}
+.intro3d .thero .htile{animation:h3pop .7s cubic-bezier(.3,1.6,.5,1) both}
+.intro3d .thero .htile:nth-child(2){animation-delay:.42s}.intro3d .thero .htile:nth-child(3){animation-delay:.52s}.intro3d .thero .htile:nth-child(1){animation-delay:.32s}
+@keyframes h3in{from{opacity:0;transform:perspective(900px) rotateX(28deg) translateY(36px) scale(.94)}to{opacity:1;transform:perspective(900px) rotateX(4deg)}}
+@keyframes h3pop{0%{transform:translateY(10px) scale(.7);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.intro3d .hero,.intro3d .thero .htile{animation:none}.hero{transform:none}}
+</style></head><body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@200..800&display=swap&subset=latin-ext">
 <style>
@@ -1263,7 +1307,7 @@ body.discreet :is(.med,.prn-row,.hero,.ord){-webkit-touch-callout:none;-webkit-u
     </section>
     <p id="storenote" class="note" style="margin:16px 4px">Načítavam…</p>
     <button type="button" class="linkbtn" id="introAgain" style="margin:0 4px 16px">Ako appka funguje</button>
-    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v68</p>
+    <p class="note" id="appVer" style="margin:0 4px 16px">Verzia appky: v69</p>
   </div>
 </main>
 <div id="quick" class="quick" hidden><div class="qback" id="qBack"></div><div class="qmenu" id="qMenu" role="menu" aria-label="Čo pridávaš"></div></div>
